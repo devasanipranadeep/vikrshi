@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+
+  --color-forest-950: #081B11;
+  --color-forest-900: #0F2E1E;
+  --color-forest-800: #16462D;
+  --color-forest-700: #1E5C3C;
+  --color-forest-600: #257049;
+
+  --color-leaf-600: #245840;
+  --color-leaf-500: #2D6A4F;
+  --color-leaf-400: #40916C;
+  --color-leaf-300: #52B788;
+  --color-leaf-200: #74C69D;
+  --color-leaf-100: #B7E4C7;
+  --color-leaf-50: #E9F7EF;
+
+  --color-cream-50: #FAF8F5;
+  --color-cream-100: #F4EFEA;
+  --color-cream-200: #EBE3D7;
+  --color-cream-300: #DFD3C3;
+
+  --color-soil-900: #3E2415;
+  --color-soil-700: #5C3D2E;
+  --color-soil-500: #8D5B4C;
+  --color-soil-300: #BA8A7A;
+
+  --color-harvest-amber: #F4A261;
+  --color-harvest-coral: #E76F51;
+  --color-harvest-gold: #E9C46A;
+  --color-harvest-sun: #F39C12;
+}
+
+:root {
+  --background: #FAF8F5;
+  --foreground: #14241B;
+  --primary: #16462D;
+  --primary-foreground: #FFFFFF;
+  --muted: #52665A;
+  --border: #E5DED5;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #B7E4C7;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #40916C;
+}
+
+/* Glassmorphism helpers */
+.glass-nav {
+  background: rgba(250, 248, 245, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(45, 106, 79, 0.12);
+}
+
+.glass-nav-transparent {
+  background: rgba(15, 46, 30, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(229, 222, 213, 0.7);
+}
+
+.glass-card-dark {
+  background: rgba(15, 46, 30, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(82, 183, 136, 0.25);
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-3deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(45, 106, 79, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(82, 183, 136, 0.6);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite;
+}
+
+/* Noise overlay texture pattern for natural organic feel */
+.bg-organic-pattern {
+  background-image: radial-gradient(#2D6A4F 0.75px, transparent 0.75px), radial-gradient(#2D6A4F 0.75px, #FAF8F5 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.04;
+}
+
+/* Hide Next.js floating dev indicator button */
+nextjs-portal,
+#nextjs-dev-tools-button,
+[data-nextjs-dev-tools-button] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

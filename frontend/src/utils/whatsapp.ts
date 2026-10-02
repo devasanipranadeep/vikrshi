@@ -1,0 +1,141 @@
+import { Product, CartItem } from '@/types';
+
+/**
+ * Normalizes phone numbers to pure digits for wa.me links
+ */
+export function cleanWhatsAppNumber(phone: string): string {
+  return phone.replace(/[^0-9]/g, '');
+}
+
+/**
+ * Builds direct WhatsApp URL for a single product order
+ */
+export function buildSingleProductWhatsAppUrl({
+  phone,
+  companyName = 'Vikrshi Suppliers Pvt Ltd',
+  product,
+  quantity = 1,
+  location = 'Hyderabad',
+}: {
+  phone: string;
+  companyName?: string;
+  product: Product;
+  quantity?: number;
+  location?: string;
+}): string {
+  const cleanPhone = cleanWhatsAppNumber(phone);
+  const qtyText = quantity > 1 ? `${quantity} x (${product.unit})` : product.unit;
+  const estimatedPrice = product.price * quantity;
+
+  const message = [
+    `Hi ${companyName},`,
+    '',
+    `I would like to order:`,
+    `Product: ${product.name}`,
+    `Quantity: ${qtyText}`,
+    `Estimated Total: ₹${estimatedPrice}`,
+    `Location: ${location}`,
+    '',
+    `Please confirm availability and delivery details.`,
+  ].join('\n');
+
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Builds multi-product WhatsApp order message from CartItems
+ */
+export function buildMultiProductWhatsAppUrl({
+  phone,
+  companyName = 'Vikrshi Suppliers Pvt Ltd',
+  items,
+  location = 'Hyderabad',
+  customerNote,
+}: {
+  phone: string;
+  companyName?: string;
+  items: CartItem[];
+  location?: string;
+  customerNote?: string;
+}): string {
+  const cleanPhone = cleanWhatsAppNumber(phone);
+
+  const productLines = items.map((item, idx) => {
+    const qtyText = item.quantity > 1 ? `${item.quantity} x (${item.product.unit})` : item.product.unit;
+    const subtotal = item.product.price * item.quantity;
+    return `${idx + 1}. ${item.product.name} – ${qtyText} (₹${subtotal})`;
+  });
+
+  const grandTotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+  const messageParts = [
+    `Hello ${companyName},`,
+    '',
+    `I would like to place an order:`,
+    '',
+    ...productLines,
+    '',
+    `Estimated Total: ₹${grandTotal}`,
+    `Delivery Location: ${location}`,
+  ];
+
+  if (customerNote && customerNote.trim()) {
+    messageParts.push(`Note: ${customerNote.trim()}`);
+  }
+
+  messageParts.push('', `Please confirm availability, total amount and delivery details.`);
+
+  const message = messageParts.join('\n');
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Builds general inquiry WhatsApp URL
+ */
+export function buildGeneralWhatsAppUrl({
+  phone,
+  companyName = 'Vikrshi Suppliers Pvt Ltd',
+  location = 'Hyderabad',
+  customGreeting,
+}: {
+  phone: string;
+  companyName?: string;
+  location?: string;
+  customGreeting?: string;
+}): string {
+  const cleanPhone = cleanWhatsAppNumber(phone);
+  const greeting =
+    customGreeting ||
+    `Hello ${companyName}, I would like to know more about your farm-fresh delivery slots in ${location}.`;
+
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(greeting)}`;
+}
+
+/**
+ * Builds out-of-stock restock inquiry WhatsApp URL
+ */
+export function buildOutOfStockInquiryWhatsAppUrl({
+  phone,
+  companyName = 'Vikrshi Suppliers Pvt Ltd',
+  product,
+  location = 'Hyderabad',
+}: {
+  phone: string;
+  companyName?: string;
+  product: Product;
+  location?: string;
+}): string {
+  const cleanPhone = cleanWhatsAppNumber(phone);
+  const message = [
+    `Hi ${companyName},`,
+    '',
+    `I noticed that ${product.name} is currently out of stock for ${location}.`,
+    `Could you please let me know when fresh stock will be available for harvest dispatch?`,
+    '',
+    `Product Link: /products/${product.slug}`,
+    '',
+    `Thank you!`,
+  ].join('\n');
+
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
