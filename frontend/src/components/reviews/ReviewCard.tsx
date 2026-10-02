@@ -43,17 +43,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
         {/* Top Header: Author, Location, Date & Rating */}
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex items-center gap-3">
-            {review.avatar ? (
-              <img
-                src={review.avatar}
-                alt={review.name}
-                className="w-12 h-12 rounded-full object-cover border-2 border-leaf-200"
-              />
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-leaf-700 to-forest-800 text-white font-serif font-bold text-base flex items-center justify-center shadow-inner">
-                {initials}
-              </div>
-            )}
+            <div className="w-10 h-10 rounded-full bg-leaf-100 text-leaf-800 font-serif font-bold text-sm flex items-center justify-center border border-leaf-200 shadow-xs">
+              {initials}
+            </div>
 
             <div>
               <div className="flex items-center gap-2 flex-wrap">

@@ -1,16 +1,47 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { customerTestimonials } from '@/constants/mockData';
+import { initialReviews } from '@/constants/mockData';
+import { getReviews } from '@/services/reviewService';
+import { CustomerReview } from '@/types';
+import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { Star, Quote, Mail, Sparkles, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 export function TestimonialsSection() {
+  const [reviews, setReviews] = useState<CustomerReview[]>(() => initialReviews.slice(0, 3));
+  const [totalCount, setTotalCount] = useState<number>(initialReviews.length);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  // Load reviews dynamically from backend API and keep synced
+  const fetchLiveReviews = useCallback(async () => {
+    try {
+      const data = await getReviews({ sort: 'highest' });
+      if (data && data.reviews && data.reviews.length > 0) {
+        // Take top 3 highest-rated and recent reviews for the homepage showcase
+        setReviews(data.reviews.slice(0, 3));
+        setTotalCount(data.stats?.totalReviews || data.reviews.length);
+      }
+    } catch {
+      // Fallback already initialized with initialReviews
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLiveReviews();
+
+    // Automatically update when reviews are submitted or updated by customers/admins
+    const unsubscribe = subscribeToStoreUpdates(() => {
+      fetchLiveReviews();
+    }, ['reviews', 'all']);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [fetchLiveReviews]);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,9 +72,9 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        {/* Testimonials Grid */}
+        {/* Testimonials Grid (Customer image removed, automatically updated) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-          {customerTestimonials.map((item, index) => (
+          {reviews.map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
@@ -54,35 +85,44 @@ export function TestimonialsSection() {
               className="group relative rounded-2xl bg-white p-7 border border-cream-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
-                {/* Rating stars */}
-                <div className="flex items-center gap-1 mb-4 text-amber-400">
-                  {[...Array(item.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400" />
-                  ))}
+                {/* Rating stars & Verified Purchase Tag */}
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <div className="flex items-center gap-1 text-amber-400">
+                    {[...Array(item.rating || 5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-amber-400" />
+                    ))}
+                  </div>
+                  {item.verifiedPurchase && (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-leaf-700 bg-leaf-50 px-2 py-0.5 rounded-full border border-leaf-200/60">
+                      <CheckCircle2 className="h-3 w-3 text-leaf-600" />
+                      Verified
+                    </span>
+                  )}
                 </div>
 
                 <Quote className="h-8 w-8 text-leaf-500/20 mb-3" />
 
+                {/* Review Text */}
                 <p className="text-xs sm:text-sm text-forest-800 leading-relaxed italic">
-                  &ldquo;{item.text}&rdquo;
+                  &ldquo;{item.comment || (item as any).text}&rdquo;
                 </p>
+
+                {item.productName && (
+                  <span className="mt-3 inline-block text-[11px] font-medium text-forest-600 bg-cream-100/80 px-2.5 py-1 rounded-lg">
+                    Harvest: {item.productName}
+                  </span>
+                )}
               </div>
 
-              {/* Author */}
-              <div className="mt-6 pt-4 border-t border-cream-100 flex items-center gap-3">
-                <div className="relative h-11 w-11 rounded-full overflow-hidden bg-cream-200 shrink-0">
-                  <Image
-                    src={item.avatar}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                    sizes="44px"
-                  />
-                </div>
+              {/* Author (No Customer Photo Image) */}
+              <div className="mt-6 pt-4 border-t border-cream-100 flex items-center justify-between">
                 <div>
                   <h4 className="text-sm font-bold text-forest-950">{item.name}</h4>
                   <p className="text-xs text-forest-700/70">{item.location}</p>
                 </div>
+                {item.date && (
+                  <span className="text-[11px] text-forest-500/80">{item.date}</span>
+                )}
               </div>
             </motion.div>
           ))}
@@ -94,7 +134,7 @@ export function TestimonialsSection() {
             href="/reviews"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-sm font-medium transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
           >
-            <span>Read All Verified Customer Reviews (280+)</span>
+            <span>Read All Verified Customer Reviews ({totalCount > 0 ? `${totalCount}+` : '280+'})</span>
             <span className="text-leaf-300">→</span>
           </Link>
         </div>

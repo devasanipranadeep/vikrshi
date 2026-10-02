@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Star, X, Check, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
 import { ReviewSubmissionData, CustomerReview } from '@/types';
 import { submitReview } from '@/services/reviewService';
+import { notifyStoreUpdate } from '@/utils/storeEvents';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -82,6 +83,7 @@ export function ReviewModal({ isOpen, onClose, onReviewSubmitted }: ReviewModalP
       const res = await submitReview(payload);
       setIsSuccess(true);
       onReviewSubmitted(res.data);
+      notifyStoreUpdate('reviews');
 
       setTimeout(() => {
         setIsSuccess(false);

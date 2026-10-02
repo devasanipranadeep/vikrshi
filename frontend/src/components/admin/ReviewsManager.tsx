@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { CustomerReview } from '@/types';
 import { Star, Trash2, Search, CheckCircle2, MapPin, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { notifyStoreUpdate } from '@/utils/storeEvents';
 
 interface ReviewsManagerProps {
   reviews: CustomerReview[];
@@ -24,6 +25,7 @@ export function ReviewsManager({ reviews, onReviewUpdated }: ReviewsManagerProps
 
       if (res.ok) {
         toast.success('Review removed');
+        notifyStoreUpdate('reviews');
         onReviewUpdated();
       } else {
         toast.error('Failed to remove review');
