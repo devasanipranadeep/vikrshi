@@ -34,7 +34,7 @@ export const storageService = {
   /**
    * Generic file uploader to vikrshi-media bucket
    */
-  async uploadFile(folder: 'products' | 'categories' | 'company', file: File): Promise<UploadResult> {
+  async uploadFile(folder: 'products' | 'categories' | 'company' | 'social', file: File): Promise<UploadResult> {
     validateFile(file);
 
     const client = getBrowserClient();
@@ -69,6 +69,10 @@ export const storageService = {
 
   async uploadCompanyImage(file: File): Promise<UploadResult> {
     return this.uploadFile('company', file);
+  },
+
+  async uploadSocialImage(file: File): Promise<UploadResult> {
+    return this.uploadFile('social', file);
   },
 
   /**

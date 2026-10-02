@@ -19,6 +19,7 @@ import {
   Sparkles,
   ShieldCheck,
   Star,
+  Camera,
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -39,6 +40,7 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
     { id: 'inquiries', label: 'Order Inquiries', icon: ShoppingBag },
     { id: 'messages', label: 'Messages', icon: Mail },
     { id: 'reviews', label: 'Customer Reviews', icon: Star },
+    { id: 'social', label: 'Farm Stories & Social', icon: Camera },
     { id: 'settings', label: 'Store Settings', icon: Settings },
   ];
 

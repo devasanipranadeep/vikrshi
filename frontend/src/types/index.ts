@@ -196,3 +196,16 @@ export interface ContactFormData {
   subject?: string;
   message: string;
 }
+
+export interface SocialPost {
+  id: string;
+  imageUrl: string;
+  imagePath?: string;
+  caption: string;
+  likes: number;
+  date: string;
+  postUrl?: string;
+  isActive?: boolean;
+  createdAt?: string;
+}
+

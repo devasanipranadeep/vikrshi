@@ -12,6 +12,7 @@ import { OrderInquiriesManager } from './OrderInquiriesManager';
 import { MessagesManager } from './MessagesManager';
 import { SettingsManager } from './SettingsManager';
 import { ReviewsManager } from './ReviewsManager';
+import { SocialManager } from './SocialManager';
 import {
   Product,
   Category,
@@ -152,6 +153,10 @@ export function AdminPortal() {
           reviews={reviews}
           onReviewUpdated={loadData}
         />
+      )}
+
+      {activeTab === 'social' && (
+        <SocialManager />
       )}
 
       {activeTab === 'settings' && (
