@@ -9,8 +9,8 @@ This document contains step-by-step instructions to configure **Supabase** as th
 Vikrshi Suppliers uses **Supabase only** for:
 - **Database**: PostgreSQL with strict Row Level Security (RLS) on all 10 tables.
 - **Authentication**: Supabase Auth for Super Admin, Admin, and Content Manager roles.
-- **Storage**: `vikrshi-media` bucket for produce images, categories, and company branding.
-- **Security**: Row Level Security (RLS) policies allowing public read access to active produce, and restricting management to authorized admin roles.
+- **Storage**: `vikrshi-media` bucket for product images, categories, and company branding.
+- **Security**: Row Level Security (RLS) policies allowing public read access to active products, and restricting management to authorized admin roles.
 - **WhatsApp Ordering**: Secure server-side inquiry creation and price validation before WhatsApp redirect.
 
 ---
@@ -62,9 +62,9 @@ Vikrshi Suppliers uses **Supabase only** for:
 3. Click **Run**.
    - Inserts company settings for *Vikrshi Suppliers Pvt Ltd*.
    - Inserts the initial anchor location: **Hyderabad, Telangana, India**.
-   - Inserts default categories: *Vegetables*, *Fruits*, *Leafy Greens*, *Seasonal Produce*.
-   - Inserts development produce items: *Organic Tomatoes*, *Fresh Spinach*, *Farm Fresh Carrots*, *Apples*, *Bananas*.
-   - Connects produce to Hyderabad in `product_locations`.
+   - Inserts default categories: *Vegetables*, *Fruits*, *Leafy Greens*, *Seasonal Products*.
+   - Inserts development product items: *Organic Tomatoes*, *Fresh Spinach*, *Farm Fresh Carrots*, *Apples*, *Bananas*.
+   - Connects products to Hyderabad in `product_locations`.
 
 ---
 

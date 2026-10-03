@@ -26,7 +26,7 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
   return {
     companyName: row.company_name || 'Vikrshi Suppliers Pvt Ltd',
     legalName: `${row.company_name || 'Vikrshi Suppliers Pvt Ltd'} (Incorporated under MCA India)`,
-    tagline: 'Fresh Organic Produce from Farm to Home',
+    tagline: 'Fresh Organic Products from Farm to Home',
     shortDescription: row.footer_description || 'Pesticide-free organic vegetables and fresh fruits.',
     logoUrl,
     logoPath: row.logo_path,

@@ -52,7 +52,7 @@ export function LocationSelectorModal() {
                 </h3>
               </div>
               <p className="mt-1 text-sm text-forest-700/80">
-                Produce is harvested fresh daily and dispatched directly to your city.
+                Products are harvested fresh daily and dispatched directly to your city.
               </p>
             </div>
             <button

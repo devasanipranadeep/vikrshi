@@ -189,7 +189,7 @@ export function Navbar() {
                     ? 'text-white/90 hover:bg-white/15 hover:text-white'
                     : 'text-forest-800 hover:bg-cream-100 hover:text-leaf-600'
                 }`}
-                aria-label="Search produce"
+                aria-label="Search products"
               >
                 <Search className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
               </button>

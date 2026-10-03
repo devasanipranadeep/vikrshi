@@ -164,7 +164,7 @@ export function CartDrawer() {
                     className="mt-6 inline-flex items-center gap-2 rounded-xl bg-leaf-500 px-5 py-2.5 text-xs font-semibold text-white shadow-md hover:bg-leaf-600 transition-colors"
                   >
                     <Sparkles className="h-4 w-4" />
-                    Browse Fresh Produce
+                    Browse Fresh Products
                   </Link>
                 </div>
               ) : (

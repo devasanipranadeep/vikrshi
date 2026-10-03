@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Customer Reviews — Vikrshi Suppliers Pvt Ltd',
     description:
-      'Discover what 280+ Hyderabad households say about our zero-pesticide, dawn-harvested organic produce.',
+      'Discover what 280+ Hyderabad households say about our zero-pesticide, dawn-harvested organic products.',
     url: 'https://vikrshi.com/reviews',
     siteName: 'Vikrshi Suppliers Pvt Ltd',
     type: 'website',

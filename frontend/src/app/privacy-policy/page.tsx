@@ -38,7 +38,7 @@ export default function PrivacyPolicyPage() {
           <div className="space-y-4 text-xs sm:text-sm text-forest-800 leading-relaxed pt-4 border-t border-cream-100">
             <h3 className="font-serif text-lg font-bold text-forest-950">1. Information We Collect</h3>
             <p>
-              Vikrshi Suppliers Pvt Ltd collects minimal information necessary to deliver farm produce to your doorstep. When you assemble a produce order or send an inquiry via WhatsApp or our contact form, we receive your name, contact telephone/WhatsApp number, and delivery locality in Hyderabad or surrounding service areas.
+              Vikrshi Suppliers Pvt Ltd collects minimal information necessary to deliver farm products to your doorstep. When you assemble a product order or send an inquiry via WhatsApp or our contact form, we receive your name, contact telephone/WhatsApp number, and delivery locality in Hyderabad or surrounding service areas.
             </p>
 
             <h3 className="font-serif text-lg font-bold text-forest-950">2. How We Use Your Information</h3>

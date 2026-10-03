@@ -264,7 +264,7 @@ export function ProductDetailView({ product: initialProduct, relatedProducts }: 
               {/* Description */}
               <div className="pt-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-forest-700/70 mb-1.5">
-                  Produce Overview
+                  Product Overview
                 </h3>
                 <p className="text-sm text-forest-700/85 leading-relaxed">
                   {product.description}
@@ -397,7 +397,7 @@ export function ProductDetailView({ product: initialProduct, relatedProducts }: 
                 href="/shop"
                 className="text-xs font-bold text-leaf-600 hover:underline"
               >
-                View all produce
+                View all products
               </Link>
             </div>
 

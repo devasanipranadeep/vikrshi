@@ -1,6 +1,6 @@
 # Vikrshi Suppliers Pvt Ltd
 
-> **Farm-to-Home Organic Farming & Produce Supply Platform**  
+> **Farm-to-Home Organic Farming & Products Supply Platform**  
 > Built with **Next.js (App Router, Server Actions, TypeScript)** and a **complete Supabase backend (PostgreSQL, Supabase Auth, Supabase Storage, and Row Level Security)**.
 
 ---
@@ -11,7 +11,7 @@ Vikrshi Suppliers supplies fresh, responsibly grown organic vegetables, leafy gr
 
 - **Current Anchor Location**: Hyderabad, Telangana, India.
 - **Multi-City Scalability**: Dynamic database-driven locations architecture. Admin can add Bengaluru, Mumbai, Pune, Chennai, or any other city at any time from the admin panel without modifying frontend code.
-- **WhatsApp Ordering**: Customers browse produce, select delivery location, review their order, and click **Place Order on WhatsApp**. Before redirecting, the server securely validates product availability and prices, creates an order inquiry in Supabase, and pre-fills the WhatsApp dispatch message.
+- **WhatsApp Ordering**: Customers browse products, select delivery location, review their order, and click **Place Order on WhatsApp**. Before redirecting, the server securely validates product availability and prices, creates an order inquiry in Supabase, and pre-fills the WhatsApp dispatch message.
 
 ---
 
@@ -31,8 +31,8 @@ Vikrshi Suppliers supplies fresh, responsibly grown organic vegetables, leafy gr
 
 The backend consists of 9 PostgreSQL tables:
 1. `profiles`: Centralized admin account linked to Supabase Auth (`admin`)
-2. `categories`: High-level produce categories (*Vegetables*, *Fruits*, *Leafy Greens*, *Seasonal Produce*)
-3. `products`: Organic produce items, prices, units, stock status, gallery
+2. `categories`: High-level product categories (*Vegetables*, *Fruits*, *Leafy Greens*, *Seasonal Products*)
+3. `products`: Organic products items, prices, units, stock status, gallery
 4. `locations`: Service cities, delivery availability, WhatsApp numbers, coordinates
 5. `product_locations`: City-specific availability and custom regional pricing
 6. `company_settings`: Singleton company branding, WhatsApp dispatch number, address, and hours
@@ -85,7 +85,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Admin Capabilities:
 - **Dashboard**: Live metrics (total products, active in-stock items, vegetables, fruits, active delivery hubs, customer reviews, new inquiries, recent orders).
-- **Products**: Add produce, manage prices, upload images to Supabase Storage, and set city-specific pricing.
+- **Products**: Add products, manage prices, upload images to Supabase Storage, and set city-specific pricing.
 - **Categories**: Organize categories with image assets and ordering.
 - **Locations**: Add and toggle service cities dynamically.
 - **Order Inquiries**: Inspect customer WhatsApp orders and update fulfillment status.

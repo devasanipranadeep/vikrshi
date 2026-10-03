@@ -18,7 +18,7 @@ export function StorySection() {
     },
     {
       title: 'Zero Chemical Wax or Gas',
-      desc: 'Produce ripens under natural Telangana sun, without artificial ethylene gassing or cosmetic polishing.',
+      desc: 'Products ripen under natural Telangana sun, without artificial ethylene gassing or cosmetic polishing.',
     },
     {
       title: 'Transparent Traceability',
@@ -92,7 +92,7 @@ export function StorySection() {
             </p>
 
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              We replaced middle-mandi middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your produce was rooted in living soil just hours before arriving at your doorstep in Hyderabad.
+              We replaced middle-mandi middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your products were rooted in living soil just hours before arriving at your doorstep in Hyderabad.
             </p>
 
             {/* Pillars list */}

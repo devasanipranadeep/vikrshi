@@ -98,11 +98,12 @@ export function ShopContent() {
       'leafy-greens': '🥬',
       greens: '🥬',
       'seasonal-produce': '✨',
+      'seasonal-products': '✨',
       seasonal: '✨',
     };
 
     const list = [
-      { label: 'All Produce', value: 'all', emoji: '🌱', count: products.length },
+      { label: 'All Products', value: 'all', emoji: '🌱', count: products.length },
     ];
 
     dbCategories.forEach((cat) => {
@@ -111,7 +112,7 @@ export function ShopContent() {
           p.categoryId === cat.id ||
           p.category === cat.slug ||
           (cat.slug === 'leafy-greens' && p.category === 'greens') ||
-          (cat.slug === 'seasonal-produce' && p.category === 'seasonal')
+          ( (cat.slug === 'seasonal-produce' || cat.slug === 'seasonal-products') && (p.category === 'seasonal' || p.category === 'seasonal-products') )
       ).length;
 
       list.push({
@@ -150,8 +151,8 @@ export function ShopContent() {
           p.categoryId === category ||
           (catLower === 'greens' && pCat === 'leafy-greens') ||
           (catLower === 'leafy-greens' && pCat === 'greens') ||
-          (catLower === 'seasonal' && pCat === 'seasonal-produce') ||
-          (catLower === 'seasonal-produce' && pCat === 'seasonal')
+          (catLower === 'seasonal' && (pCat === 'seasonal-produce' || pCat === 'seasonal-products')) ||
+          ((catLower === 'seasonal-produce' || catLower === 'seasonal-products') && pCat === 'seasonal')
         );
       });
     }
@@ -259,7 +260,7 @@ export function ShopContent() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-forest-700/60" />
             <input
               type="text"
-              placeholder="Search produce (e.g. Tomato, Palak, Carrots)..."
+              placeholder="Search products (e.g. Tomato, Palak, Carrots)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-xl bg-white border border-cream-200 py-2.5 pl-10 pr-9 text-xs sm:text-sm text-forest-950 placeholder:text-forest-700/50 focus:border-leaf-500 focus:outline-none focus:ring-2 focus:ring-leaf-500/20 shadow-2xs"
@@ -499,7 +500,7 @@ export function ShopContent() {
             {/* Header info bar */}
             <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-cream-200 text-xs text-forest-700/70">
               <span>
-                Showing <strong>{filteredProducts.length}</strong> farm-fresh produce item{filteredProducts.length !== 1 ? 's' : ''}
+                Showing <strong>{filteredProducts.length}</strong> farm-fresh product{filteredProducts.length !== 1 ? 's' : ''}
               </span>
               {activeFilterCount > 0 && (
                 <button
@@ -518,7 +519,7 @@ export function ShopContent() {
                   <Search className="h-8 w-8" />
                 </div>
                 <h3 className="font-serif text-xl font-bold text-forest-950">
-                  No produce matched your filters
+                  No products matched your filters
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm text-forest-700/70 max-w-sm mx-auto leading-relaxed">
                   Try adjusting your search query, increasing the price range, or clearing category filters to see today&apos;s harvest.

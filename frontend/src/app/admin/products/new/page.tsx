@@ -120,7 +120,7 @@ export default function NewProductPage() {
             Add Fresh Harvest Product
           </h2>
           <p className="text-xs text-forest-600 mb-6">
-            Add a new fresh produce item to your catalog
+            Add a new fresh product to your catalog
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -156,7 +156,7 @@ export default function NewProductPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-forest-900 mb-1">
-                  Produce Category *
+                  Product Category *
                 </label>
                 <select
                   required

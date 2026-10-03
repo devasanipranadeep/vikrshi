@@ -5,7 +5,7 @@ import { ArrowLeft, Scale } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Vikrshi Suppliers Pvt Ltd',
-  description: 'Terms of Service governing produce orders and deliveries from Vikrshi Suppliers Pvt Ltd.',
+  description: 'Terms of Service governing product orders and deliveries from Vikrshi Suppliers Pvt Ltd.',
 };
 
 export default function TermsPage() {
@@ -36,7 +36,7 @@ export default function TermsPage() {
           </p>
 
           <div className="space-y-4 text-xs sm:text-sm text-forest-800 leading-relaxed pt-4 border-t border-cream-100">
-            <h3 className="font-serif text-lg font-bold text-forest-950">1. Produce Nature & Natural Variation</h3>
+            <h3 className="font-serif text-lg font-bold text-forest-950">1. Product Nature & Natural Variation</h3>
             <p>
               All vegetables, leafy greens, and fruits supplied by Vikrshi Suppliers Pvt Ltd are grown using natural, organic methods without cosmetic chemical sprays or synthetic sizing hormones. Consequently, individual items may exhibit natural variations in shape, size, and seasonal pigmentation.
             </p>

@@ -126,7 +126,7 @@ export default function AboutPage() {
               href="/shop"
               className="w-full sm:w-auto rounded-xl bg-white text-forest-950 px-6 py-3 text-xs sm:text-sm font-semibold hover:bg-cream-100 transition-colors"
             >
-              Order Produce on WhatsApp
+              Order Products on WhatsApp
             </Link>
           </div>
         </div>

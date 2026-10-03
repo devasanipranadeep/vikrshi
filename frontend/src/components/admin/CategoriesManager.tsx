@@ -158,9 +158,9 @@ export function CategoriesManager({ categories, onCategoryUpdated }: CategoriesM
       {/* Top action header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-forest-950">Produce Categories</h2>
+          <h2 className="font-serif text-2xl font-bold text-forest-950">Product Categories</h2>
           <p className="text-xs text-forest-600 mt-0.5">
-            Manage high-level fresh produce classifications and categories
+            Manage high-level fresh product classifications and categories
           </p>
         </div>
 

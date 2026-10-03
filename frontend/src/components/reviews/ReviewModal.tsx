@@ -15,7 +15,7 @@ interface ReviewModalProps {
 const RATING_DESCRIPTIONS: Record<number, string> = {
   1: '1 Star — Disappointed / Quality issues',
   2: '2 Stars — Below expectations',
-  3: '3 Stars — Average / Satisfactory produce',
+  3: '3 Stars — Average / Satisfactory products',
   4: '4 Stars — Very fresh & prompt delivery',
   5: '5 Stars — Outstanding harvest freshness! 🌿',
 };
@@ -64,7 +64,7 @@ export function ReviewModal({ isOpen, onClose, onReviewSubmitted }: ReviewModalP
     }
 
     if (!comment.trim() || comment.trim().length < 10) {
-      setErrorMsg('Please write at least 10 characters detailing your experience with our farm produce.');
+      setErrorMsg('Please write at least 10 characters detailing your experience with our farm products.');
       return;
     }
 
@@ -284,7 +284,7 @@ export function ReviewModal({ isOpen, onClose, onReviewSubmitted }: ReviewModalP
               {/* Trust statement */}
               <div className="flex items-center gap-2 text-[11px] text-forest-600 bg-forest-50/60 p-2.5 rounded-xl">
                 <ShieldCheck className="w-4 h-4 text-leaf-600 shrink-0" />
-                <span>By submitting, you confirm you are sharing genuine, firsthand experience with Vikrshi farm produce.</span>
+                <span>By submitting, you confirm you are sharing genuine, firsthand experience with Vikrshi farm products.</span>
               </div>
 
               {/* Submit Button */}

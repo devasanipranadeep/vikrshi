@@ -154,7 +154,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link href="/shop" className="hover:text-leaf-300 transition-colors">
-                    Shop All Produce
+                    Shop All Products
                   </Link>
                 </li>
                 <li>
@@ -174,7 +174,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link href="/shop?category=seasonal" className="hover:text-leaf-300 transition-colors">
-                    Seasonal Produce
+                    Seasonal Products
                   </Link>
                 </li>
               </ul>
@@ -255,7 +255,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4 text-center">
             <span className="text-leaf-400 font-medium">
-              Fresh Produce • Trusted Quality • From Farm to Home
+              Fresh Products • Trusted Quality • From Farm to Home
             </span>
           </div>
           <p className="flex items-center gap-1 text-center md:text-right">

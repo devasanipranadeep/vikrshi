@@ -72,7 +72,7 @@ export function DashboardOverview({
               Operations & Farm Dispatch Command
             </h1>
             <p className="text-xs sm:text-sm text-cream-200/80 max-w-xl leading-relaxed">
-              Real-time synchronization across organic produce catalogs, WhatsApp order inquiries, and multi-city delivery hubs.
+              Real-time synchronization across organic product catalogs, WhatsApp order inquiries, and multi-city delivery hubs.
             </p>
           </div>
 
@@ -196,7 +196,7 @@ export function DashboardOverview({
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-forest-950">Recent Produce Additions</h3>
+                <h3 className="font-serif text-lg font-bold text-forest-950">Recent Product Additions</h3>
                 <p className="text-xs text-forest-600">Fresh harvest entries synchronized in real-time</p>
               </div>
               <button

@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 const heroImages = [
   {
     src: '/hero/farm-1.jpg?v=2',
-    alt: 'Organic farming fields and fresh produce cultivation',
+    alt: 'Organic farming fields and fresh product cultivation',
   },
   {
     src: '/hero/farm-2.jpg',
@@ -52,7 +52,7 @@ export function HeroSection() {
     phone: settings.whatsappNumber,
     companyName: settings.companyName,
     location: selectedLocation,
-    customGreeting: `Hello Vikrshi Suppliers, I would like to order fresh farm harvest in ${selectedLocation}. Please send today's available produce catalog.`,
+    customGreeting: `Hello Vikrshi Suppliers, I would like to order fresh farm harvest in ${selectedLocation}. Please send today's available products catalog.`,
   });
 
   return (
@@ -85,7 +85,7 @@ export function HeroSection() {
 
       {/* Main Content Container - CTA buttons positioned near bottom so farm images are fully visible */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-end w-full flex-1 pb-24 sm:pb-20">
-        <h1 className="sr-only">Vikrshi Suppliers - Fresh Farm Produce</h1>
+        <h1 className="sr-only">Vikrshi Suppliers - Fresh Farm Products</h1>
 
         {/* CTAs */}
         <div className="flex flex-col items-center w-full px-4 sm:px-0">

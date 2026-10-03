@@ -100,7 +100,7 @@ export function ProductsManager({
     setPrice('50');
     setCompareAtPrice('');
     setUnit('kg');
-    setShortDescription('Freshly harvested organic produce directly from Telangana partner farms.');
+    setShortDescription('Freshly harvested organic products directly from Telangana partner farms.');
     setDescription('Cultivated naturally using Vedic organic composting with zero synthetic chemical sprays.');
     setImageUrl('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80');
     setImagePath('');
@@ -346,7 +346,7 @@ export function ProductsManager({
       {/* Top Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-forest-950">Produce Catalog & Inventory</h2>
+          <h2 className="font-serif text-2xl font-bold text-forest-950">Product Catalog & Inventory</h2>
           <p className="text-xs text-forest-600 mt-0.5">
             Manage fresh harvest, location-specific pricing, and stock status
           </p>
@@ -369,7 +369,7 @@ export function ProductsManager({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search produce name, category or origin..."
+            placeholder="Search product name, category or origin..."
             className="w-full pl-10 pr-4 py-2 rounded-xl bg-cream-50/70 border border-cream-200 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
           />
         </div>
@@ -383,7 +383,7 @@ export function ProductsManager({
                 : 'bg-cream-100/70 text-forest-700 hover:bg-cream-200'
             }`}
           >
-            All Produce ({localProducts.length})
+            All Products ({localProducts.length})
           </button>
           {categoriesList.map((cat) => {
             const count = localProducts.filter(
@@ -562,7 +562,7 @@ export function ProductsManager({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-forest-900 mb-1">
-                    Produce Category *
+                    Product Category *
                   </label>
                   <select
                     required

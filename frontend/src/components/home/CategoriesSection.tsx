@@ -57,7 +57,7 @@ export function CategoriesSection() {
             href="/shop"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-leaf-600 hover:text-leaf-700 group transition-colors self-start md:self-auto"
           >
-            <span>View All Produce</span>
+            <span>View All Products</span>
             <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
           </NextLink>
         </div>

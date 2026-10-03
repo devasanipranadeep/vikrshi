@@ -38,7 +38,7 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
   const [businessHours, setBusinessHours] = useState(settings.businessHours?.fullText || 'Monday – Saturday: 6:00 AM – 8:00 PM');
   const [googleMapsUrl, setGoogleMapsUrl] = useState(settings.googleMapsUrl || 'https://maps.google.com/?q=Hyderabad');
   const [footerDescription, setFooterDescription] = useState(settings.footerDescription || settings.shortDescription || '');
-  const [seoTitle, setSeoTitle] = useState(settings.seoTitle || 'Vikrshi Suppliers Pvt Ltd | Fresh Organic Produce from Farm to Home');
+  const [seoTitle, setSeoTitle] = useState(settings.seoTitle || 'Vikrshi Suppliers Pvt Ltd | Fresh Organic Products from Farm to Home');
   const [seoDescription, setSeoDescription] = useState(settings.seoDescription || '');
   const [orderingEnabled, setOrderingEnabled] = useState(settings.orderingEnabled !== false);
 

@@ -16,7 +16,7 @@ export function BenefitsSection() {
   const benefits = [
     {
       icon: Sparkles,
-      title: '100% Fresh Produce',
+      title: '100% Fresh Products',
       description: 'Harvested before sunrise and packed chilled to lock in cellular moisture, natural vitamins, and farm fragrance.',
       color: 'bg-emerald-500/10 text-emerald-600',
     },
@@ -29,7 +29,7 @@ export function BenefitsSection() {
     {
       icon: ShieldCheck,
       title: 'Farm Fresh Quality',
-      description: 'No wax coatings, artificial ripening gases, or preservative sprays. Real produce that looks, smells, and tastes genuine.',
+      description: 'No wax coatings, artificial ripening gases, or preservative sprays. Real products that look, smell, and taste genuine.',
       color: 'bg-amber-500/10 text-amber-700',
     },
     {
@@ -47,7 +47,7 @@ export function BenefitsSection() {
     {
       icon: Truck,
       title: 'Local Farm Delivery',
-      description: 'Dedicated temperature-managed morning routes across Hyderabad ensure produce arrives in pristine condition.',
+      description: 'Dedicated temperature-managed morning routes across Hyderabad ensure products arrive in pristine condition.',
       color: 'bg-indigo-500/10 text-indigo-600',
     },
   ];
