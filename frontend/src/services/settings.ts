@@ -15,8 +15,8 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
     ? `+91 ${whatsapp.slice(2, 7)} ${whatsapp.slice(7)}`
     : `+${whatsapp}`;
 
-  const igUrl = row.instagram_url || 'https://instagram.com/vikrshisuppliers';
-  const igHandle = igUrl.split('/').filter(Boolean).pop()?.replace(/^@/, '') || 'vikrshisuppliers';
+  const igUrl = row.instagram_url || 'https://instagram.com/vikrshi';
+  const igHandle = igUrl.split('/').filter(Boolean).pop()?.replace(/^@/, '') || 'vikrshi';
   const addr = row.address || 'Road No. 12, Banjara Hills, Hyderabad, Telangana 500034, India';
 
   return {

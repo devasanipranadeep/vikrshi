@@ -10,8 +10,8 @@ export const initialCompanySettings: CompanySettings = {
   whatsappDisplay: '+91 94414 69814',
   email: 'hello@vikrshi.com',
   phone: '+91 94414 69814',
-  instagramUrl: 'https://instagram.com/vikrshi.farms',
-  instagramHandle: '@vikrshi.farms',
+  instagramUrl: 'https://instagram.com/vikrshi',
+  instagramHandle: '@vikrshi',
   address: {
     line1: 'Survey No. 42, Green Belt Agri Park',
     line2: 'Shamshabad Agro Corridor',
