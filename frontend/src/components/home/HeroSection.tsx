@@ -11,28 +11,28 @@ import { motion } from 'framer-motion';
 
 const heroImages = [
   {
+    src: '/hero/farm-1.jpeg',
+    alt: 'Organic farming fields and fresh produce cultivation',
+  },
+  {
+    src: '/hero/farm-2.jpeg',
+    alt: 'Fresh green vegetables and crops growing in rich organic soil',
+  },
+  {
+    src: '/hero/farm-3.png',
+    alt: 'Lush agricultural farmland and healthy harvest',
+  },
+  {
+    src: '/hero/farm-4.jpeg',
+    alt: 'Morning harvest from organic partner farms',
+  },
+  {
+    src: '/hero/farm-5.jpeg',
+    alt: 'Vibrant farmland and natural agro cultivation',
+  },
+  {
     src: '/hero/farm-6.jpg',
     alt: 'Farmers planting fresh paddy saplings in waterlogged organic fields at sunset',
-  },
-  {
-    src: '/hero/farm-1.jpg?v=2',
-    alt: 'Sunlit organic farm fields at golden hour',
-  },
-  {
-    src: '/hero/farm-2.jpg?v=2',
-    alt: 'Fresh green vegetables growing in rich soil',
-  },
-  {
-    src: '/hero/farm-3.jpg?v=2',
-    alt: 'Lush rice paddy fields stretching to the horizon',
-  },
-  {
-    src: '/hero/farm-4.jpg?v=2',
-    alt: 'Farmer harvesting fresh produce at dawn',
-  },
-  {
-    src: '/hero/farm-5.jpg?v=2',
-    alt: 'Vibrant green rolling farm hills and agricultural fields',
   },
 ];
 
