@@ -22,7 +22,7 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-forest-950 text-white pt-32 pb-20">
-      {/* Background Hero Image with Highlights and Reduced Masking */}
+      {/* Background Hero Image with Balanced Depth */}
       <div className="absolute inset-0 z-0">
         <Image
           src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=85"
@@ -30,23 +30,25 @@ export function HeroSection() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center filter brightness-95 contrast-105"
+          className="object-cover object-center filter brightness-80 contrast-105"
         />
-        {/* Lighter gradient overlay highlighting the background farm scenery */}
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/55 via-forest-950/35 to-forest-950/70" />
+        {/* Balanced gradient overlay for optimal depth and rich typography contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85" />
       </div>
 
-      {/* Main Content Container - Ultra Clean, Focused & High-Impact */}
+      {/* Main Content Container - Ultra Clean, Spacious & High-Impact */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Main Headline */}
+        {/* Main Headline with Generous Spacing */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.12] mb-8 sm:mb-10 drop-shadow-md"
+          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.14] mb-12 sm:mb-16 md:mb-20 drop-shadow-md"
         >
           Fresh From Our Farms,{' '}
-          <span className="text-leaf-300 italic font-serif drop-shadow-md">Naturally Yours.</span>
+          <span className="text-leaf-300 italic font-serif block sm:inline mt-2 sm:mt-0 drop-shadow-md">
+            Naturally Yours.
+          </span>
         </motion.h1>
 
         {/* CTAs */}
@@ -54,7 +56,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         >
           <Link
             href="/shop"
