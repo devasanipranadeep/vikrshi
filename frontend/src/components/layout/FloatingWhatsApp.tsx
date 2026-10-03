@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSettings } from '@/context/SettingsContext';
 import { useLocation } from '@/context/LocationContext';
@@ -12,9 +12,24 @@ export function FloatingWhatsApp() {
   const pathname = usePathname();
   const { settings } = useSettings();
   const { selectedLocation } = useLocation();
-  const [showTooltip, setShowTooltip] = useState(true);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
-  if (pathname?.startsWith('/admin')) {
+  // On homepage, only show floating button after scrolling past hero section to prevent button collision
+  useEffect(() => {
+    if (pathname === '/') {
+      const handleScroll = () => {
+        setIsVisible(window.scrollY > 350);
+      };
+      handleScroll();
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    } else {
+      setIsVisible(true);
+    }
+  }, [pathname]);
+
+  if (pathname?.startsWith('/admin') || !isVisible) {
     return null;
   }
 
@@ -25,15 +40,15 @@ export function FloatingWhatsApp() {
   });
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
-      {/* Tooltip bubble */}
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end pointer-events-auto">
+      {/* Tooltip bubble - desktop only, never covers mobile buttons */}
       <AnimatePresence>
         {showTooltip && (
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="mb-3 max-w-[220px] rounded-2xl bg-white p-3 shadow-xl border border-leaf-100 text-xs text-forest-900 relative"
+            className="hidden sm:block mb-3 max-w-[220px] rounded-2xl bg-white p-3 shadow-xl border border-leaf-100 text-xs text-forest-900 relative"
           >
             <button
               onClick={() => setShowTooltip(false)}
@@ -59,12 +74,15 @@ export function FloatingWhatsApp() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Order on WhatsApp"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-white/50"
+        className="group relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-white/50"
       >
         <span className="absolute -inset-1 rounded-full bg-[#25D366]/40 blur-md animate-pulse -z-10" />
-        <MessageCircle className="h-7 w-7" />
+        <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
         <span className="sr-only">Chat on WhatsApp</span>
       </motion.a>
     </div>

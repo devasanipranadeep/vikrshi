@@ -94,14 +94,14 @@ export function Navbar() {
             : 'glass-nav py-3 text-forest-900 shadow-sm'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-2">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-1.5 sm:gap-2">
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-leaf-400 rounded-lg p-1"
+              className="flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-leaf-400 rounded-lg p-0.5 sm:p-1 shrink-0"
             >
-              <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm group-hover:scale-105 transition-transform ring-1 ring-forest-900/10">
+              <div className="relative flex h-10 w-10 sm:h-12 sm:w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm group-hover:scale-105 transition-transform ring-1 ring-forest-900/10">
                 <Image
                   src={settings.logoUrl || '/logo.png'}
                   alt={`${settings.companyName} Logo`}
@@ -113,7 +113,7 @@ export function Navbar() {
               </div>
               <div className="flex flex-col">
                 <div
-                  className={`flex w-full justify-between font-sans text-xl sm:text-2xl font-black tracking-normal leading-none uppercase ${
+                  className={`flex w-full justify-between font-sans text-base sm:text-xl md:text-2xl font-black tracking-normal leading-none uppercase ${
                     isTransparent ? 'text-white' : 'text-forest-900'
                   }`}
                 >
@@ -125,7 +125,7 @@ export function Navbar() {
                     ))}
                 </div>
                 <span
-                  className={`text-[9.5px] uppercase font-bold tracking-[0.16em] leading-tight mt-1 whitespace-nowrap ${
+                  className={`text-[8px] sm:text-[9.5px] uppercase font-bold tracking-[0.16em] leading-tight mt-0.5 sm:mt-1 whitespace-nowrap ${
                     isTransparent ? 'text-white/80' : 'text-leaf-600'
                   }`}
                 >
@@ -135,7 +135,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+            <nav className="hidden xl:flex items-center gap-1.5 2xl:gap-2">
               {navLinks.map((link) => {
                 const isActive =
                   pathname === link.href ||
@@ -145,7 +145,7 @@ export function Navbar() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
                         ? isTransparent
                           ? 'bg-white/20 text-white font-semibold'
@@ -162,42 +162,42 @@ export function Navbar() {
             </nav>
 
             {/* Right Action Icons & Controls */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1 sm:gap-2">
               {/* Location Selector Pill */}
               <button
                 onClick={openLocationSelector}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                className={`flex items-center gap-1 rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs font-medium transition-all ${
                   isTransparent
                     ? 'bg-white/15 text-white border border-white/25 hover:bg-white/25 backdrop-blur-md'
                     : 'bg-leaf-50 text-leaf-600 border border-leaf-100 hover:bg-leaf-100'
                 }`}
                 title="Select Delivery Location"
               >
-                <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+                <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-400" />
                 <span className="hidden sm:inline font-semibold">{selectedLocation}</span>
                 <span className="sm:hidden font-semibold">{selectedLocation.slice(0, 3)}</span>
-                <ChevronDown className="h-3 w-3 opacity-70" />
+                <ChevronDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 opacity-70" />
               </button>
 
               {/* Search Toggle */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className={`rounded-full p-2 transition-colors ${
+                className={`rounded-full p-1.5 sm:p-2 transition-colors ${
                   isTransparent
                     ? 'text-white/90 hover:bg-white/15 hover:text-white'
                     : 'text-forest-800 hover:bg-cream-100 hover:text-leaf-600'
                 }`}
                 aria-label="Search produce"
               >
-                <Search className="h-4.5 w-4.5" />
+                <Search className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
               </button>
 
-              {/* Direct WhatsApp CTA Button */}
+              {/* Direct WhatsApp CTA Button (Desktop only) */}
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`hidden md:inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold shadow-xs transition-all ${
+                className={`hidden 2xl:inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold shadow-xs transition-all ${
                   isTransparent
                     ? 'bg-[#25D366] text-white hover:bg-[#20ba5a]'
                     : 'bg-[#25D366] text-white hover:bg-[#20ba5a]'
@@ -210,16 +210,16 @@ export function Navbar() {
               {/* Order List / Cart Trigger */}
               <button
                 onClick={openCart}
-                className={`relative rounded-full p-2 transition-colors ${
+                className={`relative rounded-full p-1.5 sm:p-2 transition-colors ${
                   isTransparent
                     ? 'text-white hover:bg-white/15'
                     : 'text-forest-900 hover:bg-cream-100'
                 }`}
                 aria-label="View Order List"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-harvest-amber text-[10px] font-bold text-forest-950 shadow-sm animate-scale">
+                  <span className="absolute -top-1 -right-1 flex h-4.5 w-4.5 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-harvest-amber text-[9px] sm:text-[10px] font-bold text-forest-950 shadow-sm animate-scale">
                     {totalItems}
                   </span>
                 )}
@@ -228,14 +228,14 @@ export function Navbar() {
               {/* Mobile Menu Hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className={`lg:hidden rounded-full p-2 transition-colors ${
+                className={`xl:hidden rounded-full p-1.5 sm:p-2 transition-colors ${
                   isTransparent
                     ? 'text-white hover:bg-white/15'
                     : 'text-forest-900 hover:bg-cream-100'
                 }`}
                 aria-label="Open navigation menu"
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
           </div>
