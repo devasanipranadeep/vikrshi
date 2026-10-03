@@ -60,7 +60,7 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-[100vh] min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white -mb-2 border-none outline-none">
+    <section className="relative min-h-[100vh] min-h-[100dvh] md:min-h-[calc(100vh+0.5cm)] flex flex-col overflow-hidden bg-forest-950 text-white -mb-2 border-none outline-none">
       {/* Sliding Background Images — extended below section (-bottom-16) so hero farm images are fully visible down to the phone edge */}
       <div className="absolute inset-0 -bottom-16 z-0">
         {heroImages.map((img, index) => (
