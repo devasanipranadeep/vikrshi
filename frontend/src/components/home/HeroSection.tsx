@@ -7,7 +7,7 @@ import { useSettings } from '@/context/SettingsContext';
 import { useLocation } from '@/context/LocationContext';
 import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';
 import { ArrowRight, MessageCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const heroImages = [
   {
@@ -57,27 +57,24 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white">
-      {/* Sliding Background Images */}
+      {/* Sliding Background Images — all preloaded, crossfade via opacity */}
       <div className="absolute inset-0 z-0">
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
-            className="absolute inset-0"
+        {heroImages.map((img, index) => (
+          <div
+            key={index}
+            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            style={{ opacity: index === currentIndex ? 1 : 0 }}
           >
             <Image
-              src={heroImages[currentIndex].src}
-              alt={heroImages[currentIndex].alt}
+              src={img.src}
+              alt={img.alt}
               fill
-              priority={currentIndex === 0}
+              priority={index <= 1}
               sizes="100vw"
-              className="object-cover object-center animate-ken-burns"
+              className="object-cover object-center"
             />
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        ))}
         {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-10" />
       </div>
