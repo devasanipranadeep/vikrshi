@@ -48,7 +48,7 @@ export async function GET() {
       const mapped: InquiryLead[] = dbInquiries.map((inq) => ({
         id: inq.id,
         customerName: inq.customerName || 'WhatsApp Customer',
-        phone: inq.customerPhone || '+91 94901 23456',
+        phone: inq.customerPhone || '+91 94414 69814',
         location: inq.locationName || 'Hyderabad',
         source: 'WhatsApp Order',
         itemsSummary:

@@ -30,8 +30,8 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
   const [companyName, setCompanyName] = useState(settings.companyName || 'Vikrshi Suppliers Pvt Ltd');
   const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/logo.png');
   const [logoPath, setLogoPath] = useState(settings.logoPath || '');
-  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '919490123456');
-  const [phoneNumber, setPhoneNumber] = useState(settings.phone || settings.phoneNumber || '+91 94901 23456');
+  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '919441469814');
+  const [phoneNumber, setPhoneNumber] = useState(settings.phone || settings.phoneNumber || '+91 94414 69814');
   const [email, setEmail] = useState(settings.email || 'contact@vikrshi.com');
   const [instagramUrl, setInstagramUrl] = useState(settings.instagramUrl || 'https://instagram.com/vikrshisuppliers');
   const [address, setAddress] = useState(settings.address?.fullText || 'Road No. 12, Banjara Hills, Hyderabad, Telangana 500034, India');
@@ -205,11 +205,11 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
                 required
                 value={whatsappNumber}
                 onChange={(e) => setWhatsappNumber(e.target.value)}
-                placeholder="919490123456"
+                placeholder="919441469814"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500 font-mono font-medium"
               />
               <span className="text-[10px] text-forest-500 mt-1 block">
-                Digits with country code (e.g. 919490123456)
+                Digits with country code (e.g. 919441469814)
               </span>
             </div>
 
@@ -222,7 +222,7 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
                 required
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="+91 94901 23456"
+                placeholder="+91 94414 69814"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
               />
             </div>

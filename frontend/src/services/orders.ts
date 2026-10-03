@@ -65,7 +65,7 @@ export const orderService = {
       .maybeSingle();
 
     const companyName = settingsData?.company_name || 'Vikrshi Suppliers Pvt Ltd';
-    const fallbackPhone = settingsData?.whatsapp_number || '919490123456';
+    const fallbackPhone = settingsData?.whatsapp_number || '919441469814';
     const cleanWaNumber = (locationPhone || fallbackPhone).replace(/[^0-9]/g, '');
 
     // 3. Fetch verified products from Supabase

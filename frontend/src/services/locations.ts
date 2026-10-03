@@ -26,7 +26,7 @@ function mapLocationRow(row: LocationRow): LocationItem {
     address: row.address || '',
     hubAddress: row.address || `${row.city} Farm Dispatch Hub, Telangana`,
     whatsappNumber: row.whatsapp_number || undefined,
-    contactPhone: row.whatsapp_number ? `+${row.whatsapp_number}` : '+91 94901 23456',
+    contactPhone: row.whatsapp_number ? `+${row.whatsapp_number}` : '+91 94414 69814',
     operatingHours: 'Morning Dispatch: 6:00 AM – 10:00 AM',
     latitude: row.latitude,
     longitude: row.longitude,

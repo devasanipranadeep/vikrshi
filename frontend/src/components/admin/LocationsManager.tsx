@@ -56,7 +56,7 @@ export function LocationsManager({ locations, onLocationUpdated }: LocationsMana
     setAddress('');
     setServiceAreasInput('Central Hub, North Zone, South Zone');
     setDeliveryAvailable(true);
-    setWhatsappNumber('919490123456');
+    setWhatsappNumber('919441469814');
     setLatitude('');
     setLongitude('');
     setIsActive(true);
@@ -387,7 +387,7 @@ export function LocationsManager({ locations, onLocationUpdated }: LocationsMana
                     type="text"
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
-                    placeholder="e.g. 919490123456"
+                    placeholder="e.g. 919441469814"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
                   />
                 </div>
