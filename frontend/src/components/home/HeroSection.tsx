@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 
 const heroImages = [
   {
-    src: '/hero/farm-1.jpg',
+    src: '/hero/farm-1.jpg?v=2',
     alt: 'Organic farming fields and fresh produce cultivation',
   },
   {
