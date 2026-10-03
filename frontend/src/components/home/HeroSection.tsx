@@ -56,9 +56,9 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-screen min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white -mb-1 border-none outline-none">
-      {/* Sliding Background Images — all preloaded, crossfade via opacity */}
-      <div className="absolute inset-0 z-0">
+    <section className="relative min-h-[100vh] min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white -mb-2 border-none outline-none">
+      {/* Sliding Background Images — extended below section (-bottom-16) so hero farm images are fully visible down to the phone edge */}
+      <div className="absolute inset-0 -bottom-16 z-0">
         {heroImages.map((img, index) => (
           <div
             key={index}
@@ -79,12 +79,12 @@ export function HeroSection() {
         ))}
         {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-[2] pointer-events-none" />
-        {/* Solid dark bottom cap to eliminate any white/cream line between sections */}
-        <div className="absolute -bottom-2 left-0 right-0 h-6 bg-forest-950 z-[3] pointer-events-none" />
+        {/* Dark bottom gradient to eliminate any white line */}
+        <div className="absolute -bottom-4 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-forest-950 z-[3] pointer-events-none" />
       </div>
 
       {/* Main Content Container - Balanced spacing bringing text & buttons closer */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-36 pb-44 sm:pb-20">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-30 sm:pt-36 pb-36 sm:pb-20">
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
