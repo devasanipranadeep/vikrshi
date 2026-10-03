@@ -56,7 +56,7 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-screen min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white">
+    <section className="relative min-h-screen min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white -mb-1 border-none outline-none">
       {/* Sliding Background Images — all preloaded, crossfade via opacity */}
       <div className="absolute inset-0 z-0">
         {heroImages.map((img, index) => (
@@ -79,10 +79,12 @@ export function HeroSection() {
         ))}
         {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-[2] pointer-events-none" />
+        {/* Solid dark bottom cap to eliminate any white/cream line between sections */}
+        <div className="absolute -bottom-2 left-0 right-0 h-6 bg-forest-950 z-[3] pointer-events-none" />
       </div>
 
-      {/* Main Content Container - Ultra Clean, Spacious & Mobile-Optimized */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-24 sm:pt-36 pb-32 sm:pb-20">
+      {/* Main Content Container - Balanced spacing bringing text & buttons closer */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-36 pb-44 sm:pb-20">
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}

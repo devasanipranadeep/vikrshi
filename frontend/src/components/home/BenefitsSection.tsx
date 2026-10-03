@@ -53,7 +53,7 @@ export function BenefitsSection() {
   ];
 
   return (
-    <section className="py-20 bg-cream-50 relative overflow-hidden">
+    <section className="py-20 bg-cream-50 relative overflow-hidden -mt-1 z-10">
       {/* Decorative leaf motifs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
