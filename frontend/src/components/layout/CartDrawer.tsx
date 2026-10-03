@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
@@ -8,35 +8,141 @@ import { useLocation } from '@/context/LocationContext';
 import { useSettings } from '@/context/SettingsContext';
 import { buildMultiProductWhatsAppUrl } from '@/utils/whatsapp';
 import { formatCurrency } from '@/utils/formatters';
-import { X, Plus, Minus, Trash2, ShoppingBag, MapPin, Send, MessageCircle, Sparkles } from 'lucide-react';
+import {
+  X,
+  Plus,
+  Minus,
+  Trash2,
+  ShoppingBag,
+  MapPin,
+  Send,
+  MessageCircle,
+  Sparkles,
+  Home,
+  Building,
+  Navigation,
+  User,
+  Phone,
+  Clock,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
+
+const DELIVERY_STORAGE_KEY = 'vikrshi_delivery_details_v1';
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, updateQuantity, removeFromCart, clearCart, totalItems, totalAmount } =
     useCart();
   const { selectedLocation, openLocationSelector } = useLocation();
   const { settings } = useSettings();
+
+  const [houseNumber, setHouseNumber] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [landmark, setLandmark] = useState('');
+  const [pincode, setPincode] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerNote, setCustomerNote] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
+  // Load saved delivery address details from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(DELIVERY_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.houseNumber) setHouseNumber(parsed.houseNumber);
+        if (parsed.streetAddress) setStreetAddress(parsed.streetAddress);
+        if (parsed.landmark) setLandmark(parsed.landmark);
+        if (parsed.pincode) setPincode(parsed.pincode);
+        if (parsed.customerName) setCustomerName(parsed.customerName);
+        if (parsed.customerPhone) setCustomerPhone(parsed.customerPhone);
+        if (parsed.customerNote) setCustomerNote(parsed.customerNote);
+      }
+    } catch (e) {
+      console.warn('Failed reading delivery details from localStorage', e);
+    }
+  }, []);
+
+  const validateDeliveryForm = () => {
+    const errs: Record<string, string> = {};
+
+    if (!houseNumber.trim()) {
+      errs.houseNumber = 'House / Flat number is required';
+    }
+    if (!streetAddress.trim()) {
+      errs.streetAddress = 'Street / Society / Area is required';
+    }
+    if (!pincode.trim() || pincode.trim().length < 6) {
+      errs.pincode = 'Valid 6-digit pincode is required';
+    }
+    if (!customerName.trim()) {
+      errs.customerName = 'Your name is required';
+    }
+    const cleanPhone = customerPhone.replace(/[^0-9]/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      errs.customerPhone = '10-digit phone required';
+    }
+
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const handlePlaceOrder = async () => {
     if (items.length === 0 || isPlacingOrder) return;
 
+    // Validate delivery details
+    if (!validateDeliveryForm()) {
+      toast.error('Please enter your house number and delivery details', {
+        description: 'Our farm team needs your exact house address for morning dispatch.',
+      });
+      const section = document.getElementById('delivery-details-section');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    // Save details to localStorage for next time
+    try {
+      localStorage.setItem(
+        DELIVERY_STORAGE_KEY,
+        JSON.stringify({
+          houseNumber,
+          streetAddress,
+          landmark,
+          pincode,
+          customerName,
+          customerPhone,
+          customerNote,
+        })
+      );
+    } catch {}
+
     setIsPlacingOrder(true);
-    const toastId = toast.loading('Verifying harvest availability & preparing WhatsApp dispatch...');
+    const toastId = toast.loading('Preparing verified harvest dispatch with delivery address...');
+
+    const deliveryPayload = {
+      houseNumber: houseNumber.trim(),
+      streetAddress: streetAddress.trim(),
+      landmark: landmark.trim() || undefined,
+      pincode: pincode.trim(),
+      customerName: customerName.trim(),
+      customerPhone: customerPhone.trim(),
+    };
 
     try {
-      // 1. Secure Server-side Inquiry Creation (validates prices and location in Supabase)
+      // 1. Secure Server-side Inquiry Creation
       const { createWhatsAppOrderAction } = await import('@/actions/orders');
       const res = await createWhatsAppOrderAction({
         locationId: selectedLocation,
-        customerName: customerName || undefined,
-        customerPhone: customerPhone || undefined,
-        customerNote: customerNote || undefined,
+        customerName: customerName.trim(),
+        customerPhone: customerPhone.trim(),
+        houseNumber: houseNumber.trim(),
+        streetAddress: streetAddress.trim(),
+        landmark: landmark.trim() || undefined,
+        pincode: pincode.trim(),
+        customerNote: customerNote.trim() || undefined,
         items: items.map((i) => ({
           productId: i.product.id,
           quantity: i.quantity,
@@ -53,7 +159,7 @@ export function CartDrawer() {
         });
       } catch {}
 
-      toast.success('Order inquiry recorded! Redirecting to WhatsApp...', { id: toastId });
+      toast.success('Order inquiry recorded! Opening WhatsApp...', { id: toastId });
 
       let targetUrl = res.whatsappUrl;
       if (!targetUrl) {
@@ -62,7 +168,8 @@ export function CartDrawer() {
           companyName: settings.companyName,
           items,
           location: selectedLocation,
-          customerNote,
+          customerNote: customerNote.trim() || undefined,
+          deliveryDetails: deliveryPayload,
         });
       }
 
@@ -74,7 +181,8 @@ export function CartDrawer() {
         companyName: settings.companyName,
         items,
         location: selectedLocation,
-        customerNote,
+        customerNote: customerNote.trim() || undefined,
+        deliveryDetails: deliveryPayload,
       });
       window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
       toast.success('Redirecting to WhatsApp...', { id: toastId });
@@ -97,7 +205,7 @@ export function CartDrawer() {
           className="fixed inset-0 bg-forest-950/60 backdrop-blur-sm transition-opacity"
         />
 
-        <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
+        <div className="fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
@@ -106,7 +214,7 @@ export function CartDrawer() {
             className="w-screen max-w-md bg-cream-50 shadow-2xl flex flex-col border-l border-leaf-100"
           >
             {/* Header */}
-            <div className="p-5 border-b border-cream-200 bg-white/80 backdrop-blur-md">
+            <div className="p-4 sm:p-5 border-b border-cream-200 bg-white/85 backdrop-blur-md shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-leaf-500/10 text-leaf-500">
@@ -123,7 +231,7 @@ export function CartDrawer() {
                 </div>
                 <button
                   onClick={closeCart}
-                  className="rounded-full p-2 text-forest-900/60 hover:bg-cream-200 hover:text-forest-900 transition-colors"
+                  className="rounded-full p-2 text-forest-900/60 hover:bg-cream-200 hover:text-forest-900 transition-colors cursor-pointer"
                   aria-label="Close cart"
                 >
                   <X className="h-5 w-5" />
@@ -138,15 +246,15 @@ export function CartDrawer() {
                 </div>
                 <button
                   onClick={openLocationSelector}
-                  className="text-leaf-500 hover:text-leaf-600 font-medium underline"
+                  className="text-leaf-500 hover:text-leaf-600 font-medium underline cursor-pointer"
                 >
-                  Change
+                  Change Hub
                 </button>
               </div>
             </div>
 
-            {/* Content / Items */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            {/* Content / Items & Delivery Form */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
               {items.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center text-center py-12">
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-leaf-50 text-leaf-400 mb-4">
@@ -173,10 +281,11 @@ export function CartDrawer() {
                   <div className="rounded-xl bg-emerald-50/70 border border-emerald-200/80 p-3 text-xs text-emerald-900 flex items-start gap-2">
                     <MessageCircle className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                     <p>
-                      <strong>Direct Farm Ordering:</strong> We don&apos;t charge payment here. Your selected list is formatted and dispatched directly to our WhatsApp farm manager for instant order confirmation.
+                      <strong>Direct Farm Dispatch:</strong> No online payment required. Your order and house address are formatted and dispatched directly to our WhatsApp farm manager.
                     </p>
                   </div>
 
+                  {/* Items List */}
                   <div className="space-y-3">
                     {items.map((item) => (
                       <div
@@ -210,7 +319,7 @@ export function CartDrawer() {
                               </div>
                               <button
                                 onClick={() => removeFromCart(item.product.id)}
-                                className="text-forest-700/40 hover:text-red-500 transition-colors p-1 shrink-0"
+                                className="text-forest-700/40 hover:text-red-500 transition-colors p-1 shrink-0 cursor-pointer"
                                 title="Remove item"
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
@@ -226,7 +335,7 @@ export function CartDrawer() {
                             <div className="flex items-center rounded-lg border border-cream-300 bg-cream-50">
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                className="p-1 hover:bg-cream-200 text-forest-900 transition-colors rounded-l-lg"
+                                className="p-1 hover:bg-cream-200 text-forest-900 transition-colors rounded-l-lg cursor-pointer"
                                 aria-label="Decrease quantity"
                               >
                                 <Minus className="h-3 w-3" />
@@ -236,7 +345,7 @@ export function CartDrawer() {
                               </span>
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                className="p-1 hover:bg-cream-200 text-forest-900 transition-colors rounded-r-lg"
+                                className="p-1 hover:bg-cream-200 text-forest-900 transition-colors rounded-r-lg cursor-pointer"
                                 aria-label="Increase quantity"
                               >
                                 <Plus className="h-3 w-3" />
@@ -252,27 +361,186 @@ export function CartDrawer() {
                     ))}
                   </div>
 
-                  {/* Customer Order Note */}
-                  <div className="pt-2">
-                    <label className="block text-xs font-semibold text-forest-900 mb-1">
-                      Delivery instructions or special requests (optional):
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Please deliver before 8 AM, or slightly unripe bananas..."
-                      value={customerNote}
-                      onChange={(e) => setCustomerNote(e.target.value)}
-                      className="w-full rounded-xl bg-white border border-cream-300 px-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/50 focus:border-leaf-500 focus:outline-none"
-                    />
-                  </div>
-
                   <div className="flex justify-end pt-1">
                     <button
                       onClick={clearCart}
-                      className="text-xs text-forest-700/60 hover:text-red-500 transition-colors underline"
+                      className="text-xs text-forest-700/60 hover:text-red-500 transition-colors underline cursor-pointer"
                     >
                       Clear order list
                     </button>
+                  </div>
+
+                  {/* Delivery Address & House Details Form */}
+                  <div id="delivery-details-section" className="rounded-2xl border border-leaf-200/80 bg-white p-4 shadow-2xs space-y-3.5 pt-4">
+                    <div className="flex items-center gap-2 pb-2 border-b border-cream-200/80">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-leaf-100 text-leaf-700">
+                        <Home className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-forest-950 flex items-center gap-1.5">
+                          Delivery Address & Contact
+                          <span className="text-[10px] font-bold text-red-500 uppercase">Required</span>
+                        </h4>
+                        <p className="text-[11px] text-forest-600">
+                          Enter your house number & address for morning farm dispatch
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      {/* House / Flat Number */}
+                      <div>
+                        <label className="block text-[11px] font-semibold text-forest-900 mb-1 flex items-center justify-between">
+                          <span>House / Flat / Door No. <span className="text-red-500">*</span></span>
+                          {errors.houseNumber && <span className="text-[10px] text-red-500 font-medium">{errors.houseNumber}</span>}
+                        </label>
+                        <div className="relative">
+                          <Home className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                          <input
+                            type="text"
+                            placeholder="e.g. Flat 402, Block B or H-No. 2-41/1"
+                            value={houseNumber}
+                            onChange={(e) => {
+                              setHouseNumber(e.target.value);
+                              if (errors.houseNumber) setErrors((prev) => ({ ...prev, houseNumber: '' }));
+                            }}
+                            className={`w-full rounded-xl bg-cream-50/70 border pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white transition-all ${
+                              errors.houseNumber ? 'border-red-400 ring-1 ring-red-400' : 'border-cream-300 focus:border-leaf-500'
+                            }`}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Street / Society / Area */}
+                      <div>
+                        <label className="block text-[11px] font-semibold text-forest-900 mb-1 flex items-center justify-between">
+                          <span>Apartment / Street / Society <span className="text-red-500">*</span></span>
+                          {errors.streetAddress && <span className="text-[10px] text-red-500 font-medium">{errors.streetAddress}</span>}
+                        </label>
+                        <div className="relative">
+                          <Building className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                          <input
+                            type="text"
+                            placeholder="e.g. Rainbow Vistas, Hitech City Main Road"
+                            value={streetAddress}
+                            onChange={(e) => {
+                              setStreetAddress(e.target.value);
+                              if (errors.streetAddress) setErrors((prev) => ({ ...prev, streetAddress: '' }));
+                            }}
+                            className={`w-full rounded-xl bg-cream-50/70 border pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white transition-all ${
+                              errors.streetAddress ? 'border-red-400 ring-1 ring-red-400' : 'border-cream-300 focus:border-leaf-500'
+                            }`}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Landmark & Pincode Grid */}
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div>
+                          <label className="block text-[11px] font-semibold text-forest-900 mb-1">
+                            Landmark (Optional)
+                          </label>
+                          <div className="relative">
+                            <Navigation className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                            <input
+                              type="text"
+                              placeholder="e.g. Near Apollo Pharmacy"
+                              value={landmark}
+                              onChange={(e) => setLandmark(e.target.value)}
+                              className="w-full rounded-xl bg-cream-50/70 border border-cream-300 pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white focus:border-leaf-500 transition-all"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-forest-900 mb-1 flex items-center justify-between">
+                            <span>Pincode <span className="text-red-500">*</span></span>
+                            {errors.pincode && <span className="text-[10px] text-red-500 font-medium">6 digits</span>}
+                          </label>
+                          <div className="relative">
+                            <MapPin className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                            <input
+                              type="text"
+                              maxLength={6}
+                              placeholder="e.g. 500081"
+                              value={pincode}
+                              onChange={(e) => {
+                                setPincode(e.target.value.replace(/[^0-9]/g, ''));
+                                if (errors.pincode) setErrors((prev) => ({ ...prev, pincode: '' }));
+                              }}
+                              className={`w-full rounded-xl bg-cream-50/70 border pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white transition-all ${
+                                errors.pincode ? 'border-red-400 ring-1 ring-red-400' : 'border-cream-300 focus:border-leaf-500'
+                              }`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Customer Name & WhatsApp Phone Grid */}
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div>
+                          <label className="block text-[11px] font-semibold text-forest-900 mb-1 flex items-center justify-between">
+                            <span>Your Name <span className="text-red-500">*</span></span>
+                            {errors.customerName && <span className="text-[10px] text-red-500 font-medium">Required</span>}
+                          </label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                            <input
+                              type="text"
+                              placeholder="Full Name"
+                              value={customerName}
+                              onChange={(e) => {
+                                setCustomerName(e.target.value);
+                                if (errors.customerName) setErrors((prev) => ({ ...prev, customerName: '' }));
+                              }}
+                              className={`w-full rounded-xl bg-cream-50/70 border pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white transition-all ${
+                                errors.customerName ? 'border-red-400 ring-1 ring-red-400' : 'border-cream-300 focus:border-leaf-500'
+                              }`}
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-forest-900 mb-1 flex items-center justify-between">
+                            <span>WhatsApp Phone <span className="text-red-500">*</span></span>
+                            {errors.customerPhone && <span className="text-[10px] text-red-500 font-medium">10 digits</span>}
+                          </label>
+                          <div className="relative">
+                            <Phone className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                            <input
+                              type="tel"
+                              maxLength={13}
+                              placeholder="10-digit number"
+                              value={customerPhone}
+                              onChange={(e) => {
+                                setCustomerPhone(e.target.value);
+                                if (errors.customerPhone) setErrors((prev) => ({ ...prev, customerPhone: '' }));
+                              }}
+                              className={`w-full rounded-xl bg-cream-50/70 border pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white transition-all ${
+                                errors.customerPhone ? 'border-red-400 ring-1 ring-red-400' : 'border-cream-300 focus:border-leaf-500'
+                              }`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Special Delivery Instructions */}
+                      <div>
+                        <label className="block text-[11px] font-semibold text-forest-900 mb-1">
+                          Delivery Instructions (Optional)
+                        </label>
+                        <div className="relative">
+                          <Clock className="absolute left-3 top-2.5 h-3.5 w-3.5 text-leaf-600/70" />
+                          <input
+                            type="text"
+                            placeholder="e.g. Please deliver before 8:30 AM, or leave at gate"
+                            value={customerNote}
+                            onChange={(e) => setCustomerNote(e.target.value)}
+                            className="w-full rounded-xl bg-cream-50/70 border border-cream-300 pl-9 pr-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/40 focus:outline-none focus:bg-white focus:border-leaf-500 transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
@@ -280,30 +548,12 @@ export function CartDrawer() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="p-5 border-t border-cream-200 bg-white shadow-lg space-y-4">
+              <div className="p-4 sm:p-5 border-t border-cream-200 bg-white shadow-lg space-y-3 shrink-0">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-forest-700 font-medium">Estimated Harvest Total:</span>
                   <span className="font-serif text-2xl font-bold text-forest-900">
                     {formatCurrency(totalAmount)}
                   </span>
-                </div>
-
-                {/* Customer name and phone for accurate WhatsApp order attribution */}
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Your Name (optional)"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full rounded-xl bg-cream-50 border border-cream-200 px-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/50 focus:border-leaf-500 focus:outline-none"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Your Phone (optional)"
-                    value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full rounded-xl bg-cream-50 border border-cream-200 px-3 py-2 text-xs text-forest-900 placeholder:text-forest-700/50 focus:border-leaf-500 focus:outline-none"
-                  />
                 </div>
 
                 <button
@@ -316,7 +566,7 @@ export function CartDrawer() {
                 </button>
 
                 <p className="text-center text-[11px] text-forest-700/70">
-                  Transfers directly to Vikrshi WhatsApp ({settings.whatsappDisplay})
+                  Transfers order & delivery address to Vikrshi WhatsApp ({settings.whatsappDisplay})
                 </p>
               </div>
             )}
@@ -326,3 +576,4 @@ export function CartDrawer() {
     </AnimatePresence>
   );
 }
+

@@ -7,6 +7,15 @@ export function cleanWhatsAppNumber(phone: string): string {
   return phone.replace(/[^0-9]/g, '');
 }
 
+export interface WhatsAppDeliveryDetails {
+  houseNumber?: string;
+  streetAddress?: string;
+  landmark?: string;
+  pincode?: string;
+  customerName?: string;
+  customerPhone?: string;
+}
+
 /**
  * Builds direct WhatsApp URL for a single product order
  */
@@ -16,30 +25,48 @@ export function buildSingleProductWhatsAppUrl({
   product,
   quantity = 1,
   location = 'Hyderabad',
+  deliveryDetails,
 }: {
   phone: string;
   companyName?: string;
   product: Product;
   quantity?: number;
   location?: string;
+  deliveryDetails?: WhatsAppDeliveryDetails;
 }): string {
   const cleanPhone = cleanWhatsAppNumber(phone);
   const qtyText = quantity > 1 ? `${quantity} x (${product.unit})` : product.unit;
   const estimatedPrice = product.price * quantity;
 
-  const message = [
+  const messageParts = [
     `Hi ${companyName},`,
     '',
     `I would like to order:`,
     `Product: ${product.name}`,
     `Quantity: ${qtyText}`,
     `Estimated Total: ₹${estimatedPrice}`,
-    `Location: ${location}`,
-    '',
-    `Please confirm availability and delivery details.`,
-  ].join('\n');
+  ];
 
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+  if (deliveryDetails?.houseNumber || deliveryDetails?.streetAddress) {
+    messageParts.push('', `🏡 Delivery Address:`);
+    if (deliveryDetails.houseNumber) messageParts.push(`• House / Flat No: ${deliveryDetails.houseNumber}`);
+    if (deliveryDetails.streetAddress) messageParts.push(`• Street / Society: ${deliveryDetails.streetAddress}`);
+    if (deliveryDetails.landmark) messageParts.push(`• Landmark: ${deliveryDetails.landmark}`);
+    messageParts.push(`• City / Area: ${location}`);
+    if (deliveryDetails.pincode) messageParts.push(`• Pincode: ${deliveryDetails.pincode}`);
+  } else {
+    messageParts.push(`Location: ${location}`);
+  }
+
+  if (deliveryDetails?.customerName || deliveryDetails?.customerPhone) {
+    messageParts.push('', `👤 Customer Details:`);
+    if (deliveryDetails.customerName) messageParts.push(`• Name: ${deliveryDetails.customerName}`);
+    if (deliveryDetails.customerPhone) messageParts.push(`• Phone: ${deliveryDetails.customerPhone}`);
+  }
+
+  messageParts.push('', `Please confirm availability and delivery dispatch details.`);
+
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageParts.join('\n'))}`;
 }
 
 /**
@@ -51,12 +78,14 @@ export function buildMultiProductWhatsAppUrl({
   items,
   location = 'Hyderabad',
   customerNote,
+  deliveryDetails,
 }: {
   phone: string;
   companyName?: string;
   items: CartItem[];
   location?: string;
   customerNote?: string;
+  deliveryDetails?: WhatsAppDeliveryDetails;
 }): string {
   const cleanPhone = cleanWhatsAppNumber(phone);
 
@@ -76,11 +105,27 @@ export function buildMultiProductWhatsAppUrl({
     ...productLines,
     '',
     `Estimated Total: ₹${grandTotal}`,
-    `Delivery Location: ${location}`,
   ];
 
+  if (deliveryDetails?.houseNumber || deliveryDetails?.streetAddress) {
+    messageParts.push('', `🏡 Delivery Address:`);
+    if (deliveryDetails.houseNumber) messageParts.push(`• House / Flat No: ${deliveryDetails.houseNumber}`);
+    if (deliveryDetails.streetAddress) messageParts.push(`• Street / Society: ${deliveryDetails.streetAddress}`);
+    if (deliveryDetails.landmark) messageParts.push(`• Landmark: ${deliveryDetails.landmark}`);
+    messageParts.push(`• City / Area: ${location}`);
+    if (deliveryDetails.pincode) messageParts.push(`• Pincode: ${deliveryDetails.pincode}`);
+  } else {
+    messageParts.push(`Delivery Location: ${location}`);
+  }
+
+  if (deliveryDetails?.customerName || deliveryDetails?.customerPhone) {
+    messageParts.push('', `👤 Customer Details:`);
+    if (deliveryDetails.customerName) messageParts.push(`• Name: ${deliveryDetails.customerName}`);
+    if (deliveryDetails.customerPhone) messageParts.push(`• Phone: ${deliveryDetails.customerPhone}`);
+  }
+
   if (customerNote && customerNote.trim()) {
-    messageParts.push(`Note: ${customerNote.trim()}`);
+    messageParts.push(`• Delivery Note: ${customerNote.trim()}`);
   }
 
   messageParts.push('', `Please confirm availability, total amount and delivery details.`);

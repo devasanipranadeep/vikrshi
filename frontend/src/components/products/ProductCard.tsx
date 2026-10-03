@@ -20,7 +20,7 @@ interface ProductCardProps {
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, openCart } = useCart();
   const { selectedLocation } = useLocation();
   const { settings } = useSettings();
 
@@ -29,16 +29,10 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isOutOfStock) return;
 
-    const url = buildSingleProductWhatsAppUrl({
-      phone: settings.whatsappNumber,
-      companyName: settings.companyName,
-      product,
-      quantity,
-      location: selectedLocation,
-    });
-
-    window.open(url, '_blank', 'noopener,noreferrer');
+    addToCart(product, quantity);
+    openCart();
   };
 
   const handleInquiryWhatsApp = (e: React.MouseEvent) => {

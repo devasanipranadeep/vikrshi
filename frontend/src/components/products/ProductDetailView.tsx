@@ -41,7 +41,7 @@ export function ProductDetailView({ product: initialProduct, relatedProducts }: 
   const [product, setProduct] = useState<Product>(initialProduct);
   const [selectedImage, setSelectedImage] = useState(initialProduct.image);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
+  const { addToCart, openCart } = useCart();
   const { selectedLocation } = useLocation();
   const { settings } = useSettings();
 
@@ -73,14 +73,9 @@ export function ProductDetailView({ product: initialProduct, relatedProducts }: 
   const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
 
   const handleWhatsAppOrder = () => {
-    const url = buildSingleProductWhatsAppUrl({
-      phone: settings.whatsappNumber,
-      companyName: settings.companyName,
-      product,
-      quantity,
-      location: selectedLocation,
-    });
-    window.open(url, '_blank', 'noopener,noreferrer');
+    if (isOutOfStock) return;
+    addToCart(product, quantity);
+    openCart();
   };
 
   const handleInquiryWhatsApp = () => {

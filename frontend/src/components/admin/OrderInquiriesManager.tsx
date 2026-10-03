@@ -16,6 +16,7 @@ import {
   MessageCircle,
   ChevronDown,
   ChevronUp,
+  Home,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -143,22 +144,37 @@ export function OrderInquiriesManager({ inquiries, onInquiryUpdated }: OrderInqu
                         </span>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-forest-800 pt-1">
-                        <span className="flex items-center gap-1.5 font-semibold">
-                          <User className="w-3.5 h-3.5 text-leaf-600" />
-                          {inq.customerName || 'WhatsApp Customer'}
-                        </span>
-                        {inq.customerPhone && (
-                          <span className="flex items-center gap-1.5 text-forest-600">
-                            <Phone className="w-3.5 h-3.5 text-leaf-600" />
-                            {inq.customerPhone}
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1.5 text-leaf-700 font-medium">
-                          <MapPin className="w-3.5 h-3.5" />
-                          {inq.locationName || 'Hyderabad'}
-                        </span>
-                      </div>
+                      {(() => {
+                        const rawName = inq.customerName || 'WhatsApp Customer';
+                        const addressMatch = rawName.match(/\[H\.No:\s*(.+?)\]/);
+                        const cleanName = addressMatch ? rawName.replace(/\[H\.No:\s*(.+?)\]/, '').trim() : rawName;
+                        const addressStr = addressMatch ? addressMatch[1] : null;
+
+                        return (
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-forest-800 pt-1">
+                            <span className="flex items-center gap-1.5 font-semibold">
+                              <User className="w-3.5 h-3.5 text-leaf-600" />
+                              {cleanName || 'WhatsApp Customer'}
+                            </span>
+                            {addressStr && (
+                              <span className="flex items-center gap-1 text-[11px] text-forest-700 bg-cream-100/90 px-2 py-0.5 rounded-md border border-cream-200">
+                                <Home className="w-3 h-3 text-leaf-600 shrink-0" />
+                                <span>{addressStr}</span>
+                              </span>
+                            )}
+                            {inq.customerPhone && (
+                              <span className="flex items-center gap-1.5 text-forest-600">
+                                <Phone className="w-3.5 h-3.5 text-leaf-600" />
+                                {inq.customerPhone}
+                              </span>
+                            )}
+                            <span className="flex items-center gap-1.5 text-leaf-700 font-medium">
+                              <MapPin className="w-3.5 h-3.5" />
+                              {inq.locationName || 'Hyderabad'}
+                            </span>
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     {/* Inquiry Right info & Status Select */}

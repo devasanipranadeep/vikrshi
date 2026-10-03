@@ -9,9 +9,14 @@ export const createOrderInquirySchema = z.object({
   locationId: z.string().min(1, 'Delivery location is required'),
   customerName: z.string().optional().nullable(),
   customerPhone: z.string().optional().nullable(),
+  houseNumber: z.string().optional().nullable(),
+  streetAddress: z.string().optional().nullable(),
+  landmark: z.string().optional().nullable(),
+  pincode: z.string().optional().nullable(),
   customerNote: z.string().optional().nullable(),
   items: z.array(orderItemInputSchema).min(1, 'Order must contain at least 1 item'),
 });
 
 export type OrderItemInput = z.infer<typeof orderItemInputSchema>;
 export type CreateOrderInquiryInput = z.infer<typeof createOrderInquirySchema>;
+

@@ -132,11 +132,18 @@ export const orderService = {
     // 4. Save order inquiry in Supabase
     let inquiryId = `inq-${Date.now()}`;
     try {
+      const addressDetailsStr = input.houseNumber
+        ? ` [H.No: ${input.houseNumber}${input.streetAddress ? `, ${input.streetAddress}` : ''}${input.pincode ? ` - ${input.pincode}` : ''}]`
+        : '';
+      const fullCustomerName = input.customerName
+        ? `${input.customerName}${addressDetailsStr}`
+        : (addressDetailsStr || null);
+
       const { data: inquiryRecord, error: inqError } = await client
         .from('order_inquiries')
         .insert({
           location_id: locationIdToSave,
-          customer_name: input.customerName || null,
+          customer_name: fullCustomerName,
           customer_phone: input.customerPhone || null,
           estimated_total: calculatedTotal,
           status: 'whatsapp_redirected',
@@ -163,24 +170,46 @@ export const orderService = {
       console.warn('Could not save order inquiry to Supabase, continuing to WhatsApp:', saveErr);
     }
 
-    // 5. Generate clean WhatsApp message
+    // 5. Generate clean WhatsApp message with delivery details
     let messageText = `Hello ${companyName},\n\nI would like to place an order:\n\n`;
     messageText += orderLines.join('\n');
     messageText += `\n\nEstimated Harvest Total: ₹${calculatedTotal.toLocaleString('en-IN')}`;
-    messageText += `\nDelivery Location: ${locationName}`;
 
-    if (input.customerName) {
-      messageText += `\nCustomer Name: ${input.customerName}`;
+    if (input.houseNumber || input.streetAddress) {
+      messageText += `\n\n🏡 Delivery Address:`;
+      if (input.houseNumber) {
+        messageText += `\n• House / Flat No: ${input.houseNumber}`;
+      }
+      if (input.streetAddress) {
+        messageText += `\n• Street / Society: ${input.streetAddress}`;
+      }
+      if (input.landmark) {
+        messageText += `\n• Landmark: ${input.landmark}`;
+      }
+      messageText += `\n• City / Area: ${locationName}`;
+      if (input.pincode) {
+        messageText += `\n• Pincode: ${input.pincode}`;
+      }
+    } else {
+      messageText += `\nDelivery Location: ${locationName}`;
     }
-    if (input.customerPhone) {
-      messageText += `\nPhone: ${input.customerPhone}`;
+
+    if (input.customerName || input.customerPhone) {
+      messageText += `\n\n👤 Customer Details:`;
+      if (input.customerName) {
+        messageText += `\n• Name: ${input.customerName}`;
+      }
+      if (input.customerPhone) {
+        messageText += `\n• Phone: ${input.customerPhone}`;
+      }
     }
+
     if (input.customerNote) {
-      messageText += `\nSpecial Note: ${input.customerNote}`;
+      messageText += `\n• Delivery Note: ${input.customerNote}`;
     }
 
-    messageText += `\nInquiry Reference: #${inquiryId.slice(0, 8)}`;
-    messageText += `\n\nPlease confirm availability, total amount and delivery details.`;
+    messageText += `\n\nInquiry Reference: #${inquiryId.slice(0, 8)}`;
+    messageText += `\n\nPlease confirm availability, total amount and dispatch schedule.`;
 
     const encodedText = encodeURIComponent(messageText);
     const whatsappUrl = `https://wa.me/${cleanWaNumber}?text=${encodedText}`;
