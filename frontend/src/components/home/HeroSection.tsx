@@ -82,15 +82,15 @@ export function HeroSection() {
       </div>
 
       {/* Main Content Container - Ultra Clean, Spacious & Mobile-Optimized */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-24 sm:pt-36 pb-20 sm:pb-16">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-24 sm:pt-36 pb-32 sm:pb-20">
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.2] drop-shadow-md max-w-xs sm:max-w-2xl lg:max-w-none"
+          className="font-serif text-[28px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.2] drop-shadow-md max-w-sm sm:max-w-2xl lg:max-w-4xl"
         >
-          Fresh From Our Farms,{' '}
+          <span className="block sm:inline">Fresh From Our Farms,</span>{' '}
           <span className="text-leaf-300 italic font-serif block sm:inline mt-1.5 sm:mt-0 drop-shadow-md">
             Naturally Yours.
           </span>
