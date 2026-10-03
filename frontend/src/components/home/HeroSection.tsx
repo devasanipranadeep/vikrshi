@@ -21,7 +21,7 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-forest-950 text-white pt-32 pb-20">
+    <section className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden bg-forest-950 text-white pt-20 pb-16">
       {/* Background Hero Image with Balanced Depth */}
       <div className="absolute inset-0 z-0">
         <Image
