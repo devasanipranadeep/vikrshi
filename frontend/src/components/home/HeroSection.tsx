@@ -21,7 +21,7 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden bg-forest-950 text-white pt-20 pb-16">
+    <section className="relative min-h-screen min-h-[100dvh] flex flex-col justify-between items-center overflow-hidden bg-forest-950 text-white pt-28 sm:pt-36 md:pt-40 pb-12 sm:pb-16 md:pb-20">
       {/* Background Hero Image with Balanced Depth */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -36,9 +36,8 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85" />
       </div>
 
-      {/* Main Content Container - Ultra Clean, Spacious & High-Impact */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-center gap-12 sm:gap-16 md:gap-20">
-        {/* Main Headline */}
+      {/* Top Area: Main Headline */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,8 +49,10 @@ export function HeroSection() {
             Naturally Yours.
           </span>
         </motion.h1>
+      </div>
 
-        {/* CTAs */}
+      {/* Bottom Area: Action Buttons Anchored to Bottom of Window */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
