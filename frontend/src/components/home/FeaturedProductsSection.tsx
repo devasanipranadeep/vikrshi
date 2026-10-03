@@ -64,7 +64,7 @@ export function FeaturedProductsSection() {
               Today&apos;s Morning Harvest
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-forest-950 tracking-tight">
-              Featured Farm Produce
+              Featured Farm Products
             </h2>
             <p className="mt-2 text-sm text-forest-700/80 max-w-xl">
               Freshly plucked from certified Telangana farms. Select your favorites to build your WhatsApp order list or order directly with a single click.
@@ -103,7 +103,7 @@ export function FeaturedProductsSection() {
 
         {/* Product Grid with AnimatePresence */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
@@ -114,7 +114,7 @@ export function FeaturedProductsSection() {
         ) : (
           <motion.div
             layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
           >
             <AnimatePresence mode="popLayout">
               {filteredProducts.slice(0, 8).map((product) => (
