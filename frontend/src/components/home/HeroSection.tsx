@@ -11,23 +11,23 @@ import { motion } from 'framer-motion';
 
 const heroImages = [
   {
-    src: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=85',
+    src: '/hero/farm-1.jpg',
     alt: 'Sunlit organic farm fields at golden hour',
   },
   {
-    src: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=2000&q=85',
+    src: '/hero/farm-2.jpg',
     alt: 'Fresh green vegetables growing in rich soil',
   },
   {
-    src: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=2000&q=85',
+    src: '/hero/farm-3.jpg',
     alt: 'Lush rice paddy fields stretching to the horizon',
   },
   {
-    src: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=2000&q=85',
+    src: '/hero/farm-4.jpg',
     alt: 'Farmer harvesting fresh produce at dawn',
   },
   {
-    src: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=85',
+    src: '/hero/farm-5.jpg',
     alt: 'Vibrant green rolling farm hills and agricultural fields',
   },
 ];
@@ -63,7 +63,7 @@ export function HeroSection() {
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              index === currentIndex ? 'opacity-100 z-[1]' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
             <Image
@@ -71,18 +71,17 @@ export function HeroSection() {
               alt={img.alt}
               fill
               priority
-              unoptimized
               sizes="100vw"
               className="object-cover object-center"
             />
           </div>
         ))}
         {/* Gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-[2] pointer-events-none" />
       </div>
 
       {/* Main Content Container */}
-      <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-40 pb-12 sm:pb-16">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-40 pb-12 sm:pb-16">
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
