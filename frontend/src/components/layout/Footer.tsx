@@ -101,11 +101,16 @@ export function Footer() {
                   className="object-contain w-full h-full"
                 />
               </div>
-              <div>
-                <span className="font-serif text-2xl font-bold tracking-tight text-white block">
-                  {settings.companyName.split(' ')[0] || 'Vikrshi'}
-                </span>
-                <span className="text-[10px] uppercase font-semibold tracking-widest text-leaf-300 block">
+              <div className="flex flex-col">
+                <div className="flex w-full justify-between font-sans text-xl sm:text-2xl font-black tracking-normal leading-none uppercase text-white">
+                  {(settings.companyName.split(' ')[0] || 'VIKRSHI')
+                    .toUpperCase()
+                    .split('')
+                    .map((char, idx) => (
+                      <span key={idx}>{char}</span>
+                    ))}
+                </div>
+                <span className="text-[9.5px] uppercase font-bold tracking-[0.16em] leading-tight text-leaf-300 mt-1 whitespace-nowrap">
                   {settings.companyName.split(' ').slice(1).join(' ') || 'Suppliers Pvt Ltd'}
                 </span>
               </div>

@@ -112,15 +112,20 @@ export function Navbar() {
                 />
               </div>
               <div className="flex flex-col">
-                <span
-                  className={`font-serif text-2xl font-bold tracking-tight leading-none ${
+                <div
+                  className={`flex w-full justify-between font-sans text-xl sm:text-2xl font-black tracking-normal leading-none uppercase ${
                     isTransparent ? 'text-white' : 'text-forest-900'
                   }`}
                 >
-                  {settings.companyName.split(' ')[0] || 'Vikrshi'}
-                </span>
+                  {(settings.companyName.split(' ')[0] || 'VIKRSHI')
+                    .toUpperCase()
+                    .split('')
+                    .map((char, idx) => (
+                      <span key={idx}>{char}</span>
+                    ))}
+                </div>
                 <span
-                  className={`text-[10px] uppercase font-semibold tracking-widest mt-0.5 ${
+                  className={`text-[9.5px] uppercase font-bold tracking-[0.16em] leading-tight mt-1 whitespace-nowrap ${
                     isTransparent ? 'text-white/80' : 'text-leaf-600'
                   }`}
                 >
@@ -329,10 +334,15 @@ export function Navbar() {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-serif text-xl font-bold text-forest-900 leading-none">
-                        {settings.companyName.split(' ')[0] || 'Vikrshi'}
-                      </span>
-                      <span className="text-[9px] uppercase font-semibold tracking-widest text-leaf-600 mt-0.5">
+                      <div className="flex w-full justify-between font-sans text-lg font-black tracking-normal leading-none uppercase text-forest-900">
+                        {(settings.companyName.split(' ')[0] || 'VIKRSHI')
+                          .toUpperCase()
+                          .split('')
+                          .map((char, idx) => (
+                            <span key={idx}>{char}</span>
+                          ))}
+                      </div>
+                      <span className="text-[8.5px] uppercase font-bold tracking-[0.16em] leading-tight text-leaf-600 mt-1 whitespace-nowrap">
                         {settings.companyName.split(' ').slice(1).join(' ') || 'Suppliers Pvt Ltd'}
                       </span>
                     </div>
