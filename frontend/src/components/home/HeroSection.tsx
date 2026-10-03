@@ -1,17 +1,52 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSettings } from '@/context/SettingsContext';
 import { useLocation } from '@/context/LocationContext';
 import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';
 import { ArrowRight, MessageCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const heroImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Sunlit organic farm fields at golden hour',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Fresh green vegetables growing in rich soil',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Lush rice paddy fields stretching to the horizon',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Farmer harvesting fresh produce at dawn',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Basket of freshly picked organic vegetables',
+  },
+];
+
+const SLIDE_INTERVAL = 6000; // 6 seconds per slide
 
 export function HeroSection() {
   const { settings } = useSettings();
   const { selectedLocation } = useLocation();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, SLIDE_INTERVAL);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
 
   const whatsappUrl = buildGeneralWhatsAppUrl({
     phone: settings.whatsappNumber,
@@ -22,22 +57,33 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white">
-      {/* Background Hero Image with Balanced Depth */}
+      {/* Sliding Background Images */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=85"
-          alt="Sunlit organic farm in Hyderabad"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center filter brightness-80 contrast-105"
-        />
-        {/* Balanced gradient overlay for optimal depth and rich typography contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85" />
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={heroImages[currentIndex].src}
+              alt={heroImages[currentIndex].alt}
+              fill
+              priority={currentIndex === 0}
+              sizes="100vw"
+              className="object-cover object-center animate-ken-burns"
+            />
+          </motion.div>
+        </AnimatePresence>
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-10" />
       </div>
 
-      {/* Main Content Container - Ultra Clean, Spacious & High-Impact */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-40 pb-12 sm:pb-16">
+      {/* Main Content Container */}
+      <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-40 pb-12 sm:pb-16">
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -51,31 +97,50 @@ export function HeroSection() {
           </span>
         </motion.h1>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
-        >
-          <Link
-            href="/shop"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-leaf-500 hover:bg-leaf-600 text-white font-semibold px-8 py-4 text-base shadow-xl shadow-forest-950/60 transition-all hover:gap-3 cursor-pointer"
-          >
-            <span>Shop Fresh Products</span>
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+        {/* CTAs + Slide Indicators */}
+        <div className="flex flex-col items-center gap-8">
+          {/* Slide Indicators */}
+          <div className="flex items-center gap-2.5">
+            {heroImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`rounded-full transition-all duration-500 ${
+                  index === currentIndex
+                    ? 'w-8 h-2.5 bg-leaf-400'
+                    : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/60'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
 
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold px-8 py-4 text-base shadow-xl shadow-forest-950/60 transition-all cursor-pointer"
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
           >
-            <MessageCircle className="h-5 w-5" />
-            <span>Order on WhatsApp</span>
-          </a>
-        </motion.div>
+            <Link
+              href="/shop"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-leaf-500 hover:bg-leaf-600 text-white font-semibold px-8 py-4 text-base shadow-xl shadow-forest-950/60 transition-all hover:gap-3 cursor-pointer"
+            >
+              <span>Shop Fresh Products</span>
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold px-8 py-4 text-base shadow-xl shadow-forest-950/60 transition-all cursor-pointer"
+            >
+              <MessageCircle className="h-5 w-5" />
+              <span>Order on WhatsApp</span>
+            </a>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

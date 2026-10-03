@@ -140,6 +140,19 @@ body {
   animation: pulseGlow 3s infinite;
 }
 
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-ken-burns {
+  animation: kenBurns 8s ease-out forwards;
+}
+
 /* Noise overlay texture pattern for natural organic feel */
 .bg-organic-pattern {
   background-image: radial-gradient(#2D6A4F 0.75px, transparent 0.75px), radial-gradient(#2D6A4F 0.75px, #FAF8F5 0.75px);
