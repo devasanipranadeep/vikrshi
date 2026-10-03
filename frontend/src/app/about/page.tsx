@@ -23,27 +23,6 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  const leadership = [
-    {
-      name: 'Vikramaditya Varma',
-      role: 'Founder & Managing Director',
-      bio: 'Lifelong advocate for regenerative agriculture and fair-price farmer cooperatives in Telangana.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-    },
-    {
-      name: 'Dr. Rameshwar Rao',
-      role: 'Lead Agronomist & Soil Biologist',
-      bio: 'Specialist in microbial Jeevamrutham brewing, native seed conservation, and groundwater soil health.',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-    },
-    {
-      name: 'Sunita Reddy',
-      role: 'Head of Quality & Nutrition',
-      bio: 'Farm culinary researcher dedicated to reviving traditional seasonal eating patterns in the Deccan region.',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-    },
-  ];
-
   return (
     <div className="pt-24 pb-20 bg-cream-50">
       {/* Hero Banner */}
@@ -125,43 +104,6 @@ export default function AboutPage() {
 
       {/* Process Timeline */}
       <ProcessTimeline />
-
-      {/* Leadership & Agronomy Team */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/60 px-3 py-1 rounded-full inline-block mb-3">
-            Passionate Stewards
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-forest-950">
-            Meet the Agronomy & Farm Team
-          </h2>
-          <p className="mt-2 text-sm text-forest-700/80">
-            Experienced soil scientists, sustainable food researchers, and farmer organizers working to enrich Hyderabad&apos;s food landscape.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {leadership.map((member) => (
-            <div
-              key={member.name}
-              className="rounded-2xl bg-white p-6 border border-cream-200 shadow-2xs text-center flex flex-col items-center"
-            >
-              <div className="relative h-28 w-28 rounded-full overflow-hidden mb-4 border-4 border-leaf-100 shadow-md">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover"
-                  sizes="112px"
-                />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-forest-950">{member.name}</h3>
-              <p className="text-xs font-semibold text-leaf-600 mb-2">{member.role}</p>
-              <p className="text-xs text-forest-700/80 leading-relaxed">{member.bio}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Farm Visit CTA */}
       <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
