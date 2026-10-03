@@ -71,9 +71,6 @@ export function ProcessTimeline() {
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
             The 12-Hour Farm to Home Journey
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-cream-200/80 leading-relaxed">
-            Harvested at 5:00 AM from organic partner farms and delivered to your doorstep by 5:00 PM the same day.
-          </p>
         </div>
 
         {/* Timeline Grid - 2 per line on mobile, 6 on desktop */}
@@ -91,17 +88,12 @@ export function ProcessTimeline() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="group relative z-10 flex flex-col items-center text-center p-3.5 sm:p-5 rounded-2xl bg-forest-900/80 backdrop-blur-md border border-leaf-500/20 hover:border-leaf-400/50 shadow-lg transition-all duration-300 justify-center"
+                className="group relative z-10 flex flex-col items-center text-center p-4 sm:p-5 rounded-2xl bg-forest-900/80 backdrop-blur-md border border-leaf-500/20 hover:border-leaf-400/50 shadow-lg transition-all duration-300 justify-center"
               >
-                {/* Step indicator pill */}
-                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-leaf-300 mb-1.5 sm:mb-2">
-                  {item.time}
-                </span>
-
-                {/* Icon bubble */}
-                <div className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-leaf-500/20 text-leaf-300 border border-leaf-400/30 shadow-md group-hover:scale-110 group-hover:bg-leaf-500 group-hover:text-white transition-all duration-300 mb-2.5 sm:mb-4">
+                {/* Icon bubble with Step Number */}
+                <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-leaf-500/20 text-leaf-300 border border-leaf-400/30 shadow-md group-hover:scale-110 group-hover:bg-leaf-500 group-hover:text-white transition-all duration-300 mb-2.5 sm:mb-3">
                   <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                  <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-harvest-gold text-[9px] sm:text-[10px] font-bold text-forest-950">
+                  <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 flex h-4.5 w-4.5 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-harvest-gold text-[9px] sm:text-[10px] font-bold text-forest-950">
                     {item.step}
                   </span>
                 </div>
