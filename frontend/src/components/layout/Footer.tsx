@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSettings } from '@/context/SettingsContext';
-import { useLocation } from '@/context/LocationContext';
 import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';
 import {
   Sprout,
@@ -25,7 +24,6 @@ import { InstagramIcon } from '@/components/ui/Icons';
 export function Footer() {
   const pathname = usePathname();
   const { settings } = useSettings();
-  const { activeLocations } = useLocation();
   const currentYear = new Date().getFullYear();
 
   const whatsappUrl = buildGeneralWhatsAppUrl({
@@ -241,11 +239,6 @@ export function Footer() {
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-leaf-300 shrink-0" />
                 <span>{settings.businessHours.fullText || settings.businessHours.weekdays}</span>
-              </div>
-              <div className="pt-2">
-                <span className="inline-block rounded-md bg-forest-900 border border-leaf-500/30 px-2 py-1 text-[11px] text-leaf-300">
-                  Active in: {activeLocations.map((l) => l.cityName).join(', ')}
-                </span>
               </div>
             </div>
           </div>
