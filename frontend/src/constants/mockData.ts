@@ -13,12 +13,13 @@ export const initialCompanySettings: CompanySettings = {
   instagramUrl: 'https://instagram.com/vikrshi',
   instagramHandle: '@vikrshi',
   address: {
-    line1: 'Survey No. 42, Green Belt Agri Park',
-    line2: 'Shamshabad Agro Corridor',
-    city: 'Hyderabad',
+    line1: 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar',
+    line2: 'Mulugu Mandal',
+    city: 'Siddipet',
     state: 'Telangana',
-    pincode: '500077',
+    pincode: '502279',
     country: 'India',
+    fullText: 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.',
   },
   businessHours: {
     weekdays: '6:00 AM – 8:30 PM',

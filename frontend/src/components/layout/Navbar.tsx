@@ -85,6 +85,8 @@ export function Navbar() {
     return null;
   }
 
+  const logoSrc = (settings.logoUrl && settings.logoUrl !== '/logo-emblem.png') ? settings.logoUrl : '/logo.png';
+
   return (
     <>
       <header
@@ -103,7 +105,7 @@ export function Navbar() {
             >
               <div className="relative flex h-10 w-10 sm:h-12 sm:w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm group-hover:scale-105 transition-transform ring-1 ring-forest-900/10">
                 <Image
-                  src={settings.logoUrl || '/logo.png'}
+                  src={logoSrc}
                   alt={`${settings.companyName} Logo`}
                   width={56}
                   height={56}
@@ -326,7 +328,7 @@ export function Navbar() {
                   <div className="flex items-center gap-2.5">
                     <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm ring-1 ring-forest-900/10">
                       <Image
-                        src={settings.logoUrl || '/logo.png'}
+                        src={logoSrc}
                         alt={`${settings.companyName} Logo`}
                         width={44}
                         height={44}

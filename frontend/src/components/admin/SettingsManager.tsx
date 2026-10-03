@@ -34,7 +34,7 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
   const [phoneNumber, setPhoneNumber] = useState(settings.phone || settings.phoneNumber || '+91 94414 69814');
   const [email, setEmail] = useState(settings.email || 'contact@vikrshi.com');
   const [instagramUrl, setInstagramUrl] = useState(settings.instagramUrl || 'https://instagram.com/vikrshi');
-  const [address, setAddress] = useState(settings.address?.fullText || 'Road No. 12, Banjara Hills, Hyderabad, Telangana 500034, India');
+  const [address, setAddress] = useState(settings.address?.fullText || 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.');
   const [businessHours, setBusinessHours] = useState(settings.businessHours?.fullText || 'Monday – Saturday: 6:00 AM – 8:00 PM');
   const [googleMapsUrl, setGoogleMapsUrl] = useState(settings.googleMapsUrl || 'https://maps.google.com/?q=Hyderabad');
   const [footerDescription, setFooterDescription] = useState(settings.footerDescription || settings.shortDescription || '');
@@ -258,7 +258,7 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Road No. 12, Banjara Hills, Hyderabad..."
+                placeholder="H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet..."
                 className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
               />
             </div>

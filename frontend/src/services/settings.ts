@@ -17,14 +17,18 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
 
   const igUrl = row.instagram_url || 'https://instagram.com/vikrshi';
   const igHandle = igUrl.split('/').filter(Boolean).pop()?.replace(/^@/, '') || 'vikrshi';
-  const addr = row.address || 'Road No. 12, Banjara Hills, Hyderabad, Telangana 500034, India';
+  const defaultAddr = 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.';
+  const addr = (row.address && !row.address.includes('Banjara Hills')) ? row.address : defaultAddr;
+
+  const rawLogo = row.logo_url;
+  const logoUrl = (!rawLogo || rawLogo === '/logo-emblem.png') ? '/logo.png' : rawLogo;
 
   return {
-    companyName: row.company_name,
-    legalName: `${row.company_name} (Incorporated under MCA India)`,
+    companyName: row.company_name || 'Vikrshi Suppliers Pvt Ltd',
+    legalName: `${row.company_name || 'Vikrshi Suppliers Pvt Ltd'} (Incorporated under MCA India)`,
     tagline: 'Fresh Organic Produce from Farm to Home',
     shortDescription: row.footer_description || 'Pesticide-free organic vegetables and fresh fruits.',
-    logoUrl: row.logo_url || '/logo.png',
+    logoUrl,
     logoPath: row.logo_path,
     whatsappNumber: whatsapp,
     whatsappDisplay: displayWa,
@@ -34,21 +38,21 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
     instagramUrl: igUrl,
     instagramHandle: `@${igHandle}`,
     address: {
-      line1: addr,
-      line2: '',
-      city: 'Hyderabad',
+      line1: 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar',
+      line2: 'Mulugu Mandal',
+      city: 'Siddipet',
       state: 'Telangana',
-      pincode: '500034',
+      pincode: '502279',
       country: 'India',
       fullText: addr,
     },
     businessHours: {
-      weekdays: row.business_hours || '6:00 AM – 8:00 PM',
+      weekdays: row.business_hours || '6:00 AM – 8:30 PM',
       weekends: '6:00 AM – 9:00 PM',
       deliverySlots: ['6:00 AM – 9:00 AM Morning Harvest', '4:00 PM – 7:00 PM Evening Route'],
-      fullText: row.business_hours || '6:00 AM – 8:00 PM',
+      fullText: row.business_hours || '6:00 AM – 8:30 PM',
     },
-    googleMapsUrl: row.google_maps_url || 'https://maps.google.com/?q=Hyderabad',
+    googleMapsUrl: row.google_maps_url || 'https://maps.google.com/?q=Mulugu+Mandal+Siddipet+Telangana+502279',
     footerDescription: row.footer_description || '',
     seoTitle: row.seo_title || undefined,
     seoDescription: row.seo_description || undefined,

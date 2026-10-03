@@ -14,11 +14,11 @@ export function getOrganizationSchema(settings: CompanySettings) {
     sameAs: [settings.instagramUrl],
     address: {
       '@type': 'PostalAddress',
-      streetAddress: `${settings.address.line1}, ${settings.address.line2}`,
-      addressLocality: settings.address.city,
-      addressRegion: settings.address.state,
-      postalCode: settings.address.pincode,
-      addressCountry: settings.address.country,
+      streetAddress: [settings.address.line1, settings.address.line2].filter(Boolean).join(', ') || settings.address.fullText || '',
+      addressLocality: settings.address.city || 'Siddipet',
+      addressRegion: settings.address.state || 'Telangana',
+      postalCode: settings.address.pincode || '502279',
+      addressCountry: settings.address.country || 'India',
     },
   };
 }
@@ -33,10 +33,10 @@ export function getLocalBusinessSchema(settings: CompanySettings) {
     priceRange: '₹₹',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: `${settings.address.line1}, ${settings.address.line2}`,
-      addressLocality: settings.address.city,
-      addressRegion: settings.address.state,
-      postalCode: settings.address.pincode,
+      streetAddress: [settings.address.line1, settings.address.line2].filter(Boolean).join(', ') || settings.address.fullText || '',
+      addressLocality: settings.address.city || 'Siddipet',
+      addressRegion: settings.address.state || 'Telangana',
+      postalCode: settings.address.pincode || '502279',
       addressCountry: 'IN',
     },
     geo: {

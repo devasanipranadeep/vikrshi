@@ -34,6 +34,8 @@ export function Footer() {
     return null;
   }
 
+  const logoSrc = (settings.logoUrl && settings.logoUrl !== '/logo-emblem.png') ? settings.logoUrl : '/logo.png';
+
   return (
     <footer className="relative bg-forest-950 text-cream-100 overflow-hidden pt-16 pb-10 border-t border-forest-800">
       {/* Background organic leaf aura */}
@@ -91,7 +93,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-3">
               <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-md ring-1 ring-white/20">
                 <Image
-                  src={settings.logoUrl || '/logo.png'}
+                  src={logoSrc}
                   alt={`${settings.companyName} Logo`}
                   width={52}
                   height={52}
