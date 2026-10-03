@@ -83,8 +83,8 @@ export function HeroSection() {
         <div className="absolute -bottom-4 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-forest-950 z-[3] pointer-events-none" />
       </div>
 
-      {/* Main Content Container - CTA buttons positioned near bottom so farm images are fully visible */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-end w-full flex-1 pb-24 sm:pb-20">
+      {/* Main Content Container - CTA buttons positioned higher up on mobile for comfortable thumb access */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-end w-full flex-1 pb-36 sm:pb-28 md:pb-24">
         <h1 className="sr-only">Vikrshi Suppliers - Fresh Farm Products</h1>
 
         {/* CTAs */}
