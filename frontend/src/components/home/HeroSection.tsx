@@ -30,10 +30,6 @@ const heroImages = [
     src: '/hero/farm-5.jpg',
     alt: 'Vibrant farmland and natural agro cultivation',
   },
-  {
-    src: '/hero/farm-6.jpg',
-    alt: 'Farmers planting fresh paddy saplings in waterlogged organic fields at sunset',
-  },
 ];
 
 const SLIDE_INTERVAL = 3000; // 3 seconds per slide
