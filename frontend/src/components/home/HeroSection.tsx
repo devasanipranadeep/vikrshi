@@ -65,28 +65,18 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.12] mb-6"
+          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.12] mb-8 sm:mb-10"
         >
           Fresh From Our Farms,{' '}
           <span className="text-leaf-300 italic font-serif">Naturally Yours.</span>
         </motion.h1>
 
-        {/* Supporting Text */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-base sm:text-lg md:text-xl text-cream-100/90 max-w-2xl mx-auto leading-relaxed mb-8"
-        >
-          Fresh, responsibly grown vegetables and fruits delivered directly from certified partner farms to your doorstep. Cultivated in chemical-free living soil and harvested at dawn for peak vitality.
-        </motion.p>
-
         {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link
             href="/shop"
@@ -105,39 +95,6 @@ export function HeroSection() {
             <MessageCircle className="h-5 w-5" />
             <span>Order on WhatsApp</span>
           </a>
-        </motion.div>
-
-        {/* Farm Metrics Ribbon */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="pt-8 border-t border-white/15 grid grid-cols-2 md:grid-cols-4 gap-6 text-center max-w-3xl mx-auto"
-        >
-          <div>
-            <span className="font-serif text-2xl sm:text-3xl font-bold text-white block">
-              100%
-            </span>
-            <span className="text-xs text-cream-200/70">Organic Sourced</span>
-          </div>
-          <div>
-            <span className="font-serif text-2xl sm:text-3xl font-bold text-leaf-300 block">
-              &lt; 8 hrs
-            </span>
-            <span className="text-xs text-cream-200/70">Farm to Kitchen</span>
-          </div>
-          <div>
-            <span className="font-serif text-2xl sm:text-3xl font-bold text-harvest-gold block">
-              Dawn Harvest
-            </span>
-            <span className="text-xs text-cream-200/70">Plucked at 5:00 AM</span>
-          </div>
-          <div>
-            <span className="font-serif text-2xl sm:text-3xl font-bold text-emerald-400 block">
-              4,200+
-            </span>
-            <span className="text-xs text-cream-200/70">Happy Families</span>
-          </div>
         </motion.div>
       </div>
     </section>
