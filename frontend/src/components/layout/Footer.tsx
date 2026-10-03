@@ -17,7 +17,6 @@ import {
   ShieldCheck,
   Truck,
   Leaf,
-  Lock,
 } from 'lucide-react';
 import { InstagramIcon } from '@/components/ui/Icons';
 
@@ -256,14 +255,6 @@ export function Footer() {
             <span className="text-leaf-400 font-medium">
               Fresh Produce • Trusted Quality • From Farm to Home
             </span>
-            <span className="text-forest-700">•</span>
-            <Link
-              href="/admin"
-              className="text-cream-200/40 hover:text-leaf-300 transition-colors inline-flex items-center gap-1 text-[11px]"
-            >
-              <Lock className="w-3 h-3" />
-              <span>Operations Portal</span>
-            </Link>
           </div>
           <p className="flex items-center gap-1 text-center md:text-right">
             Grown with <Heart className="h-3 w-3 text-red-400 fill-red-400" /> for healthy families
