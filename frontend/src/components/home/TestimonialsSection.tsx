@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 export function TestimonialsSection() {
-  const [reviews, setReviews] = useState<CustomerReview[]>(() => initialReviews.slice(0, 3));
+  const [reviews, setReviews] = useState<CustomerReview[]>(() => initialReviews.slice(0, 4));
   const [totalCount, setTotalCount] = useState<number>(initialReviews.length);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -21,8 +21,8 @@ export function TestimonialsSection() {
     try {
       const data = await getReviews({ sort: 'highest' });
       if (data && data.reviews && data.reviews.length > 0) {
-        // Take top 3 highest-rated and recent reviews for the homepage showcase
-        setReviews(data.reviews.slice(0, 3));
+        // Take top 4 highest-rated and recent reviews for the homepage showcase
+        setReviews(data.reviews.slice(0, 4));
         setTotalCount(data.stats?.totalReviews || data.reviews.length);
       }
     } catch {
@@ -72,57 +72,48 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        {/* Testimonials Grid (Customer image removed, automatically updated) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+        {/* Testimonials Grid - 2 per line on mobile, 4 on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-16 sm:mb-20">
           {reviews.map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              whileHover={{ y: -6 }}
-              className="group relative rounded-2xl bg-white p-7 border border-cream-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              whileHover={{ y: -4 }}
+              className="group relative rounded-2xl bg-white p-3.5 sm:p-5 md:p-6 border border-cream-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Rating stars & Verified Purchase Tag */}
-                <div className="flex items-center justify-between gap-2 mb-4">
-                  <div className="flex items-center gap-1 text-amber-400">
+                <div className="flex items-center justify-between gap-1 mb-2.5 sm:mb-3">
+                  <div className="flex items-center gap-0.5 text-amber-400">
                     {[...Array(item.rating || 5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-amber-400" />
+                      <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-amber-400" />
                     ))}
                   </div>
                   {item.verifiedPurchase && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-leaf-700 bg-leaf-50 px-2 py-0.5 rounded-full border border-leaf-200/60">
-                      <CheckCircle2 className="h-3 w-3 text-leaf-600" />
+                    <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] font-semibold text-leaf-700 bg-leaf-50 px-1.5 py-0.5 rounded-full border border-leaf-200/60">
+                      <CheckCircle2 className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-leaf-600" />
                       Verified
                     </span>
                   )}
                 </div>
 
-                <Quote className="h-8 w-8 text-leaf-500/20 mb-3" />
+                <Quote className="h-5 w-5 sm:h-7 sm:w-7 text-leaf-500/25 mb-1.5 sm:mb-2" />
 
-                {/* Review Text */}
-                <p className="text-xs sm:text-sm text-forest-800 leading-relaxed italic">
-                  &ldquo;{item.comment || (item as any).text}&rdquo;
-                </p>
-
-                {item.productName && (
-                  <span className="mt-3 inline-block text-[11px] font-medium text-forest-600 bg-cream-100/80 px-2.5 py-1 rounded-lg">
-                    Harvest: {item.productName}
-                  </span>
-                )}
+                {/* Review Headline (Sub-text paragraph removed) */}
+                <h4 className="font-serif text-xs sm:text-sm md:text-base font-bold text-forest-950 line-clamp-3 leading-snug">
+                  &ldquo;{item.title || item.comment}&rdquo;
+                </h4>
               </div>
 
-              {/* Author (No Customer Photo Image) */}
-              <div className="mt-6 pt-4 border-t border-cream-100 flex items-center justify-between">
-                <div>
-                  <h4 className="text-sm font-bold text-forest-950">{item.name}</h4>
-                  <p className="text-xs text-forest-700/70">{item.location}</p>
+              {/* Author */}
+              <div className="mt-3.5 sm:mt-5 pt-2.5 sm:pt-3 border-t border-cream-100 flex items-center justify-between">
+                <div className="truncate">
+                  <p className="text-xs sm:text-sm font-bold text-forest-950 truncate">{item.name}</p>
+                  <p className="text-[10px] sm:text-xs text-forest-700/70 truncate">{item.location}</p>
                 </div>
-                {item.date && (
-                  <span className="text-[11px] text-forest-500/80">{item.date}</span>
-                )}
               </div>
             </motion.div>
           ))}

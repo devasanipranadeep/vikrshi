@@ -78,8 +78,8 @@ export function FarmJourneyInstagram() {
           </a>
         </div>
 
-        {/* Grid of Dynamic Instagram preview cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Grid of Dynamic Instagram preview cards - 2 per line on mobile, 4 on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           {posts.map((post, index) => {
             const destinationUrl = post.postUrl || settings.instagramUrl;
             return (
@@ -91,38 +91,36 @@ export function FarmJourneyInstagram() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                whileHover={{ y: -6 }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                whileHover={{ y: -4 }}
                 className="group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-cream-200 shadow-2xs hover:shadow-xl transition-all duration-300"
               >
                 {/* Image */}
                 <div className="relative aspect-square w-full overflow-hidden bg-cream-100">
                   <Image
                     src={post.imageUrl}
-                    alt={post.caption}
+                    alt={post.caption || 'Vikrshi farm post'}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-108"
                     unoptimized={post.imageUrl.startsWith('data:') || post.imageUrl.includes('supabase.co')}
                   />
-                  <div className="absolute inset-0 bg-forest-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 text-white">
-                    <span className="flex items-center gap-1 text-sm font-bold">
-                      <Heart className="h-5 w-5 fill-white" />
+                  <div className="absolute inset-0 bg-forest-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-4 text-white">
+                    <span className="flex items-center gap-1 text-xs sm:text-sm font-bold">
+                      <Heart className="h-4 w-4 sm:h-5 sm:w-5 fill-white" />
                       {post.likes}
                     </span>
-                    <ExternalLink className="h-5 w-5" />
+                    <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                 </div>
 
-                {/* Caption */}
-                <div className="p-4 flex flex-col justify-between flex-1">
-                  <p className="text-xs text-forest-800 line-clamp-2 leading-relaxed">
-                    {post.caption}
-                  </p>
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-forest-700/60 pt-2 border-t border-cream-100">
-                    <span>{post.date}</span>
-                    <span className="text-pink-600 font-semibold group-hover:underline">View on Instagram</span>
-                  </div>
+                {/* Bottom Bar (Sub-text removed, Instagram link retained) */}
+                <div className="p-2.5 sm:p-3 bg-white flex items-center justify-between text-[10px] sm:text-xs border-t border-cream-100">
+                  <span className="text-forest-700/70">{post.date}</span>
+                  <span className="text-pink-600 font-semibold group-hover:underline flex items-center gap-0.5">
+                    <span>Instagram</span>
+                    <ArrowUpRight className="h-3 w-3" />
+                  </span>
                 </div>
               </motion.a>
             );
