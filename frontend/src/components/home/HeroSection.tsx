@@ -27,8 +27,8 @@ const heroImages = [
     alt: 'Farmer harvesting fresh produce at dawn',
   },
   {
-    src: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=2000&q=85',
-    alt: 'Fresh organic farm vegetables and harvest',
+    src: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Vibrant green rolling farm hills and agricultural fields',
   },
 ];
 
@@ -62,14 +62,16 @@ export function HeroSection() {
         {heroImages.map((img, index) => (
           <div
             key={index}
-            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-            style={{ opacity: index === currentIndex ? 1 : 0 }}
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+              index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+            }`}
           >
             <Image
               src={img.src}
               alt={img.alt}
               fill
               priority
+              unoptimized
               sizes="100vw"
               className="object-cover object-center"
             />
