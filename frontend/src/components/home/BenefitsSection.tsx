@@ -55,7 +55,7 @@ export function BenefitsSection() {
   return (
     <section className="py-20 bg-cream-50 relative overflow-hidden -mt-2 z-10">
       {/* Decorative leaf motifs */}
-      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">
           <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/60 px-3 py-1 rounded-full inline-block mb-3">
@@ -69,8 +69,8 @@ export function BenefitsSection() {
           </p>
         </div>
 
-        {/* Benefits Cards Grid - 3 cards per row across all screen sizes */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-6">
+        {/* Benefits Cards Grid - 2 per line on mobile, 3 on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
@@ -79,27 +79,18 @@ export function BenefitsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="group relative rounded-xl sm:rounded-2xl bg-white p-2.5 sm:p-5 md:p-7 border border-cream-200 shadow-2xs hover:shadow-xl hover:border-leaf-300 transition-all duration-300 flex flex-col justify-between"
+                transition={{ duration: 0.4, delay: index * 0.06 }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="group relative rounded-2xl bg-white p-4 sm:p-5 md:p-6 border border-cream-200 shadow-2xs hover:shadow-lg hover:border-leaf-300 transition-all duration-300 flex flex-col items-start justify-center"
               >
-                <div>
-                  <div
-                    className={`flex h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 items-center justify-center rounded-lg sm:rounded-xl mb-2 sm:mb-4 md:mb-5 transition-transform duration-300 group-hover:scale-110 ${benefit.color}`}
-                  >
-                    <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
-                  </div>
-                  <h3 className="font-serif text-xs sm:text-base md:text-xl font-bold text-forest-950 mb-1 sm:mb-2 group-hover:text-leaf-600 transition-colors leading-tight">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-[9.5px] sm:text-xs md:text-sm text-forest-700/80 leading-snug sm:leading-relaxed">
-                    {benefit.description}
-                  </p>
+                <div
+                  className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110 ${benefit.color}`}
+                >
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-
-                <div className="mt-2 sm:mt-5 pt-1.5 sm:pt-3 border-t border-cream-100 flex items-center text-[9px] sm:text-xs font-semibold text-leaf-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>Farm Certified</span>
-                </div>
+                <h3 className="font-serif text-sm sm:text-base md:text-lg font-bold text-forest-950 group-hover:text-leaf-600 transition-colors leading-snug">
+                  {benefit.title}
+                </h3>
               </motion.div>
             );
           })}
