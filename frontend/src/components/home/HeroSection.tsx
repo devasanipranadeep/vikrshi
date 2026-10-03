@@ -11,23 +11,23 @@ import { motion } from 'framer-motion';
 
 const heroImages = [
   {
-    src: '/hero/farm-1.jpeg',
+    src: '/hero/farm-1.jpg',
     alt: 'Organic farming fields and fresh produce cultivation',
   },
   {
-    src: '/hero/farm-2.jpeg',
+    src: '/hero/farm-2.jpg',
     alt: 'Fresh green vegetables and crops growing in rich organic soil',
   },
   {
-    src: '/hero/farm-3.png',
+    src: '/hero/farm-3.jpg',
     alt: 'Lush agricultural farmland and healthy harvest',
   },
   {
-    src: '/hero/farm-4.jpeg',
+    src: '/hero/farm-4.jpg',
     alt: 'Morning harvest from organic partner farms',
   },
   {
-    src: '/hero/farm-5.jpeg',
+    src: '/hero/farm-5.jpg',
     alt: 'Vibrant farmland and natural agro cultivation',
   },
   {
