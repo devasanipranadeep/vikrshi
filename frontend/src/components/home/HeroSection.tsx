@@ -32,7 +32,7 @@ const heroImages = [
   },
 ];
 
-const SLIDE_INTERVAL = 6000; // 6 seconds per slide
+const SLIDE_INTERVAL = 3000; // 3 seconds per slide
 
 export function HeroSection() {
   const { settings } = useSettings();
@@ -65,7 +65,7 @@ export function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="absolute inset-0"
           >
             <Image
@@ -97,23 +97,8 @@ export function HeroSection() {
           </span>
         </motion.h1>
 
-        {/* CTAs + Slide Indicators */}
-        <div className="flex flex-col items-center gap-8">
-          {/* Slide Indicators */}
-          <div className="flex items-center gap-2.5">
-            {heroImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`rounded-full transition-all duration-500 ${
-                  index === currentIndex
-                    ? 'w-8 h-2.5 bg-leaf-400'
-                    : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/60'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+        {/* CTAs */}
+        <div className="flex flex-col items-center">
 
           {/* CTA Buttons */}
           <motion.div
