@@ -218,7 +218,11 @@ export default function LocationsPage() {
                     <div className="space-y-2 text-xs text-forest-700/80 pt-2 border-t border-cream-100">
                       <div className="flex items-start gap-2">
                         <Building className="h-3.5 w-3.5 text-leaf-500 shrink-0 mt-0.5" />
-                        <span>{loc.hubAddress}</span>
+                        <span>
+                          {loc.isDefault || loc.cityName.toLowerCase() === 'hyderabad' || loc.hubAddress?.includes('Chevella') || loc.hubAddress?.includes('Shamshabad')
+                            ? (settings.address?.fullText || 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.')
+                            : (loc.hubAddress || loc.address)}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Clock className="h-3.5 w-3.5 text-leaf-500 shrink-0" />

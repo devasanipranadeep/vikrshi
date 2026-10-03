@@ -11,6 +11,11 @@ function getClient(customClient?: any) {
 }
 
 function mapLocationRow(row: LocationRow): LocationItem {
+  const defaultHubAddr = 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.';
+  const isDefault = row.slug === 'hyderabad' || row.sort_order === 0 || row.sort_order === 1;
+  const isOldAddr = !row.address || row.address.includes('Chevella') || row.address.includes('Shamshabad') || row.address.includes('500075');
+  const resolvedAddress = (isDefault && isOldAddr) ? defaultHubAddr : (row.address || `${row.city} Farm Dispatch Hub, Telangana`);
+
   return {
     id: row.id,
     cityName: row.city,
@@ -18,13 +23,13 @@ function mapLocationRow(row: LocationRow): LocationItem {
     country: row.country,
     slug: row.slug,
     isActive: row.is_active,
-    isDefault: row.slug === 'hyderabad' || row.sort_order === 0 || row.sort_order === 1,
+    isDefault,
     deliveryAvailable: row.delivery_available,
     deliveryAvailability: row.delivery_available ? 'Same-Day Delivery' : 'Coming Soon',
     deliveryAreas: row.service_areas || [],
     serviceAreas: row.service_areas || [],
-    address: row.address || '',
-    hubAddress: row.address || `${row.city} Farm Dispatch Hub, Telangana`,
+    address: resolvedAddress,
+    hubAddress: resolvedAddress,
     whatsappNumber: row.whatsapp_number || undefined,
     contactPhone: row.whatsapp_number ? `+${row.whatsapp_number}` : '+91 94414 69814',
     operatingHours: 'Morning Dispatch: 6:00 AM – 10:00 AM',

@@ -58,7 +58,7 @@ export const initialLocations: LocationItem[] = [
       'Attapur',
       'Kokapet',
     ],
-    hubAddress: 'Vikrshi Central Sorting Hub, Shamshabad Agro Park, Hyderabad - 500077',
+    hubAddress: 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.',
     contactPhone: '+91 94414 69814',
     operatingHours: '5:30 AM – 8:30 PM Everyday',
     pincodes: ['500033', '500034', '500081', '500084', '500032', '500072', '500089', '500075', '500016', '500077'],
