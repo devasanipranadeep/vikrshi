@@ -51,7 +51,7 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
         <div className="flex items-center gap-2.5">
           <div className="relative w-10 h-10 rounded-lg bg-white p-0.5 overflow-hidden shrink-0 flex items-center justify-center">
             <Image
-              src="/logo.png"
+              src="/logo-full.png"
               alt="Vikrshi"
               width={36}
               height={36}
@@ -81,7 +81,7 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
           <div className="flex items-center gap-3 px-2 pt-1">
             <div className="relative w-12 h-12 rounded-xl bg-white p-1 shadow-md overflow-hidden shrink-0 flex items-center justify-center">
               <Image
-                src="/logo.png"
+                src="/logo-full.png"
                 alt="Vikrshi Suppliers"
                 width={44}
                 height={44}

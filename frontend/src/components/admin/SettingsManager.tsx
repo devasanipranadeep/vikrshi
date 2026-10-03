@@ -28,7 +28,7 @@ interface SettingsManagerProps {
 
 export function SettingsManager({ settings, onSettingsUpdated }: SettingsManagerProps) {
   const [companyName, setCompanyName] = useState(settings.companyName || 'Vikrshi Suppliers Pvt Ltd');
-  const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/logo.png');
+  const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/logo-full.png');
   const [logoPath, setLogoPath] = useState(settings.logoPath || '');
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '919441469814');
   const [phoneNumber, setPhoneNumber] = useState(settings.phone || settings.phoneNumber || '+91 94414 69814');

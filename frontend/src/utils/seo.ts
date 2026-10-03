@@ -7,7 +7,7 @@ export function getOrganizationSchema(settings: CompanySettings) {
     name: settings.companyName,
     legalName: settings.legalName,
     url: 'https://vikrshi.com',
-    logo: 'https://vikrshi.com/logo.png',
+    logo: 'https://vikrshi.com/logo-full.png',
     description: settings.shortDescription,
     telephone: settings.phone,
     email: settings.email,

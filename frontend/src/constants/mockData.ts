@@ -5,7 +5,7 @@ export const initialCompanySettings: CompanySettings = {
   legalName: 'Vikrshi Suppliers Private Limited',
   tagline: 'Fresh From Our Farms, Naturally Yours.',
   shortDescription: 'Responsibly grown organic vegetables, crisp leafy greens, and sun-ripened fruits delivered directly from certified partner farms to your doorstep.',
-  logoUrl: '/logo.png',
+  logoUrl: '/logo-full.png',
   whatsappNumber: '919441469814',
   whatsappDisplay: '+91 94414 69814',
   email: 'hello@vikrshi.com',

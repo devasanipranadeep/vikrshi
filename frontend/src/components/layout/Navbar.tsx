@@ -85,7 +85,7 @@ export function Navbar() {
     return null;
   }
 
-  const logoSrc = (settings.logoUrl && settings.logoUrl !== '/logo-emblem.png') ? settings.logoUrl : '/logo.png';
+  const logoSrc = (settings.logoUrl && settings.logoUrl !== '/logo-emblem.png' && settings.logoUrl !== '/logo.png') ? settings.logoUrl : '/logo-full.png';
 
   return (
     <>

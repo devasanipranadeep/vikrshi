@@ -34,7 +34,7 @@ export function Footer() {
     return null;
   }
 
-  const logoSrc = (settings.logoUrl && settings.logoUrl !== '/logo-emblem.png') ? settings.logoUrl : '/logo.png';
+  const logoSrc = (settings.logoUrl && settings.logoUrl !== '/logo-emblem.png' && settings.logoUrl !== '/logo.png') ? settings.logoUrl : '/logo-full.png';
 
   return (
     <footer className="relative bg-forest-950 text-cream-100 overflow-hidden pt-16 pb-10 border-t border-forest-800">

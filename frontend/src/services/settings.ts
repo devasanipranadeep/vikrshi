@@ -21,7 +21,7 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
   const addr = (row.address && !row.address.includes('Banjara Hills')) ? row.address : defaultAddr;
 
   const rawLogo = row.logo_url;
-  const logoUrl = (!rawLogo || rawLogo === '/logo-emblem.png') ? '/logo.png' : rawLogo;
+  const logoUrl = (!rawLogo || rawLogo === '/logo-emblem.png' || rawLogo === '/logo.png') ? '/logo-full.png' : rawLogo;
 
   return {
     companyName: row.company_name || 'Vikrshi Suppliers Pvt Ltd',

@@ -57,7 +57,7 @@ export function AdminLogin() {
         <div className="flex flex-col items-center text-center">
           <div className="relative h-28 w-28 rounded-2xl bg-white p-2.5 shadow-2xl mb-4 ring-2 ring-leaf-400/40 flex items-center justify-center">
             <Image
-              src="/logo.png"
+              src="/logo-full.png"
               alt="Vikrshi Suppliers"
               width={100}
               height={100}
