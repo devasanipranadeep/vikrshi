@@ -77,26 +77,15 @@ export function HeroSection() {
             />
           </div>
         ))}
-        {/* Gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950/85 z-[2] pointer-events-none" />
+        {/* Gradient overlay - subtle top and bottom shading for navbar & CTA readability while keeping farm images vibrant */}
+        <div className="absolute inset-0 bg-gradient-to-b from-forest-950/60 via-forest-950/20 to-forest-950/80 z-[2] pointer-events-none" />
         {/* Dark bottom gradient to eliminate any white line */}
         <div className="absolute -bottom-4 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-forest-950 z-[3] pointer-events-none" />
       </div>
 
-      {/* Main Content Container - Balanced spacing bringing text & buttons closer */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-30 sm:pt-36 pb-36 sm:pb-20">
-        {/* Main Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="font-serif text-[28px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.2] drop-shadow-md max-w-sm sm:max-w-2xl lg:max-w-4xl"
-        >
-          <span className="block sm:inline">Fresh From Our Farms,</span>{' '}
-          <span className="text-leaf-300 italic font-serif block sm:inline mt-1.5 sm:mt-0 drop-shadow-md">
-            Naturally Yours.
-          </span>
-        </motion.h1>
+      {/* Main Content Container - CTA buttons positioned near bottom so farm images are fully visible */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-end w-full flex-1 pb-24 sm:pb-20">
+        <h1 className="sr-only">Vikrshi Suppliers - Fresh Farm Produce</h1>
 
         {/* CTAs */}
         <div className="flex flex-col items-center w-full px-4 sm:px-0">
@@ -104,7 +93,7 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            transition={{ duration: 0.5 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 w-full max-w-xs sm:max-w-none"
           >
             <Link
