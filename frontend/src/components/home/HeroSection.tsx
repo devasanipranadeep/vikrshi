@@ -37,13 +37,13 @@ export function HeroSection() {
       </div>
 
       {/* Main Content Container - Ultra Clean, Spacious & High-Impact */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Main Headline with Generous Spacing */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-center gap-12 sm:gap-16 md:gap-20">
+        {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.14] mb-14 sm:mb-20 md:mb-24 drop-shadow-md"
+          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.15] drop-shadow-md"
         >
           Fresh From Our Farms,{' '}
           <span className="text-leaf-300 italic font-serif block sm:inline mt-2 sm:mt-0 drop-shadow-md">
