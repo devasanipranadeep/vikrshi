@@ -43,7 +43,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.14] mb-12 sm:mb-16 md:mb-20 drop-shadow-md"
+          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.14] mb-14 sm:mb-20 md:mb-24 drop-shadow-md"
         >
           Fresh From Our Farms,{' '}
           <span className="text-leaf-300 italic font-serif block sm:inline mt-2 sm:mt-0 drop-shadow-md">
