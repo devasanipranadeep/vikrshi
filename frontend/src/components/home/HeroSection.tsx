@@ -11,23 +11,23 @@ import { motion } from 'framer-motion';
 
 const heroImages = [
   {
-    src: '/hero/farm-1.jpg',
+    src: '/hero/farm-1.jpg?v=2',
     alt: 'Sunlit organic farm fields at golden hour',
   },
   {
-    src: '/hero/farm-2.jpg',
+    src: '/hero/farm-2.jpg?v=2',
     alt: 'Fresh green vegetables growing in rich soil',
   },
   {
-    src: '/hero/farm-3.jpg',
+    src: '/hero/farm-3.jpg?v=2',
     alt: 'Lush rice paddy fields stretching to the horizon',
   },
   {
-    src: '/hero/farm-4.jpg',
+    src: '/hero/farm-4.jpg?v=2',
     alt: 'Farmer harvesting fresh produce at dawn',
   },
   {
-    src: '/hero/farm-5.jpg',
+    src: '/hero/farm-5.jpg?v=2',
     alt: 'Vibrant green rolling farm hills and agricultural fields',
   },
 ];
@@ -71,6 +71,7 @@ export function HeroSection() {
               alt={img.alt}
               fill
               priority
+              unoptimized
               sizes="100vw"
               className="object-cover object-center"
             />
