@@ -55,13 +55,13 @@ export function AdminLogin() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Brand Crest */}
         <div className="flex flex-col items-center text-center">
-          <div className="relative h-20 w-20 rounded-full bg-white p-1.5 shadow-2xl overflow-hidden mb-4 ring-2 ring-leaf-400/40">
+          <div className="relative h-28 w-28 rounded-2xl bg-white p-2.5 shadow-2xl mb-4 ring-2 ring-leaf-400/40 flex items-center justify-center">
             <Image
-              src="/logo-emblem.png"
+              src="/logo.png"
               alt="Vikrshi Suppliers"
-              width={76}
-              height={76}
-              className="object-contain"
+              width={100}
+              height={100}
+              className="object-contain w-full h-full"
               priority
             />
           </div>

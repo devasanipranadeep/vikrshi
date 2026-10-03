@@ -101,13 +101,13 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-leaf-400 rounded-lg p-1"
             >
-              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-sm group-hover:scale-105 transition-transform overflow-hidden ring-1 ring-forest-900/10">
+              <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm group-hover:scale-105 transition-transform ring-1 ring-forest-900/10">
                 <Image
-                  src={settings.logoUrl || '/logo-emblem.png'}
+                  src={settings.logoUrl || '/logo.png'}
                   alt={`${settings.companyName} Logo`}
-                  width={38}
-                  height={38}
-                  className="object-contain"
+                  width={56}
+                  height={56}
+                  className="object-contain w-full h-full"
                   priority
                 />
               </div>
@@ -319,13 +319,13 @@ export function Navbar() {
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-cream-200">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-sm overflow-hidden ring-1 ring-forest-900/10">
+                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm ring-1 ring-forest-900/10">
                       <Image
-                        src={settings.logoUrl || '/logo-emblem.png'}
+                        src={settings.logoUrl || '/logo.png'}
                         alt={`${settings.companyName} Logo`}
-                        width={32}
-                        height={32}
-                        className="object-contain"
+                        width={44}
+                        height={44}
+                        className="object-contain w-full h-full"
                       />
                     </div>
                     <div className="flex flex-col">

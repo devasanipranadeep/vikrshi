@@ -49,13 +49,13 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
       {/* Mobile Top Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-forest-950 text-white border-b border-forest-800">
         <div className="flex items-center gap-2.5">
-          <div className="relative w-8 h-8 rounded-full bg-white p-0.5 overflow-hidden">
+          <div className="relative w-10 h-10 rounded-lg bg-white p-0.5 overflow-hidden shrink-0 flex items-center justify-center">
             <Image
-              src="/logo-emblem.png"
+              src="/logo.png"
               alt="Vikrshi"
-              width={30}
-              height={30}
-              className="object-contain"
+              width={36}
+              height={36}
+              className="object-contain w-full h-full"
             />
           </div>
           <span className="font-serif font-bold text-base">Vikrshi Admin</span>
@@ -79,13 +79,13 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
         <div className="space-y-5 overflow-y-auto">
           {/* Logo brand */}
           <div className="flex items-center gap-3 px-2 pt-1">
-            <div className="relative w-10 h-10 rounded-full bg-white p-1 shadow-md overflow-hidden shrink-0">
+            <div className="relative w-12 h-12 rounded-xl bg-white p-1 shadow-md overflow-hidden shrink-0 flex items-center justify-center">
               <Image
-                src="/logo-emblem.png"
+                src="/logo.png"
                 alt="Vikrshi Suppliers"
-                width={36}
-                height={36}
-                className="object-contain"
+                width={44}
+                height={44}
+                className="object-contain w-full h-full"
                 priority
               />
             </div>

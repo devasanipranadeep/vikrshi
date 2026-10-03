@@ -33,7 +33,7 @@ const DEMO_ADMIN: AdminUser = {
   email: 'admin@vikrshi.com',
   role: 'admin',
   isActive: true,
-  avatar: '/logo-emblem.png',
+  avatar: '/logo.png',
 };
 
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {

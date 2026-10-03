@@ -4,7 +4,7 @@ const urlOrPathSchema = z
   .string()
   .refine(
     (val) => !val || val.trim() === '' || val.startsWith('/') || /^https?:\/\//i.test(val),
-    { message: 'Must be a valid URL or path (e.g. /logo-emblem.png or https://...)' }
+    { message: 'Must be a valid URL or path (e.g. /logo.png or https://...)' }
   )
   .nullable()
   .optional()

@@ -92,13 +92,13 @@ export function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-3">
-              <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-md overflow-hidden ring-1 ring-white/20">
+              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-md ring-1 ring-white/20">
                 <Image
-                  src={settings.logoUrl || '/logo-emblem.png'}
+                  src={settings.logoUrl || '/logo.png'}
                   alt={`${settings.companyName} Logo`}
-                  width={40}
-                  height={40}
-                  className="object-contain"
+                  width={52}
+                  height={52}
+                  className="object-contain w-full h-full"
                 />
               </div>
               <div>

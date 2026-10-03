@@ -28,7 +28,7 @@ interface SettingsManagerProps {
 
 export function SettingsManager({ settings, onSettingsUpdated }: SettingsManagerProps) {
   const [companyName, setCompanyName] = useState(settings.companyName || 'Vikrshi Suppliers Pvt Ltd');
-  const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/logo-emblem.png');
+  const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/logo.png');
   const [logoPath, setLogoPath] = useState(settings.logoPath || '');
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '919490123456');
   const [phoneNumber, setPhoneNumber] = useState(settings.phone || settings.phoneNumber || '+91 94901 23456');
@@ -156,7 +156,7 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
               Company Logo
             </label>
             <div className="flex items-center gap-3">
-              <div className="relative w-14 h-14 rounded-2xl bg-forest-950 p-1 overflow-hidden shrink-0 border border-cream-200">
+              <div className="relative w-16 h-16 rounded-xl bg-white p-1 overflow-hidden shrink-0 border border-cream-200 shadow-sm flex items-center justify-center">
                 {logoUrl && (
                   <Image src={logoUrl} alt="Logo preview" fill className="object-contain" />
                 )}

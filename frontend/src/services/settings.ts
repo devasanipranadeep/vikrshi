@@ -24,7 +24,7 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
     legalName: `${row.company_name} (Incorporated under MCA India)`,
     tagline: 'Fresh Organic Produce from Farm to Home',
     shortDescription: row.footer_description || 'Pesticide-free organic vegetables and fresh fruits.',
-    logoUrl: row.logo_url || '/logo-emblem.png',
+    logoUrl: row.logo_url || '/logo.png',
     logoPath: row.logo_path,
     whatsappNumber: whatsapp,
     whatsappDisplay: displayWa,
