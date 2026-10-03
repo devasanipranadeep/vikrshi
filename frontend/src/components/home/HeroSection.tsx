@@ -11,6 +11,10 @@ import { motion } from 'framer-motion';
 
 const heroImages = [
   {
+    src: '/hero/farm-6.jpg',
+    alt: 'Farmers planting fresh paddy saplings in waterlogged organic fields at sunset',
+  },
+  {
     src: '/hero/farm-1.jpg?v=2',
     alt: 'Sunlit organic farm fields at golden hour',
   },
