@@ -76,8 +76,8 @@ export function ProcessTimeline() {
           </p>
         </div>
 
-        {/* Desktop / Tablet Timeline Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 relative">
+        {/* Timeline Grid - 2 per line on mobile, 6 on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 relative">
           {/* Connector line for desktop */}
           <div className="hidden lg:block absolute top-14 left-10 right-10 h-0.5 bg-gradient-to-r from-leaf-500/30 via-leaf-400 to-leaf-500/30 -z-0" />
 
@@ -89,30 +89,26 @@ export function ProcessTimeline() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="group relative z-10 flex flex-col items-center text-center p-5 rounded-2xl bg-forest-900/80 backdrop-blur-md border border-leaf-500/20 hover:border-leaf-400/50 shadow-lg transition-all duration-300"
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                whileHover={{ y: -6 }}
+                className="group relative z-10 flex flex-col items-center text-center p-3.5 sm:p-5 rounded-2xl bg-forest-900/80 backdrop-blur-md border border-leaf-500/20 hover:border-leaf-400/50 shadow-lg transition-all duration-300 justify-center"
               >
                 {/* Step indicator pill */}
-                <span className="text-[10px] font-bold uppercase tracking-widest text-leaf-300 mb-2">
+                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-leaf-300 mb-1.5 sm:mb-2">
                   {item.time}
                 </span>
 
                 {/* Icon bubble */}
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-leaf-500/20 text-leaf-300 border border-leaf-400/30 shadow-md group-hover:scale-110 group-hover:bg-leaf-500 group-hover:text-white transition-all duration-300 mb-4">
-                  <Icon className="h-6 w-6" />
-                  <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-harvest-gold text-[10px] font-bold text-forest-950">
+                <div className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-leaf-500/20 text-leaf-300 border border-leaf-400/30 shadow-md group-hover:scale-110 group-hover:bg-leaf-500 group-hover:text-white transition-all duration-300 mb-2.5 sm:mb-4">
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-harvest-gold text-[9px] sm:text-[10px] font-bold text-forest-950">
                     {item.step}
                   </span>
                 </div>
 
-                <h3 className="font-serif text-lg font-bold text-white mb-2 group-hover:text-leaf-300 transition-colors">
+                <h3 className="font-serif text-xs sm:text-base lg:text-lg font-bold text-white group-hover:text-leaf-300 transition-colors leading-snug">
                   {item.title}
                 </h3>
-
-                <p className="text-xs text-cream-200/70 leading-relaxed">
-                  {item.desc}
-                </p>
               </motion.div>
             );
           })}
