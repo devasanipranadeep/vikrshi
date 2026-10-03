@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ContactMessageItem, MessageStatus } from '@/types';
 import { updateMessageStatusAction, deleteMessageAction } from '@/actions/contacts';
 import {
@@ -14,6 +14,7 @@ import {
   Clock,
   Archive,
   MessageSquare,
+  Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -23,39 +24,99 @@ interface MessagesManagerProps {
 }
 
 export function MessagesManager({ messages, onMessageUpdated }: MessagesManagerProps) {
+  const [localMessages, setLocalMessages] = useState<ContactMessageItem[]>(messages);
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const filteredMessages = messages.filter((m) => {
+  useEffect(() => {
+    setLocalMessages(messages);
+  }, [messages]);
+
+  const filteredMessages = localMessages.filter((m) => {
     if (filterStatus === 'all') return true;
     return m.status === filterStatus;
   });
 
   const handleStatusChange = async (id: string, status: MessageStatus) => {
+    const previous = localMessages;
+    setLocalMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, status } : m))
+    );
+
     try {
       const res = await updateMessageStatusAction(id, status);
       if (res.success) {
         toast.success(`Message marked as ${status}`);
         onMessageUpdated();
       } else {
-        toast.error(res.error || 'Failed to update message');
+        // Fallback to API route
+        const apiRes = await fetch('/api/contact', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, status }),
+        });
+        if (apiRes.ok) {
+          toast.success(`Message marked as ${status}`);
+          onMessageUpdated();
+        } else {
+          setLocalMessages(previous);
+          toast.error(res.error || 'Failed to update message');
+        }
       }
     } catch (err: any) {
+      setLocalMessages(previous);
       toast.error(err.message || 'Status update failed');
     }
   };
 
   const handleDelete = async (id: string, senderName: string) => {
     if (!window.confirm(`Delete message from ${senderName}?`)) return;
+
+    const previousMessages = localMessages;
+    // Optimistically remove from view immediately
+    setLocalMessages((prev) => prev.filter((m) => m.id !== id));
+    setDeletingId(id);
+
     try {
+      // 1. First attempt: Server Action with Admin Privileges
       const res = await deleteMessageAction(id);
-      if (res.success) {
-        toast.success('Message deleted');
+      if (res && res.success) {
+        toast.success('Message deleted successfully');
+        onMessageUpdated();
+        return;
+      }
+
+      // 2. Fallback: Privileged API route delete
+      const apiRes = await fetch(`/api/contact?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      const apiJson = await apiRes.json().catch(() => null);
+
+      if (apiRes.ok && apiJson?.success) {
+        toast.success('Message deleted successfully');
         onMessageUpdated();
       } else {
-        toast.error(res.error || 'Failed to delete');
+        // Revert local state if both failed
+        setLocalMessages(previousMessages);
+        toast.error(apiJson?.error || res?.error || 'Failed to delete message');
       }
     } catch (err: any) {
+      // Last-ditch API call
+      try {
+        const fallbackRes = await fetch(`/api/contact?id=${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+        });
+        if (fallbackRes.ok) {
+          toast.success('Message deleted successfully');
+          onMessageUpdated();
+          return;
+        }
+      } catch {}
+
+      setLocalMessages(previousMessages);
       toast.error(err.message || 'Delete failed');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -170,10 +231,15 @@ export function MessagesManager({ messages, onMessageUpdated }: MessagesManagerP
 
                     <button
                       onClick={() => handleDelete(msg.id, msg.name)}
-                      className="p-1.5 rounded-lg text-forest-400 hover:text-red-600 hover:bg-cream-100 transition-colors"
+                      disabled={deletingId === msg.id}
+                      className="p-1.5 rounded-lg text-forest-400 hover:text-red-600 hover:bg-cream-100 transition-colors disabled:opacity-50 cursor-pointer"
                       title="Delete message"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      {deletingId === msg.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-red-600" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
                     </button>
                   </div>
                 </div>

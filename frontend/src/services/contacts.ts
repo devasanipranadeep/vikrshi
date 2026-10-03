@@ -65,6 +65,21 @@ export const contactService = {
    * Admin: Get contact messages
    */
   async getContactMessages(statusFilter?: string, customClient?: any): Promise<ContactMessageItem[]> {
+    if (typeof window !== 'undefined' && !customClient) {
+      try {
+        const url = statusFilter && statusFilter !== 'all' ? `/api/contact?status=${encodeURIComponent(statusFilter)}` : '/api/contact';
+        const res = await fetch(url);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            return json.data;
+          }
+        }
+      } catch (err) {
+        console.warn('API route fetch failed, trying direct client:', err);
+      }
+    }
+
     try {
       const client = getClient(customClient);
       let query = client
@@ -102,6 +117,19 @@ export const contactService = {
    * Admin: Update message status
    */
   async updateMessageStatus(id: string, status: MessageStatus, customClient?: any): Promise<void> {
+    if (typeof window !== 'undefined' && !customClient) {
+      const res = await fetch('/api/contact', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        throw new Error(json?.error || 'Failed to update message status');
+      }
+      return;
+    }
+
     const client = getClient(customClient);
     const { error } = await client
       .from('contact_messages')
@@ -114,6 +142,17 @@ export const contactService = {
    * Super Admin: Delete message
    */
   async deleteMessage(id: string, customClient?: any): Promise<void> {
+    if (typeof window !== 'undefined' && !customClient) {
+      const res = await fetch(`/api/contact?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        throw new Error(json?.error || 'Failed to delete message');
+      }
+      return;
+    }
+
     const client = getClient(customClient);
     const { error } = await client.from('contact_messages').delete().eq('id', id);
     if (error) throw new Error(error.message);
