@@ -21,7 +21,7 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden bg-forest-950 text-white pt-20 pb-16">
+    <section className="relative min-h-screen min-h-[100dvh] flex flex-col overflow-hidden bg-forest-950 text-white">
       {/* Background Hero Image with Balanced Depth */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -37,7 +37,7 @@ export function HeroSection() {
       </div>
 
       {/* Main Content Container - Ultra Clean, Spacious & High-Impact */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full h-full min-h-screen min-h-[100dvh] pt-32 sm:pt-40 pb-16 sm:pb-20">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-between w-full flex-1 pt-32 sm:pt-40 pb-12 sm:pb-16">
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
