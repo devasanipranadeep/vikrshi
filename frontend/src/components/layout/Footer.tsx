@@ -86,7 +86,7 @@ export function Footer() {
         </div>
 
         {/* Main Footer Links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-forest-800/80">
+        <div className="flex flex-col lg:grid lg:grid-cols-5 gap-8 lg:gap-10 pb-12 border-b border-forest-800/80">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-3">
@@ -140,105 +140,108 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-3">
-            <h4 className="font-serif text-lg font-semibold text-white">Explore</h4>
-            <ul className="space-y-2 text-sm text-cream-200/80">
-              <li>
-                <Link href="/" className="hover:text-leaf-300 transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop" className="hover:text-leaf-300 transition-colors">
-                  Shop All Produce
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop?category=vegetables" className="hover:text-leaf-300 transition-colors">
-                  Fresh Vegetables
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop?category=fruits" className="hover:text-leaf-300 transition-colors">
-                  Fresh Fruits
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop?category=greens" className="hover:text-leaf-300 transition-colors">
-                  Leafy Greens
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop?category=seasonal" className="hover:text-leaf-300 transition-colors">
-                  Seasonal Produce
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* 3 Columns in a single line on mobile (Explore, Company, Farm Hub) */}
+          <div className="grid grid-cols-3 gap-2.5 sm:gap-6 lg:contents">
+            {/* Quick Links */}
+            <div className="space-y-2 sm:space-y-3">
+              <h4 className="font-serif text-sm sm:text-base lg:text-lg font-semibold text-white">Explore</h4>
+              <ul className="space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs md:text-sm text-cream-200/80">
+                <li>
+                  <Link href="/" className="hover:text-leaf-300 transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shop" className="hover:text-leaf-300 transition-colors">
+                    Shop All Produce
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shop?category=vegetables" className="hover:text-leaf-300 transition-colors">
+                    Fresh Vegetables
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shop?category=fruits" className="hover:text-leaf-300 transition-colors">
+                    Fresh Fruits
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shop?category=greens" className="hover:text-leaf-300 transition-colors">
+                    Leafy Greens
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shop?category=seasonal" className="hover:text-leaf-300 transition-colors">
+                    Seasonal Produce
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Company & Knowledge */}
-          <div className="space-y-3">
-            <h4 className="font-serif text-lg font-semibold text-white">Company</h4>
-            <ul className="space-y-2 text-sm text-cream-200/80">
-              <li>
-                <Link href="/about" className="hover:text-leaf-300 transition-colors">
-                  Our Story & Mission
-                </Link>
-              </li>
-              <li>
-                <Link href="/reviews" className="hover:text-leaf-300 transition-colors">
-                  Customer Reviews
-                </Link>
-              </li>
-              <li>
-                <Link href="/locations" className="hover:text-leaf-300 transition-colors">
-                  Service Locations
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-leaf-300 transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="hover:text-leaf-300 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-leaf-300 transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Company & Knowledge */}
+            <div className="space-y-2 sm:space-y-3">
+              <h4 className="font-serif text-sm sm:text-base lg:text-lg font-semibold text-white">Company</h4>
+              <ul className="space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs md:text-sm text-cream-200/80">
+                <li>
+                  <Link href="/about" className="hover:text-leaf-300 transition-colors">
+                    Our Story & Mission
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/reviews" className="hover:text-leaf-300 transition-colors">
+                    Customer Reviews
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/locations" className="hover:text-leaf-300 transition-colors">
+                    Service Locations
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="hover:text-leaf-300 transition-colors">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy-policy" className="hover:text-leaf-300 transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms" className="hover:text-leaf-300 transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Contact Hub */}
-          <div className="space-y-3">
-            <h4 className="font-serif text-lg font-semibold text-white">Farm Hub</h4>
-            <div className="space-y-2.5 text-xs text-cream-200/80">
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-leaf-300 shrink-0 mt-0.5" />
-                <span>
-                  {settings.address.fullText || settings.address.line1}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-leaf-300 shrink-0" />
-                <a href={`tel:${settings.phone}`} className="hover:text-white">
-                  {settings.phone}
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-leaf-300 shrink-0" />
-                <a href={`mailto:${settings.email}`} className="hover:text-white">
-                  {settings.email}
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-leaf-300 shrink-0" />
-                <span>{settings.businessHours.fullText || settings.businessHours.weekdays}</span>
+            {/* Contact Hub */}
+            <div className="space-y-2 sm:space-y-3">
+              <h4 className="font-serif text-sm sm:text-base lg:text-lg font-semibold text-white">Farm Hub</h4>
+              <div className="space-y-2 sm:space-y-2.5 text-[10px] sm:text-xs text-cream-200/80">
+                <div className="flex items-start gap-1.5 sm:gap-2">
+                  <MapPin className="h-3.5 w-3.5 text-leaf-300 shrink-0 mt-0.5" />
+                  <span className="leading-tight">
+                    {settings.address.fullText || settings.address.line1}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Phone className="h-3.5 w-3.5 text-leaf-300 shrink-0" />
+                  <a href={`tel:${settings.phone}`} className="hover:text-white truncate">
+                    {settings.phone}
+                  </a>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Mail className="h-3.5 w-3.5 text-leaf-300 shrink-0" />
+                  <a href={`mailto:${settings.email}`} className="hover:text-white truncate">
+                    {settings.email}
+                  </a>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Clock className="h-3.5 w-3.5 text-leaf-300 shrink-0" />
+                  <span className="leading-tight">{settings.businessHours.fullText || settings.businessHours.weekdays}</span>
+                </div>
               </div>
             </div>
           </div>
