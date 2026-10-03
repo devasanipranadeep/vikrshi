@@ -27,8 +27,8 @@ const heroImages = [
     alt: 'Farmer harvesting fresh produce at dawn',
   },
   {
-    src: 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&w=2000&q=85',
-    alt: 'Basket of freshly picked organic vegetables',
+    src: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=2000&q=85',
+    alt: 'Fresh organic farm vegetables and harvest',
   },
 ];
 
@@ -69,7 +69,7 @@ export function HeroSection() {
               src={img.src}
               alt={img.alt}
               fill
-              priority={index <= 1}
+              priority
               sizes="100vw"
               className="object-cover object-center"
             />
