@@ -81,7 +81,9 @@ export function LocationSelectorModal() {
             {filteredLocations.length === 0 ? (
               <div className="py-8 text-center">
                 <AlertCircle className="mx-auto h-8 w-8 text-leaf-500/60 mb-2" />
-                <p className="text-sm font-medium text-forest-900">No matching areas found</p>
+                <p className="text-sm font-medium text-forest-900">
+                  {locations.length === 0 ? 'Locations Updating Soon' : 'No matching areas found'}
+                </p>
                 <p className="text-xs text-forest-700/70 mt-1">
                   We are expanding rapidly across Telangana and South India. Contact us on WhatsApp for custom farm delivery requests!
                 </p>

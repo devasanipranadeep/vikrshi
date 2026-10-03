@@ -173,107 +173,117 @@ export default function LocationsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activeLocations.map((loc) => {
-              const isSelected = selectedLocation.toLowerCase() === loc.cityName.toLowerCase();
-              const whatsappChatUrl = buildGeneralWhatsAppUrl({
-                phone: settings.whatsappNumber,
-                companyName: settings.companyName,
-                location: loc.cityName,
-              });
+          {activeLocations.length === 0 ? (
+            <div className="rounded-2xl bg-white p-8 border border-cream-200 text-center shadow-2xs">
+              <Building className="mx-auto h-8 w-8 text-leaf-500/60 mb-2" />
+              <p className="text-sm font-semibold text-forest-900">Service Locations Updating Soon</p>
+              <p className="text-xs text-forest-700/70 mt-1 max-w-md mx-auto">
+                Our active delivery hubs and service areas are currently being updated. Please contact us via WhatsApp for direct delivery inquiries in your area.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {activeLocations.map((loc) => {
+                const isSelected = selectedLocation.toLowerCase() === loc.cityName.toLowerCase();
+                const whatsappChatUrl = buildGeneralWhatsAppUrl({
+                  phone: settings.whatsappNumber,
+                  companyName: settings.companyName,
+                  location: loc.cityName,
+                });
 
-              return (
-                <div
-                  key={loc.id}
-                  className={`rounded-2xl bg-white p-6 border transition-all duration-300 shadow-2xs hover:shadow-xl flex flex-col justify-between ${
-                    isSelected ? 'border-leaf-500 ring-2 ring-leaf-500/20' : 'border-cream-200'
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-serif text-2xl font-bold text-forest-950">
-                            {loc.cityName}
-                          </h3>
-                          <span className="text-xs text-forest-700/70 font-medium">
-                            ({loc.state})
+                return (
+                  <div
+                    key={loc.id}
+                    className={`rounded-2xl bg-white p-6 border transition-all duration-300 shadow-2xs hover:shadow-xl flex flex-col justify-between ${
+                      isSelected ? 'border-leaf-500 ring-2 ring-leaf-500/20' : 'border-cream-200'
+                    }`}
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-serif text-2xl font-bold text-forest-950">
+                              {loc.cityName}
+                            </h3>
+                            <span className="text-xs text-forest-700/70 font-medium">
+                              ({loc.state})
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 rounded-full bg-leaf-500/10 px-2.5 py-0.5 text-xs font-semibold text-leaf-600 mt-1">
+                            <Clock className="h-3 w-3" />
+                            {loc.deliveryAvailability}
                           </span>
                         </div>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-leaf-500/10 px-2.5 py-0.5 text-xs font-semibold text-leaf-600 mt-1">
-                          <Clock className="h-3 w-3" />
-                          {loc.deliveryAvailability}
-                        </span>
-                      </div>
 
-                      {isSelected && (
-                        <span className="flex items-center gap-1 rounded-full bg-leaf-500 text-white text-[11px] font-bold px-2 py-0.5">
-                          <Check className="h-3 w-3" />
-                          Selected
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Depot Hub details */}
-                    <div className="space-y-2 text-xs text-forest-700/80 pt-2 border-t border-cream-100">
-                      <div className="flex items-start gap-2">
-                        <Building className="h-3.5 w-3.5 text-leaf-500 shrink-0 mt-0.5" />
-                        <span>
-                          {loc.isDefault || loc.cityName.toLowerCase() === 'hyderabad' || loc.hubAddress?.includes('Chevella') || loc.hubAddress?.includes('Shamshabad')
-                            ? (settings.address?.fullText || 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.')
-                            : (loc.hubAddress || loc.address)}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-3.5 w-3.5 text-leaf-500 shrink-0" />
-                        <span>Hours: {loc.operatingHours}</span>
-                      </div>
-                    </div>
-
-                    {/* Coverage Areas */}
-                    <div>
-                      <h4 className="text-[11px] font-bold uppercase tracking-wider text-forest-700/70 mb-2">
-                        Key Coverage Neighborhoods:
-                      </h4>
-                      <div className="flex flex-wrap gap-1.5">
-                        {loc.deliveryAreas.map((area) => (
-                          <span
-                            key={area}
-                            className="rounded-lg bg-cream-100 px-2 py-0.5 text-[11px] text-forest-800"
-                          >
-                            {area}
+                        {isSelected && (
+                          <span className="flex items-center gap-1 rounded-full bg-leaf-500 text-white text-[11px] font-bold px-2 py-0.5">
+                            <Check className="h-3 w-3" />
+                            Selected
                           </span>
-                        ))}
+                        )}
+                      </div>
+
+                      {/* Depot Hub details */}
+                      <div className="space-y-2 text-xs text-forest-700/80 pt-2 border-t border-cream-100">
+                        <div className="flex items-start gap-2">
+                          <Building className="h-3.5 w-3.5 text-leaf-500 shrink-0 mt-0.5" />
+                          <span>
+                            {loc.isDefault || loc.cityName.toLowerCase() === 'hyderabad' || loc.hubAddress?.includes('Chevella') || loc.hubAddress?.includes('Shamshabad')
+                              ? (settings.address?.fullText || 'H-No. 2-41/1, Zapthi Singaipalli, Cheelasagar, Mulugu Mandal, Siddipet, Telangana 502279-India.')
+                              : (loc.hubAddress || loc.address)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3.5 w-3.5 text-leaf-500 shrink-0" />
+                          <span>Hours: {loc.operatingHours}</span>
+                        </div>
+                      </div>
+
+                      {/* Coverage Areas */}
+                      <div>
+                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-forest-700/70 mb-2">
+                          Key Coverage Neighborhoods:
+                        </h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {loc.deliveryAreas.map((area) => (
+                            <span
+                              key={area}
+                              className="rounded-lg bg-cream-100 px-2 py-0.5 text-[11px] text-forest-800"
+                            >
+                              {area}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Actions */}
-                  <div className="mt-6 pt-4 border-t border-cream-100 flex items-center gap-2">
-                    <button
-                      onClick={() => setSelectedLocation(loc.cityName)}
-                      className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                        isSelected
-                          ? 'bg-leaf-100 text-leaf-700'
-                          : 'bg-forest-900 hover:bg-forest-800 text-white'
-                      }`}
-                    >
-                      {isSelected ? 'Default Location' : 'Set as Delivery City'}
-                    </button>
-                    <a
-                      href={whatsappChatUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-xl bg-[#25D366] text-white hover:bg-[#20ba5a] transition-colors"
-                      title="Inquire via WhatsApp"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                    </a>
+                    {/* Actions */}
+                    <div className="mt-6 pt-4 border-t border-cream-100 flex items-center gap-2">
+                      <button
+                        onClick={() => setSelectedLocation(loc.cityName)}
+                        className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                          isSelected
+                            ? 'bg-leaf-100 text-leaf-700'
+                            : 'bg-forest-900 hover:bg-forest-800 text-white'
+                        }`}
+                      >
+                        {isSelected ? 'Default Location' : 'Set as Delivery City'}
+                      </button>
+                      <a
+                        href={whatsappChatUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-xl bg-[#25D366] text-white hover:bg-[#20ba5a] transition-colors"
+                        title="Inquire via WhatsApp"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Upcoming Locations */}
