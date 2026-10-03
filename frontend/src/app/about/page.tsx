@@ -87,10 +87,10 @@ export default function AboutPage() {
               Every day across India, vegetables travel through three to four middle-tier wholesale markets, spending up to a week in refrigerated trucks before reaching city households. By then, their vital enzymes have deteriorated, cellular water has transpired, and natural fragrances have vanished.
             </p>
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              <strong>Vikrshi Suppliers Pvt Ltd</strong> was founded with an uncompromising purpose: dismantle this industrial food delay. We partnered with smallholder farmers within a 100km perimeter of Hyderabad to establish an 8-hour harvest-to-kitchen model.
+              <strong>Vikrshi Suppliers Pvt Ltd</strong> was founded with an uncompromising purpose: dismantle this industrial food delay. We partnered with smallholder farmers within a 100km perimeter of Hyderabad to establish a 12-hour harvest-to-kitchen model.
             </p>
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              When our farmers pluck tomatoes, dig up carrots, or harvest baby spinach at dawn, those exact crops are on their way to your home before the afternoon sun reaches its zenith.
+              When our farmers pluck tomatoes, dig up carrots, or harvest baby spinach at dawn, those exact crops are on their way to your home for same-day delivery by 5:00 PM.
             </p>
 
             <div className="pt-2 flex items-center gap-6">

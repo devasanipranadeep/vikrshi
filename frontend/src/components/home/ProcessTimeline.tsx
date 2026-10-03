@@ -15,45 +15,45 @@ export function ProcessTimeline() {
   const steps = [
     {
       step: '01',
-      icon: Sprout,
-      title: 'Regenerative Farm',
-      desc: 'Nourished by indigenous Jeevamrutham bio-cultures, vermicompost, and clean groundwater.',
-      time: 'Day 0',
+      icon: Sun,
+      title: 'Dawn Harvest',
+      desc: 'Harvested fresh from fields at 5:00 AM before sunrise to lock in natural vitamins and moisture.',
+      time: '5:00 AM',
     },
     {
       step: '02',
-      icon: Sun,
-      title: 'Dawn Harvest',
-      desc: 'Hand-picked at 4:30 AM before peak solar transpiration to preserve crisp hydration.',
-      time: '4:30 AM',
+      icon: ShieldCheck,
+      title: 'Quality Grading',
+      desc: 'Cold-water rinsed and manually graded for peak nutritional maturity and zero blemishes.',
+      time: '7:30 AM',
     },
     {
       step: '03',
-      icon: ShieldCheck,
-      title: 'Quality Selection',
-      desc: 'Rinsed in cold spring water and hand-graded for peak ripeness and zero blemishes.',
-      time: '6:00 AM',
+      icon: PackageCheck,
+      title: 'Eco Packaging',
+      desc: 'Wrapped in breathable compostable paper and jute to allow fresh leaves to breathe naturally.',
+      time: '10:00 AM',
     },
     {
       step: '04',
-      icon: PackageCheck,
-      title: 'Eco Packaging',
-      desc: 'Wrapped in breathable compostable paper and jute to allow leaves to breathe naturally.',
-      time: '7:30 AM',
+      icon: Sprout,
+      title: 'Central Hub Intake',
+      desc: 'Temperature-stabilized transit directly to our central Hyderabad sorting depot.',
+      time: '1:00 PM',
     },
     {
       step: '05',
       icon: Truck,
       title: 'Direct Dispatch',
-      desc: 'Temperature-stabilized morning routes deployed straight from Shamshabad hub.',
-      time: '8:30 AM',
+      desc: 'Evening express routes deployed directly across Hyderabad residential hubs.',
+      time: '3:30 PM',
     },
     {
       step: '06',
       icon: HeartHandshake,
       title: 'At Your Doorstep',
-      desc: 'Delivered to your kitchen table ready to enrich healthy meals for your family.',
-      time: 'Morning Run',
+      desc: 'Delivered to your kitchen at 5:00 PM the exact same day, ready for wholesome family meals.',
+      time: '5:00 PM',
     },
   ];
 
@@ -69,10 +69,10 @@ export function ProcessTimeline() {
             Transparent Supply Cycle
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
-            The 8-Hour Farm to Home Journey
+            The 12-Hour Farm to Home Journey
           </h2>
           <p className="mt-3 text-sm sm:text-base text-cream-200/80 leading-relaxed">
-            Every step is engineered to safeguard biological freshness without commercial chemical delay.
+            Harvested at 5:00 AM from organic partner farms and delivered to your doorstep by 5:00 PM the same day.
           </p>
         </div>
 

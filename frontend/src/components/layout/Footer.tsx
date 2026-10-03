@@ -58,8 +58,8 @@ export function Footer() {
               <Truck className="h-5 w-5" />
             </div>
             <div>
-              <h5 className="font-semibold text-white">Morning Farm Run</h5>
-              <p className="text-xs text-cream-200/70">Delivered within 8 hours of harvest</p>
+              <h5 className="font-semibold text-white">Same-Day Farm Run</h5>
+              <p className="text-xs text-cream-200/70">Delivered within 12 hours of harvest</p>
             </div>
           </div>
 
