@@ -47,6 +47,27 @@ export function StorySection() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Mobile Header: Visible only on mobile screens (< lg), positioned before the image */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:hidden space-y-4 mb-8"
+        >
+          <div>
+            <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/60 px-3 py-1 rounded-full inline-block mb-3">
+              Our Root Story
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-forest-950 tracking-tight leading-tight">
+              Fresh food should travel the shortest possible journey.
+            </h2>
+          </div>
+          <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
+            At <strong>Vikrshi Suppliers Pvt Ltd</strong>, We replaced middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your products were rooted in living soil just hours before arriving at your community in Hyderabad.
+          </p>
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Imagery Grid - slides in when scrolling down, slides out when scrolling up */}
           <motion.div
@@ -96,18 +117,21 @@ export function StorySection() {
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6"
           >
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/60 px-3 py-1 rounded-full inline-block mb-3">
-                Our Root Story
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest-950 tracking-tight leading-tight">
-                Fresh food should travel the shortest possible journey.
-              </h2>
-            </div>
+            {/* Desktop Header: Hidden on mobile (< lg), visible on desktop (>= lg) */}
+            <div className="hidden lg:block space-y-4">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/60 px-3 py-1 rounded-full inline-block mb-3">
+                  Our Root Story
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest-950 tracking-tight leading-tight">
+                  Fresh food should travel the shortest possible journey.
+                </h2>
+              </div>
 
-            <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              At <strong>Vikrshi Suppliers Pvt Ltd</strong>, We replaced middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your products were rooted in living soil just hours before arriving at your community in Hyderabad.
-            </p>
+              <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
+                At <strong>Vikrshi Suppliers Pvt Ltd</strong>, We replaced middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your products were rooted in living soil just hours before arriving at your community in Hyderabad.
+              </p>
+            </div>
 
             {/* Pillars list */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
