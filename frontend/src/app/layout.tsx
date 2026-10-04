@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Vikrshi Suppliers Pvt Ltd | Fresh Organic Farm Products',
     description:
-      'Responsibly grown vegetables and fruits delivered from trusted farms to your doorstep in Hyderabad.',
+      'Responsibly grown vegetables and fruits delivered from trusted farms to your community in Hyderabad.',
     images: ['https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80'],
   },
   icons: {

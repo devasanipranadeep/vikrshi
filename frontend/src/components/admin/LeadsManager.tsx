@@ -62,7 +62,7 @@ export function LeadsManager({ leads, onLeadUpdated }: LeadsManagerProps) {
             WhatsApp Orders & Dispatch Inquiries
           </h2>
           <p className="text-xs sm:text-sm text-forest-600 mt-0.5">
-            Manage incoming WhatsApp customer orders, custom requests, and doorstep deliveries.
+            Manage incoming WhatsApp customer orders, custom requests, and community deliveries.
           </p>
         </div>
 

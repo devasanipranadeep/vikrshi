@@ -276,7 +276,7 @@ export function ReviewModal({ isOpen, onClose, onReviewSubmitted }: ReviewModalP
                   maxLength={1000}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="Describe the freshness, taste, early morning doorstep delivery, or packaging..."
+                  placeholder="Describe the freshness, taste, early morning community delivery, or packaging..."
                   className="w-full px-3.5 py-2.5 rounded-xl border border-forest-200 text-sm focus:outline-none focus:ring-2 focus:ring-leaf-500/20 focus:border-leaf-600 resize-none"
                 />
               </div>
