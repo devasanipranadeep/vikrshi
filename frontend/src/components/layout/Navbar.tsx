@@ -65,10 +65,10 @@ export function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
-    { name: 'Reviews', href: '/reviews' },
     { name: 'About Us', href: '/about' },
     { name: 'Locations', href: '/locations' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Reviews', href: '/reviews' },
   ];
 
   const whatsappUrl = buildGeneralWhatsAppUrl({
