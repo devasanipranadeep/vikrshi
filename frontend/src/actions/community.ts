@@ -27,8 +27,8 @@ export interface CommunityRequestFormInput {
 
 export async function submitCommunityRequestAction(input: CommunityRequestFormInput) {
   try {
-    if (!input.applicantName?.trim() || !input.communityName?.trim() || !input.address?.trim() || !input.source?.trim()) {
-      return { success: false, error: 'Please provide all required fields' };
+    if (!input.applicantName?.trim() || !input.phone?.trim() || !input.communityName?.trim() || !input.address?.trim() || !input.source?.trim()) {
+      return { success: false, error: 'Please provide all required fields (including Phone / WhatsApp)' };
     }
 
     const adminClient = getServerAdminClient();

@@ -113,8 +113,8 @@ export function CommunityRequestModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!applicantName.trim() || !communityName.trim() || !address.trim() || !source) {
-      toast.error('Please fill in all required fields.');
+    if (!applicantName.trim() || !phone.trim() || !communityName.trim() || !address.trim() || !source) {
+      toast.error('Please fill in all required fields, including Phone / WhatsApp.');
       return;
     }
 
@@ -299,14 +299,14 @@ export function CommunityRequestModal() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-forest-900 mb-1 flex items-center justify-between">
-                    <span>Phone / WhatsApp</span>
-                    <span className="text-[10px] text-forest-500 font-normal">Optional</span>
+                  <label className="block text-xs font-semibold text-forest-900 mb-1">
+                    Phone / WhatsApp <span className="text-leaf-600">*</span>
                   </label>
                   <div className="relative group">
                     <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-forest-400 group-focus-within:text-leaf-600 transition-colors" />
                     <input
                       type="tel"
+                      required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="e.g. +91 98765 43210"
