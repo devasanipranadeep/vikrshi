@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useSettings } from '@/context/SettingsContext';
 import { buildCommunityRequestWhatsAppUrl } from '@/utils/whatsapp';
 import { submitCommunityRequestAction } from '@/actions/community';
@@ -36,6 +37,9 @@ const HEAR_ABOUT_OPTIONS = [
 
 export function CommunityRequestModal() {
   const { settings } = useSettings();
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
+
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -48,13 +52,44 @@ export function CommunityRequestModal() {
   const [details, setDetails] = useState('');
 
   useEffect(() => {
-    // Trigger popup after exactly 7 seconds of landing on the site
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 7000);
+    // Never show on admin pages
+    if (isAdmin) return;
 
-    return () => clearTimeout(timer);
-  }, []);
+    try {
+      // Check if already dismissed or completed in this session
+      if (sessionStorage.getItem('vikrshi_community_popup_dismissed') === 'true') {
+        return;
+      }
+
+      // Record when the user first arrived at the website
+      const now = Date.now();
+      let visitStart = sessionStorage.getItem('vikrshi_visit_start');
+      if (!visitStart) {
+        visitStart = now.toString();
+        sessionStorage.setItem('vikrshi_visit_start', visitStart);
+      }
+
+      const elapsed = now - parseInt(visitStart, 10);
+      const remaining = Math.max(0, 7000 - elapsed);
+
+      const timer = setTimeout(() => {
+        try {
+          if (sessionStorage.getItem('vikrshi_community_popup_dismissed') !== 'true') {
+            setIsOpen(true);
+          }
+        } catch {
+          setIsOpen(true);
+        }
+      }, remaining);
+
+      return () => clearTimeout(timer);
+    } catch {
+      const fallbackTimer = setTimeout(() => {
+        setIsOpen(true);
+      }, 7000);
+      return () => clearTimeout(fallbackTimer);
+    }
+  }, [isAdmin]);
 
   const handleClose = (e?: React.MouseEvent) => {
     if (e) {
@@ -62,13 +97,16 @@ export function CommunityRequestModal() {
       e.stopPropagation();
     }
     setIsOpen(false);
+    try {
+      sessionStorage.setItem('vikrshi_community_popup_dismissed', 'true');
+    } catch {}
   };
 
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+        handleClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -98,6 +136,10 @@ export function CommunityRequestModal() {
     });
 
     setIsSubmitted(true);
+    try {
+      sessionStorage.setItem('vikrshi_community_popup_dismissed', 'true');
+    } catch {}
+
     toast.success('Redirecting to WhatsApp with your community request...');
 
     // Persist to Supabase database in the background
@@ -127,7 +169,7 @@ export function CommunityRequestModal() {
     }, 2000);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || isAdmin) return null;
 
   return (
     <div

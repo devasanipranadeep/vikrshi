@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
 import { LocationSelectorModal } from '@/components/layout/LocationSelectorModal';
 import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp';
+import { CommunityRequestModal } from '@/components/home/CommunityRequestModal';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -95,6 +96,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <CartDrawer />
           <LocationSelectorModal />
+          <CommunityRequestModal />
           <FloatingWhatsApp />
           <Footer />
         </AppProviders>
