@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSettings } from '@/context/SettingsContext';
 import { buildCommunityRequestWhatsAppUrl } from '@/utils/whatsapp';
 import {
@@ -31,10 +31,9 @@ const HEAR_ABOUT_OPTIONS = [
 
 export function CommunityRequestModal() {
   const { settings } = useSettings();
-  const [isRendered, setIsRendered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   // Form states
   const [applicantName, setApplicantName] = useState('');
@@ -45,46 +44,32 @@ export function CommunityRequestModal() {
   const [details, setDetails] = useState('');
 
   useEffect(() => {
-    // Check if dismissed previously in this browser session
-    const hasDismissed = sessionStorage.getItem('vikrshi_community_popup_dismissed');
-    if (hasDismissed === 'true') {
-      return;
-    }
-
     // Trigger popup after exactly 7 seconds of landing on the site
     const timer = setTimeout(() => {
-      const isStillDismissed = sessionStorage.getItem('vikrshi_community_popup_dismissed');
-      if (isStillDismissed !== 'true') {
-        setIsRendered(true);
-        // Small delay to allow DOM render before triggering CSS smooth opacity/transform
-        requestAnimationFrame(() => {
-          setTimeout(() => setIsVisible(true), 30);
-        });
-      }
+      setIsOpen(true);
     }, 7000);
 
     return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
-    // Smooth exit transition
-    setIsVisible(false);
-    sessionStorage.setItem('vikrshi_community_popup_dismissed', 'true');
+    setIsClosing(true);
     setTimeout(() => {
-      setIsRendered(false);
-    }, 350);
+      setIsOpen(false);
+      setIsClosing(false);
+    }, 250);
   };
 
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isVisible) {
+      if (e.key === 'Escape' && isOpen) {
         handleClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isVisible]);
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +93,6 @@ export function CommunityRequestModal() {
       },
     });
 
-    sessionStorage.setItem('vikrshi_community_popup_dismissed', 'true');
     setIsSubmitted(true);
     toast.success('Redirecting to WhatsApp with your community request...');
 
@@ -120,33 +104,27 @@ export function CommunityRequestModal() {
     // Smoothly exit after success acknowledgement
     setTimeout(() => {
       handleClose();
-    }, 2200);
+    }, 2000);
   };
 
-  if (!isRendered) return null;
+  if (!isOpen && !isClosing) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 transition-all duration-350 ease-out overflow-y-auto ${
-        isVisible
-          ? 'bg-forest-950/65 backdrop-blur-md opacity-100'
-          : 'bg-forest-950/0 backdrop-blur-none opacity-0 pointer-events-none'
+      className={`fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-forest-950/70 backdrop-blur-md overflow-y-auto transition-opacity duration-250 ease-out ${
+        isClosing ? 'opacity-0' : 'opacity-100'
       }`}
       onClick={(e) => {
-        // Close when clicking directly on backdrop
         if (e.target === e.currentTarget) {
           handleClose();
         }
       }}
     >
       <div
-        ref={modalRef}
-        className={`relative w-full max-w-lg bg-white rounded-3xl sm:rounded-[2rem] shadow-[0_25px_60px_-15px_rgba(20,50,30,0.35)] border border-cream-200/90 overflow-hidden my-auto transform transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isVisible
-            ? 'scale-100 translate-y-0 opacity-100'
-            : 'scale-95 translate-y-6 opacity-0'
+        className={`relative w-full max-w-lg bg-white rounded-3xl sm:rounded-[2rem] shadow-[0_25px_60px_-15px_rgba(20,50,30,0.35)] border border-cream-200/90 overflow-hidden my-auto transform transition-all duration-250 ease-out ${
+          isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
         }`}
       >
         {/* Top Gradient Accent Ribbon */}
@@ -193,7 +171,7 @@ export function CommunityRequestModal() {
         {/* Modal Body */}
         <div className="p-5 sm:p-7 max-h-[72vh] overflow-y-auto">
           {isSubmitted ? (
-            <div className="py-10 text-center space-y-3.5 animate-in fade-in zoom-in-95 duration-300">
+            <div className="py-10 text-center space-y-3.5">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shadow-xs">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
