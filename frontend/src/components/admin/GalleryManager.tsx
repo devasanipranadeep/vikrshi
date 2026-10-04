@@ -57,18 +57,17 @@ export function GalleryManager() {
     if (!file) return;
 
     setIsUploading(true);
+    const toastId = toast.loading('Uploading image to Supabase storage bucket...');
     try {
-      const res = await storageService.uploadSocialImage(file);
+      const res = await storageService.uploadGalleryImage(file);
       setImageUrl(res.imageUrl);
       setImagePath(res.imagePath);
-      toast.success('Story image uploaded successfully!');
+      toast.success('Gallery image saved to Supabase storage bucket!', { id: toastId });
     } catch (err: any) {
-      // If Supabase storage is not configured, fallback to local object URL or direct preview
-      const preview = URL.createObjectURL(file);
-      setImageUrl(preview);
-      toast.info('Using local preview (Storage: ' + (err.message || 'offline fallback') + ')');
+      toast.error(err.message || 'Failed to upload image to Supabase bucket', { id: toastId });
     } finally {
       setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -118,12 +117,15 @@ export function GalleryManager() {
   };
 
   const handleDelete = async (post: SocialPost) => {
-    if (!confirm('Are you sure you want to remove this farm story?')) return;
+    if (!confirm('Are you sure you want to remove this gallery story?')) return;
 
     try {
+      if (post.imagePath) {
+        await storageService.deleteMedia(post.imagePath, 'gallery');
+      }
       const res = await socialService.deletePost(post.id);
       if (res.success) {
-        toast.success('Story removed');
+        toast.success('Gallery story removed');
         notifyStoreUpdate('social');
         loadPosts();
       } else {
@@ -311,12 +313,28 @@ export function GalleryManager() {
 
                 {/* Preview Thumbnail */}
                 {imageUrl && (
-                  <div className="mt-2 relative w-24 h-24 rounded-xl overflow-hidden border border-cream-200 shadow-inner bg-cream-100">
-                    <img
-                      src={imageUrl}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="mt-2.5 flex items-center gap-3">
+                    <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-cream-200 shadow-inner bg-cream-100 shrink-0">
+                      <img
+                        src={imageUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-xs text-forest-700">
+                      {imagePath ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          ✓ Saved to Supabase Bucket
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                          External Image URL
+                        </span>
+                      )}
+                      <p className="text-[11px] text-forest-500 mt-1 truncate max-w-[240px]">
+                        {imageUrl}
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>

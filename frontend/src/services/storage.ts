@@ -4,9 +4,12 @@ const BUCKET_NAME = 'vikrshi-media';
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
+export type StorageFolder = 'products' | 'categories' | 'company' | 'social' | 'gallery';
+
 export interface UploadResult {
   imageUrl: string;
   imagePath: string;
+  bucket?: string;
 }
 
 function validateFile(file: File) {
@@ -20,70 +23,135 @@ function validateFile(file: File) {
 
 function getSanitizedFileName(originalName: string): string {
   const parts = originalName.split('.');
-  const ext = parts.pop() || 'jpg';
+  const ext = (parts.pop() || 'jpg').toLowerCase();
   const cleanBase = parts
     .join('-')
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '-')
     .slice(0, 30);
   const timestamp = Date.now();
-  return `${cleanBase}-${timestamp}.${ext}`;
+  return `${cleanBase || 'media'}-${timestamp}.${ext}`;
 }
 
 export const storageService = {
   /**
-   * Generic file uploader to vikrshi-media bucket
+   * Primary file uploader to Supabase buckets (via server-side admin API, with direct client fallback)
    */
-  async uploadFile(folder: 'products' | 'categories' | 'company' | 'social', file: File): Promise<UploadResult> {
+  async uploadFile(folder: StorageFolder, file: File, customBucket?: string): Promise<UploadResult> {
     validateFile(file);
 
+    const targetBucket = customBucket || (folder === 'gallery' ? 'gallery' : BUCKET_NAME);
+
+    // 1. First attempt: Use the secure server API route which has full Supabase service-role permissions
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', folder);
+      formData.append('bucket', targetBucket);
+
+      const response = await fetch('/api/storage/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        if (json.success && json.imageUrl) {
+          return {
+            imageUrl: json.imageUrl,
+            imagePath: json.imagePath,
+            bucket: json.bucket || targetBucket,
+          };
+        }
+      }
+    } catch {
+      // If server API route is unreachable, fall through to direct browser client
+    }
+
+    // 2. Direct browser client upload fallback
     const client = getBrowserClient();
     const fileName = getSanitizedFileName(file.name);
-    const filePath = `${folder}/${fileName}`;
+    const filePath = targetBucket === 'gallery' ? fileName : `${folder}/${fileName}`;
 
-    const { error } = await client.storage.from(BUCKET_NAME).upload(filePath, file, {
+    const { error } = await client.storage.from(targetBucket).upload(filePath, file, {
       cacheControl: '3600',
       upsert: true,
       contentType: file.type,
     });
 
     if (error) {
+      // If 'gallery' bucket failed, try 'vikrshi-media'
+      if (targetBucket === 'gallery') {
+        const fallbackPath = `gallery/${fileName}`;
+        const fallbackRes = await client.storage.from(BUCKET_NAME).upload(fallbackPath, file, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: file.type,
+        });
+
+        if (!fallbackRes.error) {
+          const { data: publicData } = client.storage.from(BUCKET_NAME).getPublicUrl(fallbackPath);
+          return {
+            imageUrl: publicData.publicUrl,
+            imagePath: fallbackPath,
+            bucket: BUCKET_NAME,
+          };
+        }
+      }
       throw new Error(`Storage upload failed: ${error.message}`);
     }
 
-    const { data: publicData } = client.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+    const { data: publicData } = client.storage.from(targetBucket).getPublicUrl(filePath);
 
     return {
       imageUrl: publicData.publicUrl,
       imagePath: filePath,
+      bucket: targetBucket,
     };
   },
 
+  async uploadGalleryImage(file: File): Promise<UploadResult> {
+    return this.uploadFile('gallery', file, 'gallery');
+  },
+
   async uploadProductImage(file: File): Promise<UploadResult> {
-    return this.uploadFile('products', file);
+    return this.uploadFile('products', file, 'vikrshi-media');
   },
 
   async uploadCategoryImage(file: File): Promise<UploadResult> {
-    return this.uploadFile('categories', file);
+    return this.uploadFile('categories', file, 'vikrshi-media');
   },
 
   async uploadCompanyImage(file: File): Promise<UploadResult> {
-    return this.uploadFile('company', file);
+    return this.uploadFile('company', file, 'vikrshi-media');
   },
 
   async uploadSocialImage(file: File): Promise<UploadResult> {
-    return this.uploadFile('social', file);
+    return this.uploadGalleryImage(file);
   },
 
   /**
    * Delete media using image_path
    */
-  async deleteMedia(imagePath: string): Promise<void> {
+  async deleteMedia(imagePath: string, bucket: string = 'gallery'): Promise<void> {
     if (!imagePath) return;
-    const client = getBrowserClient();
-    const { error } = await client.storage.from(BUCKET_NAME).remove([imagePath]);
-    if (error) {
-      console.warn(`Failed to delete media ${imagePath}:`, error.message);
+
+    // 1. Try server API route
+    try {
+      const res = await fetch(`/api/storage/upload?imagePath=${encodeURIComponent(imagePath)}&bucket=${encodeURIComponent(bucket)}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) return;
+    } catch {
+      // Fall through to browser client
+    }
+
+    // 2. Direct browser client fallback
+    try {
+      const client = getBrowserClient();
+      await client.storage.from(bucket).remove([imagePath]);
+    } catch (err: any) {
+      console.warn(`Failed to delete media ${imagePath}:`, err.message);
     }
   },
 
@@ -93,11 +161,12 @@ export const storageService = {
   async replaceMedia(
     oldPath: string | null | undefined,
     newFile: File,
-    folder: 'products' | 'categories' | 'company'
+    folder: StorageFolder = 'gallery',
+    bucket?: string
   ): Promise<UploadResult> {
     if (oldPath) {
-      await this.deleteMedia(oldPath);
+      await this.deleteMedia(oldPath, bucket);
     }
-    return this.uploadFile(folder, newFile);
+    return this.uploadFile(folder, newFile, bucket);
   },
 };
