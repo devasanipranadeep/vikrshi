@@ -99,8 +99,8 @@ export function BenefitsSection() {
           </p>
         </div>
 
-        {/* Benefits Cards Grid - 3 columns on desktop, 2 on tablet, responsive on mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+        {/* Benefits Cards Grid - 3 columns on desktop, 2 on tablet and mobile */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
@@ -111,17 +111,17 @@ export function BenefitsSection() {
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.4, delay: index * 0.06 }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="group relative rounded-2xl sm:rounded-3xl bg-white/95 sm:bg-white p-5 sm:p-6 lg:p-7 border border-white/80 shadow-[0_8px_30px_rgba(0,0,0,0.10)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.15)] hover:border-leaf-300/60 transition-all duration-300 flex flex-col items-start justify-center backdrop-blur-xs"
+                className="group relative rounded-2xl sm:rounded-3xl bg-white/95 sm:bg-white p-3.5 sm:p-6 lg:p-7 border border-white/80 shadow-[0_8px_30px_rgba(0,0,0,0.10)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.15)] hover:border-leaf-300/60 transition-all duration-300 flex flex-col items-start justify-center backdrop-blur-xs"
                 style={{
                   boxShadow: '0 8px 30px rgba(0,0,0,0.10)',
                 }}
               >
                 <div
-                  className={`flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110 ${benefit.color}`}
+                  className={`flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-lg sm:rounded-xl mb-2.5 sm:mb-4 transition-transform duration-300 group-hover:scale-110 ${benefit.color}`}
                 >
-                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <Icon className="h-4.5 w-4.5 sm:h-6 sm:w-6" />
                 </div>
-                <h3 className="font-serif text-base sm:text-lg md:text-xl font-bold text-forest-950 group-hover:text-leaf-600 transition-colors leading-snug">
+                <h3 className="font-serif text-sm sm:text-lg md:text-xl font-bold text-forest-950 group-hover:text-leaf-600 transition-colors leading-snug">
                   {benefit.title}
                 </h3>
               </motion.div>
