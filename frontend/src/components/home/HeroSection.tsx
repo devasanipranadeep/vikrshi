@@ -32,7 +32,7 @@ const heroImages = [
   },
 ];
 
-const SLIDE_INTERVAL = 5000; // Relaxed 5.0 seconds per slide for premium viewing
+const SLIDE_INTERVAL = 3500; // Relaxed 3.5 seconds per slide for premium viewing
 
 export function HeroSection() {
   const { settings } = useSettings();
