@@ -54,10 +54,8 @@ export function GalleryClient() {
 
   const categories: { id: GalleryCategory; label: string; count?: number }[] = [
     { id: 'all', label: 'All Photos' },
-    { id: 'farms', label: 'Living Soil & Farms' },
-    { id: 'harvest', label: 'Morning Harvest' },
-    { id: 'coldchain', label: 'Cold Chain & Sorting' },
-    { id: 'community', label: 'Community Deliveries' },
+    { id: 'farms', label: 'Farms' },
+    { id: 'community', label: 'Community Delivery' },
   ];
 
   const filteredItems = items.filter((item) => {
@@ -227,7 +225,7 @@ export function GalleryClient() {
                 {/* Top Badge */}
                 <div className="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 z-10">
                   <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider bg-white/90 backdrop-blur-xs text-forest-950 px-2 sm:px-2.5 py-0.5 rounded-full shadow-xs">
-                    {item.category}
+                    {item.category === 'community' ? 'Community Delivery' : 'Farms'}
                   </span>
                 </div>
 
@@ -355,7 +353,7 @@ export function GalleryClient() {
                 <div className="space-y-1.5 max-w-xl">
                   <div className="flex items-center gap-2 flex-wrap text-xs text-leaf-300">
                     <span className="font-bold uppercase tracking-wider bg-leaf-500/20 px-2 py-0.5 rounded-full border border-leaf-400/30">
-                      {activeLightboxItem.category}
+                      {activeLightboxItem.category === 'community' ? 'Community Delivery' : 'Farms'}
                     </span>
                     <span className="flex items-center gap-1">
                       <MapPin className="w-3 h-3" />

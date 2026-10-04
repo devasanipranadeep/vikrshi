@@ -12,7 +12,7 @@ let galleryStore: GalleryItem[] = [...initialGalleryItems];
 const gallerySchema = z.object({
   title: z.string().min(2, 'Title must be at least 2 characters'),
   caption: z.string().optional().default(''),
-  category: z.enum(['farms', 'harvest', 'coldchain', 'community']).default('farms'),
+  category: z.enum(['farms', 'community']).default('farms'),
   locationTag: z.string().optional().default('Telangana, India'),
   imageUrl: z.string().min(1, 'Image URL or file is required'),
   imagePath: z.string().optional().nullable(),

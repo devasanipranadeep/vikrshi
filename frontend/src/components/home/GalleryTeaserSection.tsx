@@ -99,7 +99,7 @@ export function GalleryTeaserSection() {
                 {/* Category Pill */}
                 <div className="absolute top-2.5 left-2.5 z-10">
                   <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-white/95 text-forest-950 px-2 py-0.5 rounded-full shadow-xs">
-                    {item.category}
+                    {item.category === 'community' ? 'Community Delivery' : 'Farms'}
                   </span>
                 </div>
 

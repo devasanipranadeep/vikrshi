@@ -40,7 +40,7 @@ export function GalleryManager() {
   // Form states
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
-  const [category, setCategory] = useState<'farms' | 'harvest' | 'coldchain' | 'community'>('farms');
+  const [category, setCategory] = useState<'farms' | 'community'>('farms');
   const [locationTag, setLocationTag] = useState('Chevella Agro-Cluster, Telangana');
   const [imageUrl, setImageUrl] = useState('');
   const [imagePath, setImagePath] = useState('');
@@ -229,10 +229,8 @@ export function GalleryManager() {
 
   const categoriesList: { id: GalleryCategory; label: string }[] = [
     { id: 'all', label: 'All Photos' },
-    { id: 'farms', label: 'Farms & Living Soil' },
-    { id: 'harvest', label: 'Morning Harvest' },
-    { id: 'coldchain', label: 'Cold Chain & Sorting' },
-    { id: 'community', label: 'Community Deliveries' },
+    { id: 'farms', label: 'Farms' },
+    { id: 'community', label: 'Community Delivery' },
   ];
 
   return (
@@ -347,7 +345,7 @@ export function GalleryManager() {
                 {/* Badges on top */}
                 <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
                   <span className="text-[10px] font-bold uppercase tracking-wider bg-forest-950/80 backdrop-blur-xs text-white px-2.5 py-0.5 rounded-full border border-white/20">
-                    {item.category}
+                    {item.category === 'community' ? 'Community Delivery' : 'Farms'}
                   </span>
                   {item.featured && (
                     <span className="text-[10px] font-bold bg-amber-500 text-forest-950 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
@@ -525,10 +523,8 @@ export function GalleryManager() {
                     onChange={(e: any) => setCategory(e.target.value)}
                     className="w-full text-xs px-3 py-2 rounded-lg border border-cream-200 bg-white focus:outline-hidden focus:ring-2 focus:ring-leaf-500/20 focus:border-leaf-500"
                   >
-                    <option value="farms">Living Soil & Farms</option>
-                    <option value="harvest">Morning Harvest</option>
-                    <option value="coldchain">Cold Chain & Sorting</option>
-                    <option value="community">Community Deliveries</option>
+                    <option value="farms">Farms</option>
+                    <option value="community">Community Delivery</option>
                   </select>
                 </div>
 

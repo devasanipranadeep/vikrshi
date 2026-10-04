@@ -28,7 +28,7 @@ export const galleryService = {
   async createGalleryItem(item: {
     title: string;
     caption?: string;
-    category: 'farms' | 'harvest' | 'coldchain' | 'community';
+    category: 'farms' | 'community';
     locationTag?: string;
     imageUrl: string;
     imagePath?: string;
