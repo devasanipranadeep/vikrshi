@@ -143,6 +143,8 @@ export interface OrderInquiryRecord {
   locationName?: string | null;
   customerName: string | null;
   customerPhone: string | null;
+  deliveryAddress?: string | null;
+  notes?: string | null;
   estimatedTotal: number | null;
   status: 'initiated' | 'whatsapp_redirected' | 'confirmed' | 'cancelled';
   createdAt: string;

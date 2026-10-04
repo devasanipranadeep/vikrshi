@@ -251,6 +251,8 @@ export const orderService = {
         locationName: row.location?.city || 'Hyderabad Hub',
         customerName: row.customer_name,
         customerPhone: row.customer_phone,
+        deliveryAddress: row.delivery_address || null,
+        notes: row.notes || null,
         estimatedTotal: row.estimated_total ? Number(row.estimated_total) : null,
         status: row.status as InquiryStatus,
         createdAt: row.created_at,

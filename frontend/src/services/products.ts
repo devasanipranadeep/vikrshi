@@ -96,7 +96,9 @@ function mapProductRow(
     isSeasonal: row.seasonal,
     isActive: row.is_active,
     sortOrder: row.sort_order,
-    availableLocations: ['all', 'hyderabad'],
+    availableLocations: Array.isArray(locList) && locList.length > 0
+      ? ['all', ...locList.filter((l: any) => l.is_available !== false).map((l: any) => l.location_id)]
+      : ['all', 'hyderabad'],
     locationPrices: locPrices,
     locationAvailability: locAvail,
     originLocation: 'Telangana Organic Partner Farms',

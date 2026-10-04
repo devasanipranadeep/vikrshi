@@ -5,6 +5,7 @@ import { AdminWrapper } from '@/components/admin/AdminWrapper';
 import { OrderInquiriesManager } from '@/components/admin/OrderInquiriesManager';
 import { OrderInquiryRecord } from '@/types';
 import { orderService } from '@/services/orders';
+import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 
 export default function AdminInquiriesPage() {
   const [inquiries, setInquiries] = useState<OrderInquiryRecord[]>([]);
@@ -20,6 +21,8 @@ export default function AdminInquiriesPage() {
 
   useEffect(() => {
     loadData();
+    const unsub = subscribeToStoreUpdates(() => loadData());
+    return () => unsub();
   }, []);
 
   return (

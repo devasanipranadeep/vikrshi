@@ -8,6 +8,7 @@ import { productService } from '@/services/products';
 import { locationService } from '@/services/locations';
 import { categoryService } from '@/services/categories';
 import { initialProducts, initialCategories } from '@/constants/mockData';
+import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -21,9 +22,9 @@ export default function AdminProductsPage() {
         categoryService.getCategories(true),
         locationService.getLocations(true),
       ]);
-      if (prods?.length) setProducts(prods);
-      if (cats?.length) setCategories(cats);
-      if (locs?.length) setLocations(locs);
+      if (prods) setProducts(prods);
+      if (cats) setCategories(cats);
+      if (locs) setLocations(locs);
     } catch (e) {
       console.error(e);
     }
@@ -31,6 +32,8 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     loadData();
+    const unsub = subscribeToStoreUpdates(() => loadData());
+    return () => unsub();
   }, []);
 
   return (

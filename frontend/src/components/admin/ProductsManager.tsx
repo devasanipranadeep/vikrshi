@@ -29,6 +29,7 @@ import {
 import { toast } from 'sonner';
 import { Category } from '@/types';
 import { categoryService } from '@/services/categories';
+import { locationService } from '@/services/locations';
 import { notifyStoreUpdate } from '@/utils/storeEvents';
 
 interface ProductsManagerProps {
@@ -46,6 +47,7 @@ export function ProductsManager({
 }: ProductsManagerProps) {
   const [localProducts, setLocalProducts] = useState<Product[]>(products);
   const [categoriesList, setCategoriesList] = useState<Category[]>(categories);
+  const [locationsList, setLocationsList] = useState<LocationItem[]>(locations);
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,6 +63,16 @@ export function ProductsManager({
       });
     }
   }, [categories]);
+
+  useEffect(() => {
+    if (locations && locations.length > 0) {
+      setLocationsList(locations);
+    } else {
+      locationService.getLocations(true).then((data) => {
+        if (data && data.length > 0) setLocationsList(data);
+      });
+    }
+  }, [locations]);
 
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -112,7 +124,7 @@ export function ProductsManager({
     setSortOrder(products.length + 1);
 
     const initCitySettings: Record<string, { isAvailable: boolean; customPrice: string }> = {};
-    locations.forEach((loc) => {
+    locationsList.forEach((loc) => {
       initCitySettings[loc.id] = { isAvailable: true, customPrice: '' };
     });
     setCitySettings(initCitySettings);
@@ -143,7 +155,7 @@ export function ProductsManager({
     setSortOrder(p.sortOrder ?? 0);
 
     const initCitySettings: Record<string, { isAvailable: boolean; customPrice: string }> = {};
-    locations.forEach((loc) => {
+    locationsList.forEach((loc) => {
       initCitySettings[loc.id] = {
         isAvailable: p.locationAvailability?.[loc.id] !== false,
         customPrice: p.locationPrices?.[loc.id] ? String(p.locationPrices[loc.id]) : '',
@@ -739,7 +751,7 @@ export function ProductsManager({
               </div>
 
               {/* Multi-City Specific Pricing & Availability */}
-              {locations.length > 0 && (
+              {locationsList.length > 0 && (
                 <div className="pt-2 border-t border-cream-200">
                   <h4 className="text-xs font-bold text-forest-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-leaf-600" />
@@ -750,7 +762,7 @@ export function ProductsManager({
                   </p>
 
                   <div className="space-y-2">
-                    {locations.map((loc) => {
+                    {locationsList.map((loc) => {
                       const cfg = citySettings[loc.id] || { isAvailable: true, customPrice: '' };
 
                       return (

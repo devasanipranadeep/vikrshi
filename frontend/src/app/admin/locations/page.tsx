@@ -5,6 +5,7 @@ import { AdminWrapper } from '@/components/admin/AdminWrapper';
 import { LocationsManager } from '@/components/admin/LocationsManager';
 import { LocationItem } from '@/types';
 import { locationService } from '@/services/locations';
+import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 
 export default function AdminLocationsPage() {
   const [locations, setLocations] = useState<LocationItem[]>([]);
@@ -12,7 +13,7 @@ export default function AdminLocationsPage() {
   const loadData = async () => {
     try {
       const data = await locationService.getLocations(true);
-      if (data?.length) setLocations(data);
+      if (data) setLocations(data);
     } catch (e) {
       console.error(e);
     }
@@ -20,6 +21,8 @@ export default function AdminLocationsPage() {
 
   useEffect(() => {
     loadData();
+    const unsub = subscribeToStoreUpdates(() => loadData());
+    return () => unsub();
   }, []);
 
   return (

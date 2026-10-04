@@ -29,6 +29,7 @@ import { orderService } from '@/services/orders';
 import { contactService } from '@/services/contacts';
 import { settingsService } from '@/services/settings';
 import { initialProducts, initialCategories, initialReviews, initialCompanySettings } from '@/constants/mockData';
+import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { Loader2 } from 'lucide-react';
 
 export function AdminPortal() {
@@ -62,9 +63,9 @@ export function AdminPortal() {
         settingsService.getCompanySettings(),
       ]);
 
-      if (prods.status === 'fulfilled' && prods.value?.length) setProducts(prods.value);
-      if (cats.status === 'fulfilled' && cats.value?.length) setCategories(cats.value);
-      if (locs.status === 'fulfilled' && locs.value?.length) setLocations(locs.value);
+      if (prods.status === 'fulfilled' && prods.value) setProducts(prods.value);
+      if (cats.status === 'fulfilled' && cats.value) setCategories(cats.value);
+      if (locs.status === 'fulfilled' && locs.value) setLocations(locs.value);
       if (inqs.status === 'fulfilled') setInquiries(inqs.value || []);
       if (msgs.status === 'fulfilled') setMessages(msgs.value || []);
       if (sets.status === 'fulfilled' && sets.value) setSettings(sets.value);
@@ -82,6 +83,10 @@ export function AdminPortal() {
   useEffect(() => {
     if (isAuthenticated) {
       loadData();
+      const unsubscribe = subscribeToStoreUpdates(() => {
+        loadData();
+      });
+      return () => unsubscribe();
     }
   }, [isAuthenticated]);
 

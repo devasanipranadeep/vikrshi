@@ -87,14 +87,14 @@ export function DashboardOverview({
               onClick={() => onNavigateTab('inquiries')}
               className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm transition-all border border-white/10 cursor-pointer"
             >
-              View Inquiries ({totalInquiriesCount})
+              View Orders ({totalInquiriesCount})
             </button>
           </div>
         </div>
       </div>
 
       {/* Required Metric Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
         {/* Total Products */}
         <div
           onClick={() => onNavigateTab('products')}
@@ -160,8 +160,6 @@ export function DashboardOverview({
           <span className="text-[10px] text-leaf-600 block mt-0.5">Delivery hubs</span>
         </div>
 
-
-
         {/* New Messages */}
         <div
           onClick={() => onNavigateTab('messages')}
@@ -181,11 +179,11 @@ export function DashboardOverview({
           className="bg-white p-4 rounded-2xl border border-cream-200 shadow-2xs hover:border-leaf-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold text-forest-600 truncate">WhatsApp Inq</span>
+            <span className="text-[11px] font-semibold text-forest-600 truncate">Orders</span>
             <ShoppingBag className="w-4 h-4 text-leaf-600" />
           </div>
           <span className="font-serif text-2xl font-bold text-leaf-700">{totalInquiriesCount}</span>
-          <span className="text-[10px] text-leaf-600 block mt-0.5">Total orders</span>
+          <span className="text-[10px] text-leaf-600 block mt-0.5">WhatsApp orders</span>
         </div>
       </div>
 
