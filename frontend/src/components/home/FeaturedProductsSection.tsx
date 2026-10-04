@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Product } from '@/types';
-import { productService } from '@/services/productService';
+import { productService } from '@/services/products';
 import { initialProducts } from '@/constants/mockData';
 import { ProductCard } from '@/components/products/ProductCard';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';

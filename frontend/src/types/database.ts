@@ -203,65 +203,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      company_settings: {
-        Row: {
-          id: number;
-          company_name: string;
-          logo_url: string | null;
-          logo_path: string | null;
-          whatsapp_number: string | null;
-          phone_number: string | null;
-          email: string | null;
-          instagram_url: string | null;
-          address: string | null;
-          business_hours: string | null;
-          google_maps_url: string | null;
-          footer_description: string | null;
-          seo_title: string | null;
-          seo_description: string | null;
-          ordering_enabled: boolean;
-          default_location: string | null;
-          updated_at: string;
-        };
-        Insert: {
-          id?: number;
-          company_name?: string;
-          logo_url?: string | null;
-          logo_path?: string | null;
-          whatsapp_number?: string | null;
-          phone_number?: string | null;
-          email?: string | null;
-          instagram_url?: string | null;
-          address?: string | null;
-          business_hours?: string | null;
-          google_maps_url?: string | null;
-          footer_description?: string | null;
-          seo_title?: string | null;
-          seo_description?: string | null;
-          ordering_enabled?: boolean;
-          default_location?: string | null;
-          updated_at?: string;
-        };
-        Update: {
-          id?: number;
-          company_name?: string;
-          logo_url?: string | null;
-          logo_path?: string | null;
-          whatsapp_number?: string | null;
-          phone_number?: string | null;
-          email?: string | null;
-          instagram_url?: string | null;
-          address?: string | null;
-          business_hours?: string | null;
-          google_maps_url?: string | null;
-          footer_description?: string | null;
-          seo_title?: string | null;
-          seo_description?: string | null;
-          ordering_enabled?: boolean;
-          default_location?: string | null;
-          updated_at?: string;
-        };
-      };
       customer_orders: {
         Row: {
           id: string;

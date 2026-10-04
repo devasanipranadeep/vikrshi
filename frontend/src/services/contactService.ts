@@ -1,1 +1,0 @@
-export { contactService } from './contacts';

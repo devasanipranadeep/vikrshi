@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LocationItem } from '@/types';
-import { locationService } from '@/services/locationService';
+import { locationService } from '@/services/locations';
 import { useLocation } from '@/context/LocationContext';
 import { useSettings } from '@/context/SettingsContext';
 import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';

@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Product, LocationItem, Category } from '@/types';
-import { productService } from '@/services/productService';
-import { locationService } from '@/services/locationService';
+import { productService } from '@/services/products';
+import { locationService } from '@/services/locations';
 import { categoryService } from '@/services/categories';
 import { initialProducts, initialCategories } from '@/constants/mockData';
 import { ProductCard } from '@/components/products/ProductCard';

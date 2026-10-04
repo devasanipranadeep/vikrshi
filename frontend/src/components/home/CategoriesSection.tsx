@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { Category } from '@/types';
-import { categoryService } from '@/services/categoryService';
+import { categoryService } from '@/services/categories';
 import { initialCategories } from '@/constants/mockData';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { ArrowRight } from 'lucide-react';

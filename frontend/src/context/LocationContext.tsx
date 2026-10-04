@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { LocationItem } from '@/types';
-import { locationService } from '@/services/locationService';
+import { locationService } from '@/services/locations';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { toast } from 'sonner';
 
