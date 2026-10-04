@@ -32,7 +32,7 @@ const heroImages = [
   },
 ];
 
-const SLIDE_INTERVAL = 3000; // 3 seconds per slide
+const SLIDE_INTERVAL = 5000; // Relaxed 5.0 seconds per slide for premium viewing
 
 export function HeroSection() {
   const { settings } = useSettings();
@@ -62,9 +62,8 @@ export function HeroSection() {
         {heroImages.map((img, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === currentIndex ? 'opacity-100 z-[1]' : 'opacity-0 z-0 pointer-events-none'
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1200 ease-in-out ${index === currentIndex ? 'opacity-100 z-[1]' : 'opacity-0 z-0 pointer-events-none'
+              }`}
           >
             <Image
               src={img.src}
