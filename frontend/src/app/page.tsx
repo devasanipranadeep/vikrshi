@@ -6,6 +6,7 @@ import { StorySection } from '@/components/home/StorySection';
 import { ProcessTimeline } from '@/components/home/ProcessTimeline';
 import { FarmJourneyInstagram } from '@/components/home/FarmJourneyInstagram';
 import { TestimonialsSection } from '@/components/home/TestimonialsSection';
+import { CommunityRequestModal } from '@/components/home/CommunityRequestModal';
 import { initialCompanySettings } from '@/constants/mockData';
 import { getOrganizationSchema, getLocalBusinessSchema } from '@/utils/seo';
 
@@ -33,6 +34,9 @@ export default function HomePage() {
       <ProcessTimeline />
       <FarmJourneyInstagram />
       <TestimonialsSection />
+
+      {/* 10-Second Community Request WhatsApp Popup */}
+      <CommunityRequestModal />
     </>
   );
 }

@@ -184,3 +184,55 @@ export function buildOutOfStockInquiryWhatsAppUrl({
 
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 }
+
+export interface CommunityRequestDetails {
+  applicantName: string;
+  phone?: string;
+  communityName: string;
+  address: string;
+  details?: string;
+  source: string;
+}
+
+/**
+ * Builds community bulk/apartment supply request WhatsApp URL
+ */
+export function buildCommunityRequestWhatsAppUrl({
+  phone,
+  companyName = 'Vikrshi Suppliers Pvt Ltd',
+  request,
+}: {
+  phone: string;
+  companyName?: string;
+  request: CommunityRequestDetails;
+}): string {
+  const cleanPhone = cleanWhatsAppNumber(phone);
+  const messageParts = [
+    `Hello ${companyName},`,
+    '',
+    `🌿 *Community / Apartment Supply Request*`,
+    `I would like to explore getting Vikrshi fresh organic farm produce delivered to our residential community:`,
+    '',
+    `👤 *Applicant Name*: ${request.applicantName}`,
+  ];
+
+  if (request.phone) {
+    messageParts.push(`📞 *Contact Phone*: ${request.phone}`);
+  }
+
+  messageParts.push(`🏢 *Community / Society*: ${request.communityName}`);
+  messageParts.push(`📍 *Location & Address*: ${request.address}`);
+  messageParts.push(`📢 *Heard About Us Via*: ${request.source}`);
+
+  if (request.details && request.details.trim()) {
+    messageParts.push('', `📝 *Details & Requirements*:`, request.details.trim());
+  }
+
+  messageParts.push(
+    '',
+    `Please share the details on how we can setup a community delivery schedule or farm harvest pop-up for our residents. Thank you!`
+  );
+
+  const message = messageParts.join('\n');
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
