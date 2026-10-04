@@ -10,7 +10,6 @@ import {
   Layers,
   MapPin,
   ShoppingBag,
-  Settings,
   ExternalLink,
   LogOut,
   Menu,
@@ -43,7 +42,6 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
     { id: 'reviews', label: 'Customer Reviews', icon: Star },
     { id: 'gallery', label: 'Photo Gallery', icon: Images },
     { id: 'social', label: 'Farm Stories & Social', icon: Camera },
-    { id: 'settings', label: 'Store Settings', icon: Settings },
   ];
 
   return (

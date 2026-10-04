@@ -10,7 +10,6 @@ import { CategoriesManager } from './CategoriesManager';
 import { LocationsManager } from './LocationsManager';
 import { OrderInquiriesManager } from './OrderInquiriesManager';
 import { CommunityRequestsManager } from './CommunityRequestsManager';
-import { SettingsManager } from './SettingsManager';
 import { ReviewsManager } from './ReviewsManager';
 import { SocialManager } from './SocialManager';
 import { GalleryManager } from './GalleryManager';
@@ -21,15 +20,13 @@ import {
   OrderInquiryRecord,
   CommunityRequestItem,
   CustomerReview,
-  CompanySettings,
 } from '@/types';
 import { productService } from '@/services/products';
 import { categoryService } from '@/services/categories';
 import { locationService } from '@/services/locations';
 import { orderService } from '@/services/orders';
 import { communityService } from '@/services/community';
-import { settingsService } from '@/services/settings';
-import { initialProducts, initialCategories, initialReviews, initialCompanySettings } from '@/constants/mockData';
+import { initialProducts, initialCategories, initialReviews } from '@/constants/mockData';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { Loader2 } from 'lucide-react';
 
@@ -43,7 +40,6 @@ export function AdminPortal() {
   const [inquiries, setInquiries] = useState<OrderInquiryRecord[]>([]);
   const [communityRequests, setCommunityRequests] = useState<CommunityRequestItem[]>([]);
   const [reviews, setReviews] = useState<CustomerReview[]>(initialReviews);
-  const [settings, setSettings] = useState<CompanySettings>(initialCompanySettings);
 
   // Fetch live store data across Supabase services
   const loadData = async () => {
@@ -54,14 +50,12 @@ export function AdminPortal() {
         locs,
         inqs,
         comms,
-        sets,
       ] = await Promise.allSettled([
         productService.getProducts({ includeInactive: true }),
         categoryService.getCategories(true),
         locationService.getLocations(true),
         orderService.getOrderInquiries(),
         communityService.getCommunityRequests(),
-        settingsService.getCompanySettings(),
       ]);
 
       if (prods.status === 'fulfilled' && prods.value) setProducts(prods.value);
@@ -69,7 +63,6 @@ export function AdminPortal() {
       if (locs.status === 'fulfilled' && locs.value) setLocations(locs.value);
       if (inqs.status === 'fulfilled') setInquiries(inqs.value || []);
       if (comms.status === 'fulfilled') setCommunityRequests(comms.value || []);
-      if (sets.status === 'fulfilled' && sets.value) setSettings(sets.value);
 
       // Reviews endpoint fallback
       try {
@@ -167,13 +160,6 @@ export function AdminPortal() {
 
       {activeTab === 'social' && (
         <SocialManager />
-      )}
-
-      {activeTab === 'settings' && (
-        <SettingsManager
-          settings={settings}
-          onSettingsUpdated={loadData}
-        />
       )}
     </AdminLayout>
   );
