@@ -190,6 +190,11 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/gallery" className="hover:text-leaf-300 transition-colors">
+                    Photo Gallery
+                  </Link>
+                </li>
+                <li>
                   <Link href="/reviews" className="hover:text-leaf-300 transition-colors">
                     Customer Reviews
                   </Link>

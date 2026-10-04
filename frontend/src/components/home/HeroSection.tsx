@@ -11,11 +11,11 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 
 const heroImages = [
   {
-    src: '/hero/farm-1.jpg?v=2',
+    src: '/hero/farm-1.jpg',
     alt: 'Organic farming fields and fresh product cultivation',
   },
   {
-    src: '/hero/farm-2.jpg?v=2',
+    src: '/hero/farm-2.jpg',
     alt: 'Vikrshi Suppliers packing, sorting and cold chain logistics facility',
   },
   {

@@ -4,6 +4,7 @@ import { CategoriesSection } from '@/components/home/CategoriesSection';
 import { FeaturedProductsSection } from '@/components/home/FeaturedProductsSection';
 import { StorySection } from '@/components/home/StorySection';
 import { ProcessTimeline } from '@/components/home/ProcessTimeline';
+import { GalleryTeaserSection } from '@/components/home/GalleryTeaserSection';
 import { FarmJourneyInstagram } from '@/components/home/FarmJourneyInstagram';
 import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 import { initialCompanySettings } from '@/constants/mockData';
@@ -31,6 +32,7 @@ export default function HomePage() {
       <CategoriesSection />
       <FeaturedProductsSection />
       <ProcessTimeline />
+      <GalleryTeaserSection />
       <FarmJourneyInstagram />
       <TestimonialsSection />
     </>

@@ -66,6 +66,7 @@ export function Navbar() {
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
     { name: 'About Us', href: '/about' },
+    { name: 'Gallery', href: '/gallery' },
     { name: 'Locations', href: '/locations' },
     { name: 'Contact', href: '/contact' },
     { name: 'Reviews', href: '/reviews' },

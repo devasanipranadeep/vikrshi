@@ -13,6 +13,7 @@ import { CommunityRequestsManager } from './CommunityRequestsManager';
 import { SettingsManager } from './SettingsManager';
 import { ReviewsManager } from './ReviewsManager';
 import { SocialManager } from './SocialManager';
+import { GalleryManager } from './GalleryManager';
 import {
   Product,
   Category,
@@ -158,6 +159,10 @@ export function AdminPortal() {
           reviews={reviews}
           onReviewUpdated={loadData}
         />
+      )}
+
+      {activeTab === 'gallery' && (
+        <GalleryManager />
       )}
 
       {activeTab === 'social' && (

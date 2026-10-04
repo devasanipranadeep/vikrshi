@@ -225,3 +225,20 @@ export interface SocialPost {
   createdAt?: string;
 }
 
+export type GalleryCategory = 'all' | 'farms' | 'harvest' | 'coldchain' | 'community';
+
+export interface GalleryItem {
+  id: string;
+  title: string;
+  caption?: string;
+  category: 'farms' | 'harvest' | 'coldchain' | 'community';
+  locationTag?: string;
+  imageUrl: string;
+  imagePath?: string;
+  date?: string;
+  featured?: boolean;
+  sortOrder?: number;
+  isActive?: boolean;
+  createdAt?: string;
+}
+

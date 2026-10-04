@@ -20,6 +20,7 @@ import {
   Star,
   Camera,
   Users2,
+  Images,
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -40,6 +41,7 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
     { id: 'inquiries', label: 'Customer Orders', icon: ShoppingBag },
     { id: 'community', label: 'Community Requests', icon: Users2 },
     { id: 'reviews', label: 'Customer Reviews', icon: Star },
+    { id: 'gallery', label: 'Photo Gallery', icon: Images },
     { id: 'social', label: 'Farm Stories & Social', icon: Camera },
     { id: 'settings', label: 'Store Settings', icon: Settings },
   ];
