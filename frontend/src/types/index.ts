@@ -115,6 +115,20 @@ export interface CompanySettings {
   defaultLocation?: string;
 }
 
+export type CommunityRequestStatus = 'new' | 'contacted' | 'approved' | 'rejected' | 'archived';
+
+export interface CommunityRequestItem {
+  id: string;
+  applicantName: string;
+  phone?: string | null;
+  communityName: string;
+  address: string;
+  source: string;
+  details?: string | null;
+  status: CommunityRequestStatus;
+  createdAt: string;
+}
+
 export interface ContactMessageItem {
   id: string;
   name: string;

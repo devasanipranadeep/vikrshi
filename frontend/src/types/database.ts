@@ -332,6 +332,41 @@ export interface Database {
           created_at?: string;
         };
       };
+      community_requests: {
+        Row: {
+          id: string;
+          applicant_name: string;
+          phone: string | null;
+          community_name: string;
+          address: string;
+          source: string;
+          details: string | null;
+          status: 'new' | 'contacted' | 'approved' | 'rejected' | 'archived';
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          applicant_name: string;
+          phone?: string | null;
+          community_name: string;
+          address: string;
+          source: string;
+          details?: string | null;
+          status?: 'new' | 'contacted' | 'approved' | 'rejected' | 'archived';
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          applicant_name?: string;
+          phone?: string | null;
+          community_name?: string;
+          address?: string;
+          source?: string;
+          details?: string | null;
+          status?: 'new' | 'contacted' | 'approved' | 'rejected' | 'archived';
+          created_at?: string;
+        };
+      };
     };
   };
 }

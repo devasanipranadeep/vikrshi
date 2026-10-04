@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSettings } from '@/context/SettingsContext';
 import { buildCommunityRequestWhatsAppUrl } from '@/utils/whatsapp';
+import { submitCommunityRequestAction } from '@/actions/community';
+import { notifyStoreUpdate } from '@/utils/storeEvents';
 import {
   X,
   MessageCircle,
@@ -97,6 +99,22 @@ export function CommunityRequestModal() {
 
     setIsSubmitted(true);
     toast.success('Redirecting to WhatsApp with your community request...');
+
+    // Persist to Supabase database in the background
+    submitCommunityRequestAction({
+      applicantName: applicantName.trim(),
+      phone: phone.trim() || undefined,
+      communityName: communityName.trim(),
+      address: address.trim(),
+      source,
+      details: details.trim() || undefined,
+    }).then((res) => {
+      if (res?.success) {
+        notifyStoreUpdate('all');
+      }
+    }).catch((err) => {
+      console.warn('Could not save community request to database:', err);
+    });
 
     // Open WhatsApp in new tab
     if (typeof window !== 'undefined') {

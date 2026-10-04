@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Star,
   Camera,
+  Users2,
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -38,6 +39,7 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
     { id: 'categories', label: 'Categories', icon: Layers },
     { id: 'locations', label: 'Delivery Hubs', icon: MapPin },
     { id: 'inquiries', label: 'Customer Orders', icon: ShoppingBag },
+    { id: 'community', label: 'Community Requests', icon: Users2 },
     { id: 'messages', label: 'Messages', icon: Mail },
     { id: 'reviews', label: 'Customer Reviews', icon: Star },
     { id: 'social', label: 'Farm Stories & Social', icon: Camera },

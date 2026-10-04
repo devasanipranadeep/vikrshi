@@ -9,6 +9,7 @@ import { ProductsManager } from './ProductsManager';
 import { CategoriesManager } from './CategoriesManager';
 import { LocationsManager } from './LocationsManager';
 import { OrderInquiriesManager } from './OrderInquiriesManager';
+import { CommunityRequestsManager } from './CommunityRequestsManager';
 import { MessagesManager } from './MessagesManager';
 import { SettingsManager } from './SettingsManager';
 import { ReviewsManager } from './ReviewsManager';
@@ -19,6 +20,7 @@ import {
   LocationItem,
   OrderInquiryRecord,
   ContactMessageItem,
+  CommunityRequestItem,
   CustomerReview,
   CompanySettings,
 } from '@/types';
@@ -26,6 +28,7 @@ import { productService } from '@/services/products';
 import { categoryService } from '@/services/categories';
 import { locationService } from '@/services/locations';
 import { orderService } from '@/services/orders';
+import { communityService } from '@/services/community';
 import { contactService } from '@/services/contacts';
 import { settingsService } from '@/services/settings';
 import { initialProducts, initialCategories, initialReviews, initialCompanySettings } from '@/constants/mockData';
@@ -40,6 +43,7 @@ export function AdminPortal() {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [locations, setLocations] = useState<LocationItem[]>([]);
   const [inquiries, setInquiries] = useState<OrderInquiryRecord[]>([]);
+  const [communityRequests, setCommunityRequests] = useState<CommunityRequestItem[]>([]);
   const [messages, setMessages] = useState<ContactMessageItem[]>([]);
   const [reviews, setReviews] = useState<CustomerReview[]>(initialReviews);
   const [settings, setSettings] = useState<CompanySettings>(initialCompanySettings);
@@ -52,6 +56,7 @@ export function AdminPortal() {
         cats,
         locs,
         inqs,
+        comms,
         msgs,
         sets,
       ] = await Promise.allSettled([
@@ -59,6 +64,7 @@ export function AdminPortal() {
         categoryService.getCategories(true),
         locationService.getLocations(true),
         orderService.getOrderInquiries(),
+        communityService.getCommunityRequests(),
         contactService.getContactMessages(),
         settingsService.getCompanySettings(),
       ]);
@@ -67,6 +73,7 @@ export function AdminPortal() {
       if (cats.status === 'fulfilled' && cats.value) setCategories(cats.value);
       if (locs.status === 'fulfilled' && locs.value) setLocations(locs.value);
       if (inqs.status === 'fulfilled') setInquiries(inqs.value || []);
+      if (comms.status === 'fulfilled') setCommunityRequests(comms.value || []);
       if (msgs.status === 'fulfilled') setMessages(msgs.value || []);
       if (sets.status === 'fulfilled' && sets.value) setSettings(sets.value);
 
@@ -110,6 +117,7 @@ export function AdminPortal() {
           products={products}
           locations={locations}
           inquiries={inquiries}
+          communityRequests={communityRequests}
           messages={messages}
           reviews={reviews}
           onNavigateTab={setActiveTab}
@@ -143,6 +151,13 @@ export function AdminPortal() {
         <OrderInquiriesManager
           inquiries={inquiries}
           onInquiryUpdated={loadData}
+        />
+      )}
+
+      {activeTab === 'community' && (
+        <CommunityRequestsManager
+          requests={communityRequests}
+          onRequestUpdated={loadData}
         />
       )}
 

@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   Layers,
   ChevronRight,
+  Users2,
 } from 'lucide-react';
 import {
   Product,
@@ -23,6 +24,7 @@ import {
   CustomerReview,
   OrderInquiryRecord,
   ContactMessageItem,
+  CommunityRequestItem,
 } from '@/types';
 import { formatCurrency } from '@/utils/formatters';
 
@@ -30,6 +32,7 @@ interface DashboardOverviewProps {
   products: Product[];
   locations: LocationItem[];
   inquiries?: OrderInquiryRecord[];
+  communityRequests?: CommunityRequestItem[];
   messages?: ContactMessageItem[];
   reviews?: CustomerReview[];
   onNavigateTab: (tab: string) => void;
@@ -39,6 +42,7 @@ export function DashboardOverview({
   products = [],
   locations = [],
   inquiries = [],
+  communityRequests = [],
   messages = [],
   reviews = [],
   onNavigateTab,
@@ -52,6 +56,7 @@ export function DashboardOverview({
 
   const newMessagesCount = messages.filter((m) => m.status === 'new').length;
   const totalInquiriesCount = inquiries.length;
+  const communityCount = communityRequests.length;
 
   const recentProducts = products.slice(0, 5);
   const recentInquiries = inquiries.slice(0, 5);
@@ -94,7 +99,7 @@ export function DashboardOverview({
       </div>
 
       {/* Required Metric Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
         {/* Total Products */}
         <div
           onClick={() => onNavigateTab('products')}
@@ -160,6 +165,32 @@ export function DashboardOverview({
           <span className="text-[10px] text-leaf-600 block mt-0.5">Delivery hubs</span>
         </div>
 
+        {/* Customer Orders */}
+        <div
+          onClick={() => onNavigateTab('inquiries')}
+          className="bg-white p-4 rounded-2xl border border-cream-200 shadow-2xs hover:border-leaf-300 transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-semibold text-forest-600 truncate">Orders</span>
+            <ShoppingBag className="w-4 h-4 text-leaf-600" />
+          </div>
+          <span className="font-serif text-2xl font-bold text-leaf-700">{totalInquiriesCount}</span>
+          <span className="text-[10px] text-leaf-600 block mt-0.5">WhatsApp orders</span>
+        </div>
+
+        {/* Community Requests */}
+        <div
+          onClick={() => onNavigateTab('community')}
+          className="bg-white p-4 rounded-2xl border border-cream-200 shadow-2xs hover:border-leaf-300 transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-semibold text-forest-600 truncate">Communities</span>
+            <Users2 className="w-4 h-4 text-emerald-600" />
+          </div>
+          <span className="font-serif text-2xl font-bold text-emerald-700">{communityCount}</span>
+          <span className="text-[10px] text-emerald-600/80 block mt-0.5">Society requests</span>
+        </div>
+
         {/* New Messages */}
         <div
           onClick={() => onNavigateTab('messages')}
@@ -171,19 +202,6 @@ export function DashboardOverview({
           </div>
           <span className="font-serif text-2xl font-bold text-blue-700">{newMessagesCount}</span>
           <span className="text-[10px] text-blue-600 block mt-0.5">New unread</span>
-        </div>
-
-        {/* Order Inquiries */}
-        <div
-          onClick={() => onNavigateTab('inquiries')}
-          className="bg-white p-4 rounded-2xl border border-cream-200 shadow-2xs hover:border-leaf-300 transition-all cursor-pointer group"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold text-forest-600 truncate">Orders</span>
-            <ShoppingBag className="w-4 h-4 text-leaf-600" />
-          </div>
-          <span className="font-serif text-2xl font-bold text-leaf-700">{totalInquiriesCount}</span>
-          <span className="text-[10px] text-leaf-600 block mt-0.5">WhatsApp orders</span>
         </div>
       </div>
 
