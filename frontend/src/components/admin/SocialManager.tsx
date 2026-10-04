@@ -33,8 +33,6 @@ export function SocialManager() {
   const [imageUrl, setImageUrl] = useState('');
   const [imagePath, setImagePath] = useState('');
   const [caption, setCaption] = useState('');
-  const [date, setDate] = useState('Today');
-  const [likes, setLikes] = useState(320);
   const [postUrl, setPostUrl] = useState('https://instagram.com/vikrshi');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -78,8 +76,6 @@ export function SocialManager() {
     setImageUrl('');
     setImagePath('');
     setCaption('');
-    setDate('Today');
-    setLikes(Math.floor(Math.random() * 200) + 260);
     setPostUrl('https://instagram.com/vikrshi');
     setIsModalOpen(true);
   };
@@ -101,8 +97,8 @@ export function SocialManager() {
         imageUrl: imageUrl.trim(),
         imagePath: imagePath || undefined,
         caption: caption.trim(),
-        likes: Number(likes) || 300,
-        date: date.trim() || 'Today',
+        likes: 0,
+        date: 'Today',
         postUrl: postUrl.trim() || undefined,
       });
 
@@ -340,35 +336,6 @@ export function SocialManager() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {/* Date Label */}
-                <div>
-                  <label className="block text-xs font-bold text-forest-950 mb-1">
-                    Date Label
-                  </label>
-                  <input
-                    type="text"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    placeholder="Today / Yesterday / 2 days ago"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
-                  />
-                </div>
-
-                {/* Likes Count */}
-                <div>
-                  <label className="block text-xs font-bold text-forest-950 mb-1">
-                    Engagement Likes
-                  </label>
-                  <input
-                    type="number"
-                    value={likes}
-                    onChange={(e) => setLikes(Number(e.target.value))}
-                    min={0}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
-                  />
-                </div>
-              </div>
 
               {/* Link */}
               <div>
