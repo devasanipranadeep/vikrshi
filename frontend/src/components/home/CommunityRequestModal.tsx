@@ -35,11 +35,12 @@ const HEAR_ABOUT_OPTIONS = [
   'Other',
 ];
 
+const SESSION_KEY = 'vikrshi_community_popup';
+const POPUP_DELAY_MS = 7000;
+
 export function CommunityRequestModal() {
   const { settings } = useSettings();
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith('/admin');
-
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -52,44 +53,34 @@ export function CommunityRequestModal() {
   const [details, setDetails] = useState('');
 
   useEffect(() => {
-    // Never show on admin pages
-    if (isAdmin) return;
+    // Don't show popup on admin pages
+    if (pathname?.startsWith('/admin')) return;
 
-    try {
-      // Check if already dismissed or completed in this session
-      if (sessionStorage.getItem('vikrshi_community_popup_dismissed') === 'true') {
-        return;
-      }
+    // If the popup was already shown or dismissed this session, don't show again
+    const popupState = sessionStorage.getItem(SESSION_KEY);
+    if (popupState === 'shown' || popupState === 'dismissed') return;
 
-      // Record when the user first arrived at the website
-      const now = Date.now();
-      let visitStart = sessionStorage.getItem('vikrshi_visit_start');
-      if (!visitStart) {
-        visitStart = now.toString();
-        sessionStorage.setItem('vikrshi_visit_start', visitStart);
-      }
-
-      const elapsed = now - parseInt(visitStart, 10);
-      const remaining = Math.max(0, 7000 - elapsed);
-
-      const timer = setTimeout(() => {
-        try {
-          if (sessionStorage.getItem('vikrshi_community_popup_dismissed') !== 'true') {
-            setIsOpen(true);
-          }
-        } catch {
-          setIsOpen(true);
-        }
-      }, remaining);
-
-      return () => clearTimeout(timer);
-    } catch {
-      const fallbackTimer = setTimeout(() => {
-        setIsOpen(true);
-      }, 7000);
-      return () => clearTimeout(fallbackTimer);
+    // Record the timestamp of the very first page load if not already set
+    let landingTime = Number(sessionStorage.getItem(`${SESSION_KEY}_time`));
+    if (!landingTime) {
+      landingTime = Date.now();
+      sessionStorage.setItem(`${SESSION_KEY}_time`, String(landingTime));
     }
-  }, [isAdmin]);
+
+    // Calculate remaining delay (7s from original landing, minus time already elapsed)
+    const elapsed = Date.now() - landingTime;
+    const remaining = Math.max(0, POPUP_DELAY_MS - elapsed);
+
+    const timer = setTimeout(() => {
+      // Double-check we're not on an admin page at the time the timer fires
+      if (!window.location.pathname.startsWith('/admin')) {
+        setIsOpen(true);
+        sessionStorage.setItem(SESSION_KEY, 'shown');
+      }
+    }, remaining);
+
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   const handleClose = (e?: React.MouseEvent) => {
     if (e) {
@@ -97,16 +88,14 @@ export function CommunityRequestModal() {
       e.stopPropagation();
     }
     setIsOpen(false);
-    try {
-      sessionStorage.setItem('vikrshi_community_popup_dismissed', 'true');
-    } catch {}
+    sessionStorage.setItem(SESSION_KEY, 'dismissed');
   };
 
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        handleClose();
+        setIsOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -136,10 +125,6 @@ export function CommunityRequestModal() {
     });
 
     setIsSubmitted(true);
-    try {
-      sessionStorage.setItem('vikrshi_community_popup_dismissed', 'true');
-    } catch {}
-
     toast.success('Redirecting to WhatsApp with your community request...');
 
     // Persist to Supabase database in the background
@@ -169,7 +154,7 @@ export function CommunityRequestModal() {
     }, 2000);
   };
 
-  if (!isOpen || isAdmin) return null;
+  if (!isOpen) return null;
 
   return (
     <div

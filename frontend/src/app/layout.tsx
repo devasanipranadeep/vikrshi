@@ -96,8 +96,8 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <CartDrawer />
           <LocationSelectorModal />
-          <CommunityRequestModal />
           <FloatingWhatsApp />
+          <CommunityRequestModal />
           <Footer />
         </AppProviders>
       </body>
