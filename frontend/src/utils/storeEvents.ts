@@ -1,4 +1,4 @@
-export type StoreUpdateType = 'products' | 'categories' | 'settings' | 'locations' | 'reviews' | 'social' | 'gallery' | 'all';
+export type StoreUpdateType = 'products' | 'categories' | 'settings' | 'locations' | 'reviews' | 'social' | 'all';
 
 export interface StoreUpdateMessage {
   type: StoreUpdateType;

@@ -20,6 +20,9 @@ export function RealtimeStoreProvider({ children }: { children: React.ReactNode 
         .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
           notifyStoreUpdate('categories');
         })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'company_settings' }, () => {
+          notifyStoreUpdate('settings');
+        })
         .on('postgres_changes', { event: '*', schema: 'public', table: 'locations' }, () => {
           notifyStoreUpdate('locations');
         })

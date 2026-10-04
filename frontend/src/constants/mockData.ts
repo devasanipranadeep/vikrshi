@@ -1,4 +1,4 @@
-import { CompanySettings, Category, Product, CustomerReview, GalleryItem } from '@/types';
+import { CompanySettings, Category, Product, CustomerReview } from '@/types';
 
 export const initialCompanySettings: CompanySettings = {
   companyName: 'Vikrshi Suppliers Pvt Ltd',
@@ -43,78 +43,3 @@ export const initialReviews: CustomerReview[] = [];
 export const instagramPosts: any[] = [];
 
 export const customerTestimonials: any[] = [];
-
-export const initialGalleryItems: GalleryItem[] = [
-  {
-    id: 'gallery-1',
-    title: 'Chevella Agro-Cluster Sunrise Harvest',
-    caption: 'Our partner farmers harvesting crisp organic greens and vine tomatoes at 5:30 AM under natural morning dew.',
-    category: 'farms',
-    locationTag: 'Chevella Agro-Cluster, Telangana',
-    imageUrl: '/hero/farm-1.jpg',
-    date: 'Dawn Harvest',
-    featured: true,
-    sortOrder: 1,
-    isActive: true,
-  },
-  {
-    id: 'gallery-2',
-    title: 'Vikrshi Cold Chain & Delivery Dispatch',
-    caption: 'Multi-stage gentle manual inspection, ozone water wash, and temperature-controlled pre-cooling before Hyderabad community dispatch.',
-    category: 'community',
-    locationTag: 'Central Sorting Facility, Hyderabad',
-    imageUrl: '/hero/farm-2.jpg',
-    date: 'Facility Logistics',
-    featured: true,
-    sortOrder: 2,
-    isActive: true,
-  },
-  {
-    id: 'gallery-3',
-    title: 'Living Soil & Jeevamrutham Cultivation',
-    caption: 'Nourishing our crops with native cow dung, bio-cultures, and organic compost instead of synthetic petroleum-derived fertilizers.',
-    category: 'farms',
-    locationTag: 'Vikarabad Organic Belt',
-    imageUrl: '/hero/farm-3.jpg',
-    date: 'Sustainable Soil',
-    featured: true,
-    sortOrder: 3,
-    isActive: true,
-  },
-  {
-    id: 'gallery-4',
-    title: 'Direct Farmer Partnership & Field Inspection',
-    caption: 'Agronomists and farm coordinators conducting soil quality testing and fair covenant verification with local smallholders.',
-    category: 'farms',
-    locationTag: 'Mahabubnagar Partner Cluster',
-    imageUrl: '/hero/farm-4.jpg',
-    date: 'Direct Covenant',
-    featured: true,
-    sortOrder: 4,
-    isActive: true,
-  },
-  {
-    id: 'gallery-5',
-    title: 'Fresh Leafy Greens Field Harvest Batch',
-    caption: 'Plucked before sunrise, washed in clean natural water, and packed in breathable eco-crates within 2 hours of harvest.',
-    category: 'farms',
-    locationTag: 'Chevella Farms',
-    imageUrl: '/hero/farm-5.jpg',
-    date: 'Morning Harvest',
-    featured: true,
-    sortOrder: 5,
-    isActive: true,
-  },
-  {
-    id: 'gallery-6',
-    title: 'Gated Community Morning Deliveries',
-    caption: 'Direct van delivery routes reaching residential gated communities across Gachibowli, Kondapur, and Jubilee Hills by 7:30 AM.',
-    category: 'community',
-    locationTag: 'Hyderabad Residential Routes',
-    imageUrl: '/background.png',
-    date: 'Same-Day Delivery',
-    featured: true,
-    sortOrder: 6,
-    isActive: true,
-  },
-];

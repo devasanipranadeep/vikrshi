@@ -225,20 +225,3 @@ export interface SocialPost {
   createdAt?: string;
 }
 
-export type GalleryCategory = 'all' | 'farms' | 'community';
-
-export interface GalleryItem {
-  id: string;
-  title: string;
-  caption?: string;
-  category: 'farms' | 'community';
-  locationTag?: string;
-  imageUrl: string;
-  imagePath?: string;
-  date?: string;
-  featured?: boolean;
-  sortOrder?: number;
-  isActive?: boolean;
-  createdAt?: string;
-}
-
