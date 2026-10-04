@@ -39,7 +39,7 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
     { id: 'inquiries', label: 'Customer Orders', icon: ShoppingBag },
     { id: 'community', label: 'Community Requests', icon: Users2 },
     { id: 'reviews', label: 'Customer Reviews', icon: Star },
-    { id: 'social', label: 'Farm Stories & Social', icon: Camera },
+    { id: 'social', label: 'Gallery', icon: Camera },
   ];
 
   return (

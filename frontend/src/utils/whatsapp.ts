@@ -230,7 +230,7 @@ export function buildCommunityRequestWhatsAppUrl({
 
   messageParts.push(
     '',
-    `Please share the details on how we can setup a community delivery schedule or farm harvest pop-up for our residents. Thank you!`
+    `Please share the details on how we can setup a community delivery schedule for our residents. Thank you!`
   );
 
   const message = messageParts.join('\n');

@@ -150,7 +150,7 @@ export function SocialManager() {
             </span>
           </div>
           <h2 className="font-serif text-2xl font-bold text-forest-950">
-            Farm Journey & Social Stories
+            Gallery
           </h2>
           <p className="text-xs sm:text-sm text-forest-600 mt-0.5">
             Add live harvest photos, field moments, and Instagram updates displayed dynamically on the storefront.
