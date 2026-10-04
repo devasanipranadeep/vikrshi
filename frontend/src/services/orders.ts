@@ -1,6 +1,7 @@
 import { getBrowserClient } from '@/lib/supabase/client';
 import { CreateOrderInquiryInput } from '@/schemas/order';
 import { OrderInquiryRecord, InquiryStatus, Database } from '@/types';
+import { initialCompanySettings } from '@/constants/mockData';
 
 type OrderInquiryRow = Database['public']['Tables']['customer_orders']['Row'];
 
@@ -57,15 +58,9 @@ export const orderService = {
       }
     }
 
-    // 2. Fetch company settings for fallback WhatsApp phone
-    const { data: settingsData } = await client
-      .from('company_settings')
-      .select('company_name, whatsapp_number')
-      .eq('id', 1)
-      .maybeSingle();
-
-    const companyName = settingsData?.company_name || 'Vikrshi Suppliers Pvt Ltd';
-    const fallbackPhone = settingsData?.whatsapp_number || '919441469814';
+    // 2. Constant company settings for fallback WhatsApp phone
+    const companyName = initialCompanySettings.companyName;
+    const fallbackPhone = initialCompanySettings.whatsappNumber;
     const cleanWaNumber = (locationPhone || fallbackPhone).replace(/[^0-9]/g, '');
 
     // 3. Fetch verified products from Supabase
