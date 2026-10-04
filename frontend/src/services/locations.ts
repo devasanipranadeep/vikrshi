@@ -1,6 +1,5 @@
 import { getBrowserClient } from '@/lib/supabase/client';
 import { LocationItem, Database } from '@/types';
-import { initialLocations } from '@/constants/mockData';
 
 type LocationRow = Database['public']['Tables']['locations']['Row'];
 type LocationInsert = Database['public']['Tables']['locations']['Insert'];
@@ -62,18 +61,18 @@ export const locationService = {
       const { data, error } = await query;
 
       if (error) {
-        console.warn('Supabase getLocations error, using fallback:', error.message);
-        return initialLocations;
+        console.warn('Supabase getLocations error:', error.message);
+        return [];
       }
 
       if (!data || data.length === 0) {
-        return initialLocations;
+        return [];
       }
 
       return data.map(mapLocationRow);
     } catch (err) {
-      console.warn('Failed fetching locations from Supabase, using mock fallback:', err);
-      return initialLocations;
+      console.warn('Failed fetching locations from Supabase:', err);
+      return [];
     }
   },
 
@@ -90,12 +89,12 @@ export const locationService = {
         .single();
 
       if (error || !data) {
-        return initialLocations.find((l) => l.slug === slug || l.cityName.toLowerCase() === slug.toLowerCase()) || null;
+        return null;
       }
 
       return mapLocationRow(data as LocationRow);
     } catch {
-      return initialLocations.find((l) => l.slug === slug || l.cityName.toLowerCase() === slug.toLowerCase()) || null;
+      return null;
     }
   },
 
@@ -145,12 +144,16 @@ export const locationService = {
   async getLocationProducts(locationId: string, customClient?: any) {
     const client = getClient(customClient);
     const { data, error } = await client
-      .from('product_locations')
-      .select('*, product:products(*)')
-      .eq('location_id', locationId)
-      .eq('is_available', true);
+      .from('products')
+      .select('*')
+      .eq('is_active', true);
 
     if (error) throw new Error(error.message);
-    return data;
+
+    return (data || []).filter((p: any) => {
+      const locList = (p.locations && Array.isArray(p.locations) ? p.locations : p.product_locations) || [];
+      const match = locList.find((l: any) => l.location_id === locationId);
+      return match ? match.is_available : true;
+    });
   },
 };

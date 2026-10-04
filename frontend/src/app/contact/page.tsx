@@ -31,7 +31,6 @@ const contactSchema = z.object({
   phone: z.string().min(10, 'Please enter a valid 10-digit mobile number'),
   email: z.string().email('Please enter a valid email address').optional().or(z.literal('')),
   location: z.string().min(2, 'Please specify your location or neighborhood in Hyderabad'),
-  subject: z.string().min(3, 'Subject must be at least 3 characters'),
   message: z.string().min(10, 'Message must be at least 10 characters'),
 });
 
@@ -201,7 +200,7 @@ export default function ContactPage() {
               Connect With Vikrshi Farms
             </h1>
             <p className="text-xs sm:text-sm text-cream-200/80 leading-relaxed">
-              Have questions about our morning harvest delivery, weekly family subscription crates, zero-pesticide certifications, or weekend farm walks? We’d love to hear from you.
+              Have questions about our morning harvest delivery, seasonal organic produce, or zero-pesticide certifications? We’d love to hear from you.
             </p>
           </div>
           <div className="absolute right-0 bottom-0 w-80 h-80 bg-leaf-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -409,27 +408,6 @@ export default function ContactPage() {
                         <p className="mt-1 text-[11px] text-red-600">{errors.location.message}</p>
                       )}
                     </div>
-                  </div>
-
-                  {/* Subject */}
-                  <div>
-                    <label className="block text-xs font-bold text-forest-950 mb-1">
-                      Subject *
-                    </label>
-                    <select
-                      {...register('subject')}
-                      className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none"
-                    >
-                      <option value="Home Delivery Inquiry">Home Delivery & Slots Inquiry</option>
-                      <option value="Weekly Farm Subscription Box">Weekly Family Subscription Box</option>
-                      <option value="Weekend Farm Tour Booking">Weekend Farm Tour Booking (Chevella)</option>
-                      <option value="Farmer Partnership Request">Farmer Partnership / Sourcing</option>
-                      <option value="Bulk Order for Event/Restaurant">Bulk Farm Order for Event or Cafe</option>
-                      <option value="Other">Other Inquiry</option>
-                    </select>
-                    {errors.subject && (
-                      <p className="mt-1 text-[11px] text-red-600">{errors.subject.message}</p>
-                    )}
                   </div>
 
                   {/* Message */}

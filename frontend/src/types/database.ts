@@ -99,6 +99,7 @@ export interface Database {
           availability_status: AvailabilityStatus;
           is_active: boolean;
           sort_order: number;
+          locations: Json;
           created_at: string;
           updated_at: string;
         };
@@ -121,6 +122,7 @@ export interface Database {
           availability_status?: AvailabilityStatus;
           is_active?: boolean;
           sort_order?: number;
+          locations?: Json;
           created_at?: string;
           updated_at?: string;
         };
@@ -143,6 +145,7 @@ export interface Database {
           availability_status?: AvailabilityStatus;
           is_active?: boolean;
           sort_order?: number;
+          locations?: Json;
           created_at?: string;
           updated_at?: string;
         };
@@ -168,7 +171,7 @@ export interface Database {
         Insert: {
           id?: string;
           city: string;
-          state: string;
+          state?: string;
           country?: string;
           slug: string;
           address?: string | null;
@@ -200,38 +203,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      product_locations: {
-        Row: {
-          id: string;
-          product_id: string;
-          location_id: string;
-          is_available: boolean;
-          custom_price: number | null;
-          availability_status: AvailabilityStatus | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          product_id: string;
-          location_id: string;
-          is_available?: boolean;
-          custom_price?: number | null;
-          availability_status?: AvailabilityStatus | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          product_id?: string;
-          location_id?: string;
-          is_available?: boolean;
-          custom_price?: number | null;
-          availability_status?: AvailabilityStatus | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
       company_settings: {
         Row: {
           id: number;
@@ -249,6 +220,7 @@ export interface Database {
           seo_title: string | null;
           seo_description: string | null;
           ordering_enabled: boolean;
+          default_location: string | null;
           updated_at: string;
         };
         Insert: {
@@ -267,6 +239,7 @@ export interface Database {
           seo_title?: string | null;
           seo_description?: string | null;
           ordering_enabled?: boolean;
+          default_location?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -285,6 +258,7 @@ export interface Database {
           seo_title?: string | null;
           seo_description?: string | null;
           ordering_enabled?: boolean;
+          default_location?: string | null;
           updated_at?: string;
         };
       };
@@ -320,13 +294,16 @@ export interface Database {
           created_at?: string;
         };
       };
-      order_inquiries: {
+      customer_orders: {
         Row: {
           id: string;
           location_id: string | null;
           customer_name: string | null;
           customer_phone: string | null;
+          delivery_address: string | null;
+          notes: string | null;
           estimated_total: number | null;
+          items: Json;
           status: InquiryStatus;
           created_at: string;
         };
@@ -335,7 +312,10 @@ export interface Database {
           location_id?: string | null;
           customer_name?: string | null;
           customer_phone?: string | null;
+          delivery_address?: string | null;
+          notes?: string | null;
           estimated_total?: number | null;
+          items?: Json;
           status?: InquiryStatus;
           created_at?: string;
         };
@@ -344,38 +324,12 @@ export interface Database {
           location_id?: string | null;
           customer_name?: string | null;
           customer_phone?: string | null;
+          delivery_address?: string | null;
+          notes?: string | null;
           estimated_total?: number | null;
+          items?: Json;
           status?: InquiryStatus;
           created_at?: string;
-        };
-      };
-      order_inquiry_items: {
-        Row: {
-          id: string;
-          inquiry_id: string;
-          product_id: string | null;
-          product_name: string;
-          quantity: number;
-          unit: string;
-          price: number;
-        };
-        Insert: {
-          id?: string;
-          inquiry_id: string;
-          product_id?: string | null;
-          product_name: string;
-          quantity: number;
-          unit: string;
-          price: number;
-        };
-        Update: {
-          id?: string;
-          inquiry_id?: string;
-          product_id?: string | null;
-          product_name?: string;
-          quantity?: number;
-          unit?: string;
-          price?: number;
         };
       };
     };

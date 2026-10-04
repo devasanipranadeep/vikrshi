@@ -51,7 +51,7 @@ export function ProcessTimeline() {
     {
       step: '06',
       icon: HeartHandshake,
-      title: 'At Your Doorstep',
+      title: 'At your community',
       desc: 'Delivered to your kitchen at 5:00 PM the exact same day, ready for wholesome family meals.',
       time: '5:00 PM',
     },

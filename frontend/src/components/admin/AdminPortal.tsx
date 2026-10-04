@@ -28,7 +28,7 @@ import { locationService } from '@/services/locations';
 import { orderService } from '@/services/orders';
 import { contactService } from '@/services/contacts';
 import { settingsService } from '@/services/settings';
-import { initialProducts, initialCategories, initialLocations, initialReviews, initialCompanySettings } from '@/constants/mockData';
+import { initialProducts, initialCategories, initialReviews, initialCompanySettings } from '@/constants/mockData';
 import { Loader2 } from 'lucide-react';
 
 export function AdminPortal() {
@@ -37,7 +37,7 @@ export function AdminPortal() {
 
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [locations, setLocations] = useState<LocationItem[]>(initialLocations);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
   const [inquiries, setInquiries] = useState<OrderInquiryRecord[]>([]);
   const [messages, setMessages] = useState<ContactMessageItem[]>([]);
   const [reviews, setReviews] = useState<CustomerReview[]>(initialReviews);

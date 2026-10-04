@@ -7,12 +7,12 @@ import { Product, LocationItem, Category } from '@/types';
 import { productService } from '@/services/products';
 import { locationService } from '@/services/locations';
 import { categoryService } from '@/services/categories';
-import { initialProducts, initialLocations, initialCategories } from '@/constants/mockData';
+import { initialProducts, initialCategories } from '@/constants/mockData';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [locations, setLocations] = useState<LocationItem[]>(initialLocations);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
 
   const loadData = async () => {
     try {

@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { LocationItem } from '@/types';
 import { locationService } from '@/services/locationService';
-import { initialLocations } from '@/constants/mockData';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { toast } from 'sonner';
 
@@ -26,7 +25,7 @@ const LOCATION_STORAGE_KEY = 'vikrshi_user_location_pref';
 
 export function LocationProvider({ children }: { children: React.ReactNode }) {
   const [selectedLocation, setSelectedLocationState] = useState<string>('Hyderabad');
-  const [locations, setLocations] = useState<LocationItem[]>(initialLocations);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
@@ -36,8 +35,8 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     async function fetchLocations() {
       try {
         const data = await locationService.getLocations();
-        if (isMounted && data && data.length > 0) {
-          setLocations(data);
+        if (isMounted) {
+          setLocations(data || []);
         }
       } catch (err) {
         console.error('Failed fetching dynamic locations', err);

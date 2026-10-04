@@ -5,10 +5,9 @@ import { AdminWrapper } from '@/components/admin/AdminWrapper';
 import { LocationsManager } from '@/components/admin/LocationsManager';
 import { LocationItem } from '@/types';
 import { locationService } from '@/services/locations';
-import { initialLocations } from '@/constants/mockData';
 
 export default function AdminLocationsPage() {
-  const [locations, setLocations] = useState<LocationItem[]>(initialLocations);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
 
   const loadData = async () => {
     try {

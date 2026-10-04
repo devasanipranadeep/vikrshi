@@ -136,27 +136,6 @@ export function FeaturedProductsSection() {
             </AnimatePresence>
           </motion.div>
         )}
-
-        {/* Bottom Banner */}
-        <div className="mt-14 rounded-2xl bg-gradient-to-r from-forest-900 via-forest-800 to-leaf-600 p-8 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="max-w-xl text-center md:text-left">
-            <span className="text-xs font-bold uppercase tracking-widest text-leaf-300 block mb-1">
-              Custom Farm Basket
-            </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-bold">
-              Looking for Weekly Home Subscription Baskets?
-            </h3>
-            <p className="mt-2 text-xs sm:text-sm text-cream-100/80 leading-relaxed">
-              We curate custom weekly baskets of essential vegetables, greens, and seasonal fruits suited for small and large families in Hyderabad.
-            </p>
-          </div>
-          <Link
-            href="/contact"
-            className="shrink-0 rounded-xl bg-white text-forest-900 px-6 py-3.5 text-xs sm:text-sm font-bold shadow-md hover:bg-cream-100 transition-colors"
-          >
-            Inquire About Custom Basket
-          </Link>
-        </div>
       </div>
     </section>
   );

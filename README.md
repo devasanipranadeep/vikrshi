@@ -29,16 +29,14 @@ Vikrshi Suppliers supplies fresh, responsibly grown organic vegetables, leafy gr
 
 ## 🗄️ Database Architecture
 
-The backend consists of 9 PostgreSQL tables:
+The backend consists of 7 PostgreSQL tables:
 1. `profiles`: Centralized admin account linked to Supabase Auth (`admin`)
 2. `categories`: High-level product categories (*Vegetables*, *Fruits*, *Leafy Greens*, *Seasonal Products*)
-3. `products`: Organic products items, prices, units, stock status, gallery
+3. `products`: Organic products items, master prices, units, gallery, and embedded city-specific pricing/availability overrides (`locations` JSONB)
 4. `locations`: Service cities, delivery availability, WhatsApp numbers, coordinates
-5. `product_locations`: City-specific availability and custom regional pricing
-6. `company_settings`: Singleton company branding, WhatsApp dispatch number, address, and hours
-7. `contact_messages`: Inbound customer questions with status workflow
-8. `order_inquiries`: Secure server-validated customer orders before WhatsApp redirect
-9. `order_inquiry_items`: Line items with quantities and verified prices
+5. `company_settings`: Singleton company branding, WhatsApp dispatch number, address, and hours
+6. `contact_messages`: Inbound customer questions with status workflow
+7. `customer_orders`: Secure server-validated customer orders with embedded line items (JSONB) before WhatsApp redirect
 
 ---
 

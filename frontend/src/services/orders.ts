@@ -2,7 +2,7 @@ import { getBrowserClient } from '@/lib/supabase/client';
 import { CreateOrderInquiryInput } from '@/schemas/order';
 import { OrderInquiryRecord, InquiryStatus, Database } from '@/types';
 
-type OrderInquiryRow = Database['public']['Tables']['order_inquiries']['Row'];
+type OrderInquiryRow = Database['public']['Tables']['customer_orders']['Row'];
 
 function getClient(customClient?: any) {
   return customClient || getBrowserClient();
@@ -79,7 +79,7 @@ export const orderService = {
         unit,
         is_active,
         availability_status,
-        product_locations(*)
+        locations
       `)
       .in('id', productIds);
 
@@ -108,8 +108,9 @@ export const orderService = {
       let unitPrice = p ? Number(p.price) : 50;
 
       // Check for location-specific custom price
-      if (locationIdToSave && p?.product_locations) {
-        const pl = p.product_locations.find((l: any) => l.location_id === locationIdToSave);
+      const locList = (p?.locations && Array.isArray(p.locations) ? p.locations : p?.product_locations) || [];
+      if (locationIdToSave && locList.length > 0) {
+        const pl = locList.find((l: any) => l.location_id === locationIdToSave);
         if (pl && pl.custom_price !== null && pl.custom_price !== undefined) {
           unitPrice = Number(pl.custom_price);
         }
@@ -139,13 +140,23 @@ export const orderService = {
         ? `${input.customerName}${addressDetailsStr}`
         : (addressDetailsStr || null);
 
+      const itemRows = itemsToInsert.map((item) => ({
+        product_id: item.productId,
+        product_name: item.productName,
+        quantity: item.quantity,
+        unit: item.unit,
+        price: item.price,
+      }));
+
       const { data: inquiryRecord, error: inqError } = await client
-        .from('order_inquiries')
+        .from('customer_orders')
         .insert({
           location_id: locationIdToSave,
           customer_name: fullCustomerName,
           customer_phone: input.customerPhone || null,
+          delivery_address: addressDetailsStr || null,
           estimated_total: calculatedTotal,
+          items: itemRows,
           status: 'whatsapp_redirected',
         })
         .select()
@@ -153,18 +164,6 @@ export const orderService = {
 
       if (!inqError && inquiryRecord) {
         inquiryId = inquiryRecord.id;
-
-        // Insert inquiry items
-        const itemRows = itemsToInsert.map((item) => ({
-          inquiry_id: inquiryRecord.id,
-          product_id: item.productId,
-          product_name: item.productName,
-          quantity: item.quantity,
-          unit: item.unit,
-          price: item.price,
-        }));
-
-        await client.from('order_inquiry_items').insert(itemRows);
       }
     } catch (saveErr) {
       console.warn('Could not save order inquiry to Supabase, continuing to WhatsApp:', saveErr);
@@ -232,11 +231,10 @@ export const orderService = {
     try {
       const client = getClient(customClient);
       let query = client
-        .from('order_inquiries')
+        .from('customer_orders')
         .select(`
           *,
-          location:locations(city),
-          items:order_inquiry_items(*)
+          location:locations(city)
         `)
         .order('created_at', { ascending: false });
 
@@ -256,15 +254,17 @@ export const orderService = {
         estimatedTotal: row.estimated_total ? Number(row.estimated_total) : null,
         status: row.status as InquiryStatus,
         createdAt: row.created_at,
-        items: (row.items || []).map((i: any) => ({
-          id: i.id,
-          inquiryId: i.inquiry_id,
-          productId: i.product_id,
-          productName: i.product_name,
-          quantity: Number(i.quantity),
-          unit: i.unit,
-          price: Number(i.price),
-        })),
+        items: Array.isArray(row.items)
+          ? row.items.map((i: any, index: number) => ({
+              id: i.id || `${row.id}-${index}`,
+              inquiryId: row.id,
+              productId: i.product_id || i.productId || null,
+              productName: i.product_name || i.productName || 'Farm Product',
+              quantity: Number(i.quantity || 1),
+              unit: i.unit || 'kg',
+              price: Number(i.price || 0),
+            }))
+          : [],
       }));
     } catch {
       return [];
@@ -277,7 +277,7 @@ export const orderService = {
   async updateInquiryStatus(id: string, status: InquiryStatus, customClient?: any): Promise<void> {
     const client = getClient(customClient);
     const { error } = await client
-      .from('order_inquiries')
+      .from('customer_orders')
       .update({ status })
       .eq('id', id);
     if (error) throw new Error(error.message);

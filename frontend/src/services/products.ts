@@ -44,8 +44,9 @@ function mapProductRow(
   const locPrices: Record<string, number> = {};
   const locAvail: Record<string, boolean> = {};
 
-  if (row.product_locations && Array.isArray(row.product_locations)) {
-    row.product_locations.forEach((pl: any) => {
+  const locList = (row.locations && Array.isArray(row.locations) ? row.locations : row.product_locations) || [];
+  if (Array.isArray(locList)) {
+    locList.forEach((pl: any) => {
       if (pl.custom_price !== null && pl.custom_price !== undefined) {
         locPrices[pl.location_id] = Number(pl.custom_price);
       }
@@ -120,8 +121,7 @@ export const productService = {
         .from('products')
         .select(`
           *,
-          category:categories(name, slug),
-          product_locations(*)
+          category:categories(name, slug)
         `);
 
       if (!filters.includeInactive) {
@@ -241,8 +241,7 @@ export const productService = {
         .from('products')
         .select(`
           *,
-          category:categories(name, slug),
-          product_locations(*)
+          category:categories(name, slug)
         `)
         .eq('slug', slug)
         .single();
@@ -281,26 +280,25 @@ export const productService = {
   ): Promise<ProductRow> {
     const client = getClient(customClient);
 
+    const locationData = locations && locations.length > 0
+      ? locations.map((loc) => ({
+          location_id: loc.locationId,
+          is_available: loc.isAvailable,
+          custom_price: loc.customPrice ?? null,
+          availability_status: loc.availabilityStatus ?? null,
+        }))
+      : (payload.locations || []);
+
     const { data: product, error } = await client
       .from('products')
-      .insert(payload)
+      .insert({
+        ...payload,
+        locations: locationData,
+      })
       .select()
       .single();
 
     if (error) throw new Error(error.message);
-
-    if (locations && locations.length > 0) {
-      const locationRows = locations.map((loc) => ({
-        product_id: product.id,
-        location_id: loc.locationId,
-        is_available: loc.isAvailable,
-        custom_price: loc.customPrice ?? null,
-        availability_status: loc.availabilityStatus ?? null,
-      }));
-
-      await client.from('product_locations').insert(locationRows);
-    }
-
     return product;
   },
 
@@ -315,42 +313,25 @@ export const productService = {
   ): Promise<ProductRow> {
     const client = getClient(customClient);
 
+    const updateData: any = { ...payload };
+
+    if (locations) {
+      updateData.locations = locations.map((loc) => ({
+        location_id: loc.locationId,
+        is_available: loc.isAvailable,
+        custom_price: loc.customPrice ?? null,
+        availability_status: loc.availabilityStatus ?? null,
+      }));
+    }
+
     const { data: product, error } = await client
       .from('products')
-      .update(payload)
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
 
     if (error) throw new Error(error.message);
-
-    // Keep product_locations availability in sync with master product
-    if (payload.availability_status !== undefined) {
-      await client
-        .from('product_locations')
-        .update({
-          availability_status: payload.availability_status,
-          is_available: payload.availability_status !== 'out_of_stock',
-        })
-        .eq('product_id', id);
-    }
-
-    if (locations) {
-      // Upsert product location records
-      for (const loc of locations) {
-        await client.from('product_locations').upsert(
-          {
-            product_id: id,
-            location_id: loc.locationId,
-            is_available: loc.isAvailable,
-            custom_price: loc.customPrice ?? null,
-            availability_status: loc.availabilityStatus ?? null,
-          },
-          { onConflict: 'product_id,location_id' }
-        );
-      }
-    }
-
     return product;
   },
 

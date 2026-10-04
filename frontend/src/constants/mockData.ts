@@ -1,4 +1,4 @@
-import { CompanySettings, LocationItem, Category, Product, CustomerReview } from '@/types';
+import { CompanySettings, Category, Product, CustomerReview } from '@/types';
 
 export const initialCompanySettings: CompanySettings = {
   companyName: 'Vikrshi Suppliers Pvt Ltd',
@@ -32,9 +32,6 @@ export const initialCompanySettings: CompanySettings = {
   orderingEnabled: true,
   defaultLocation: 'Hyderabad',
 };
-
-// All mock locations removed. Live locations from the database will populate once unpaused.
-export const initialLocations: LocationItem[] = [];
 
 // All mock data removed. When the backend server is unpaused, live data will automatically populate.
 export const initialCategories: Category[] = [];

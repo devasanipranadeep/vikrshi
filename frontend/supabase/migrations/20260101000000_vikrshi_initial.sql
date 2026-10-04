@@ -1,2 +1,0 @@
--- Combined migration for Vikrshi Suppliers Pvt Ltd
--- See supabase/schema.sql and supabase/seed.sql for complete definitions

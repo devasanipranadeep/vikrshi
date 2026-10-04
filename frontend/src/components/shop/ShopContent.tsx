@@ -6,7 +6,7 @@ import { Product, LocationItem, Category } from '@/types';
 import { productService } from '@/services/productService';
 import { locationService } from '@/services/locationService';
 import { categoryService } from '@/services/categories';
-import { initialProducts, initialLocations, initialCategories } from '@/constants/mockData';
+import { initialProducts, initialCategories } from '@/constants/mockData';
 import { ProductCard } from '@/components/products/ProductCard';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { useLocation } from '@/context/LocationContext';
@@ -33,7 +33,7 @@ export function ShopContent() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [dbCategories, setDbCategories] = useState<Category[]>(initialCategories);
-  const [locations, setLocations] = useState<LocationItem[]>(initialLocations);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Filter States

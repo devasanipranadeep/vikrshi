@@ -1,20 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ProcessTimeline } from '@/components/home/ProcessTimeline';
-import {
-  Sprout,
-  ShieldCheck,
-  Heart,
-  Users,
-  Sun,
-  Truck,
-  Leaf,
-  CheckCircle2,
-  ArrowRight,
-  MessageCircle,
-} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'About Our Organic Farming Mission | Vikrshi Suppliers Pvt Ltd',
@@ -104,33 +91,6 @@ export default function AboutPage() {
 
       {/* Process Timeline */}
       <ProcessTimeline />
-
-      {/* Farm Visit CTA */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-forest-900 p-8 sm:p-12 text-white shadow-xl text-center max-w-3xl mx-auto border border-leaf-500/20">
-          <Sprout className="h-12 w-12 text-leaf-300 mx-auto mb-4" />
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold mb-3">
-            Experience Our Chevella Farms in Person
-          </h3>
-          <p className="text-xs sm:text-sm text-cream-200/80 leading-relaxed mb-6 max-w-xl mx-auto">
-            We host weekend morning farm walks for Hyderabad families and school groups. Walk through the tomato groves, see how Jeevamrutham is brewed, and let your children harvest their own carrots.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/contact"
-              className="w-full sm:w-auto rounded-xl bg-leaf-500 hover:bg-leaf-600 text-white px-6 py-3 text-xs sm:text-sm font-semibold shadow-md transition-colors"
-            >
-              Book a Weekend Farm Visit
-            </Link>
-            <Link
-              href="/shop"
-              className="w-full sm:w-auto rounded-xl bg-white text-forest-950 px-6 py-3 text-xs sm:text-sm font-semibold hover:bg-cream-100 transition-colors"
-            >
-              Order Products on WhatsApp
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

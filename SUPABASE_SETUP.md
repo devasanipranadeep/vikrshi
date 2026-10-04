@@ -7,7 +7,7 @@ This document contains step-by-step instructions to configure **Supabase** as th
 ## 1. Quick Overview
 
 Vikrshi Suppliers uses **Supabase only** for:
-- **Database**: PostgreSQL with strict Row Level Security (RLS) on all 10 tables.
+- **Database**: PostgreSQL with strict Row Level Security (RLS) on all 8 tables.
 - **Authentication**: Supabase Auth for Super Admin, Admin, and Content Manager roles.
 - **Storage**: `vikrshi-media` bucket for product images, categories, and company branding.
 - **Security**: Row Level Security (RLS) policies allowing public read access to active products, and restricting management to authorized admin roles.
@@ -38,16 +38,14 @@ Vikrshi Suppliers uses **Supabase only** for:
 2. Click **New Query**.
 3. Copy the complete contents of `supabase/schema.sql` and paste it into the editor.
 4. Click **Run** (Ctrl + Enter).
-   - This creates all 9 tables:
+   - This creates all 7 core tables:
      - `profiles`
      - `categories`
-     - `products`
+     - `products` (stores product catalog and location pricing/availability JSONB directly)
      - `locations`
-     - `product_locations`
      - `company_settings`
      - `contact_messages`
-     - `order_inquiries`
-     - `order_inquiry_items`
+     - `customer_orders` (stores customer order details and line items JSONB directly)
    - This creates the `handle_updated_at` timestamp triggers.
    - This creates the `is_admin()`, `is_super_admin()`, and `is_full_admin()` functions.
    - This enables RLS across all tables and applies public and admin policies.
@@ -64,7 +62,7 @@ Vikrshi Suppliers uses **Supabase only** for:
    - Inserts the initial anchor location: **Hyderabad, Telangana, India**.
    - Inserts default categories: *Vegetables*, *Fruits*, *Leafy Greens*, *Seasonal Products*.
    - Inserts development product items: *Organic Tomatoes*, *Fresh Spinach*, *Farm Fresh Carrots*, *Apples*, *Bananas*.
-   - Connects products to Hyderabad in `product_locations`.
+   - Configures products with Hyderabad hub availability in `locations` JSONB.
 
 ---
 
@@ -138,7 +136,7 @@ The platform is built to expand to unlimited cities:
    - Fetches actual product prices from Supabase.
    - Checks location-specific price or regular price.
    - Validates availability.
-   - Creates an `order_inquiries` record and `order_inquiry_items` in Supabase.
+   - Creates a `customer_orders` record with line items in Supabase.
    - Generates pre-filled WhatsApp message URL.
 5. WhatsApp opens directly with the farm manager containing the order summary and inquiry reference code.
 6. The inquiry immediately appears in the admin panel under **Order Inquiries** (`/admin/inquiries`).

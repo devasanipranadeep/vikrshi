@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LocationItem } from '@/types';
 import { locationService } from '@/services/locationService';
-import { initialLocations } from '@/constants/mockData';
 import { useLocation } from '@/context/LocationContext';
 import { useSettings } from '@/context/SettingsContext';
 import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';
@@ -25,7 +24,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 export default function LocationsPage() {
-  const [locations, setLocations] = useState<LocationItem[]>(initialLocations);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
   const [pincodeQuery, setPincodeQuery] = useState('');
   const [checkResult, setCheckResult] = useState<{
     searched: boolean;

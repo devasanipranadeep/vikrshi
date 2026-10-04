@@ -26,9 +26,6 @@ export function RealtimeStoreProvider({ children }: { children: React.ReactNode 
         .on('postgres_changes', { event: '*', schema: 'public', table: 'locations' }, () => {
           notifyStoreUpdate('locations');
         })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'product_locations' }, () => {
-          notifyStoreUpdate('products');
-        })
         .subscribe();
     } catch (e) {
       console.warn('Realtime subscription could not be established:', e);
