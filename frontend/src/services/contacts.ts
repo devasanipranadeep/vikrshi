@@ -1,8 +1,7 @@
 import { getBrowserClient } from '@/lib/supabase/client';
 import { ContactMessageFormValues } from '@/schemas/contact';
 import { ContactMessageItem, MessageStatus, Database } from '@/types';
-
-type ContactRow = Database['public']['Tables']['contact_messages']['Row'];
+type ContactRow = any;
 
 function getClient(customClient?: any) {
   return customClient || getBrowserClient();

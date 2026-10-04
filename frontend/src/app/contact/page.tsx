@@ -6,8 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useSettings } from '@/context/SettingsContext';
 import { useLocation } from '@/context/LocationContext';
-import { contactService } from '@/services/contactService';
-import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';
+import { buildGeneralWhatsAppUrl, buildCommunityRequestWhatsAppUrl } from '@/utils/whatsapp';
+import { submitCommunityRequestAction } from '@/actions/community';
 import {
   MapPin,
   Phone,
@@ -17,24 +17,40 @@ import {
   Send,
   CheckCircle2,
   Building,
+  Building2,
   Sprout,
   HelpCircle,
   ExternalLink,
   Navigation,
+  Compass,
+  FileText,
+  Users2,
+  ShieldCheck,
 } from 'lucide-react';
 import { InstagramIcon } from '@/components/ui/Icons';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
-const contactSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+const HEAR_ABOUT_OPTIONS = [
+  'Resident / Apartment WhatsApp Group',
+  'Friend or Family Recommendation',
+  'Instagram (@vikrshi)',
+  'Google Search',
+  'Facebook / Social Media',
+  'Community Event / Farmers Market',
+  'Other',
+];
+
+const communitySchema = z.object({
+  applicantName: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z.string().min(10, 'Please enter a valid 10-digit mobile number'),
-  email: z.string().email('Please enter a valid email address').optional().or(z.literal('')),
-  location: z.string().min(2, 'Please specify your location or neighborhood in Hyderabad'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  communityName: z.string().min(2, 'Please enter your community / society name'),
+  address: z.string().min(5, 'Please provide the community address or locality'),
+  source: z.string().min(1, 'Please select how you heard about us'),
+  details: z.string().optional(),
 });
 
-type ContactFormInputs = z.infer<typeof contactSchema>;
+type CommunityFormInputs = z.infer<typeof communitySchema>;
 
 export default function ContactPage() {
   const { settings } = useSettings();
@@ -156,26 +172,45 @@ export default function ContactPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ContactFormInputs>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: {
-      location: selectedLocation,
-    },
+  } = useForm<CommunityFormInputs>({
+    resolver: zodResolver(communitySchema),
   });
 
-  const onSubmit = async (data: ContactFormInputs) => {
+  const onSubmit = async (data: CommunityFormInputs) => {
     setIsSubmitting(true);
     try {
-      const response = await contactService.submitContact(data);
-      if (response.success) {
-        setSubmittedTicket(response.ticketId || 'VKR-ONLINE');
-        toast.success(response.message || 'Inquiry submitted successfully!');
-        reset();
-      } else {
-        toast.error(response.message || 'Failed to submit form');
+      await submitCommunityRequestAction({
+        applicantName: data.applicantName,
+        phone: data.phone,
+        communityName: data.communityName,
+        address: data.address,
+        source: data.source,
+        details: data.details,
+      });
+
+      const waPhone = settings?.whatsappNumber || '919441469814';
+      const waUrl = buildCommunityRequestWhatsAppUrl({
+        phone: waPhone,
+        companyName: settings?.companyName || 'Vikrshi Suppliers Pvt Ltd',
+        request: {
+          applicantName: data.applicantName,
+          phone: data.phone,
+          communityName: data.communityName,
+          address: data.address,
+          source: data.source,
+          details: data.details,
+        },
+      });
+
+      if (typeof window !== 'undefined') {
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
       }
+
+      setSubmittedTicket(`COM-${Date.now().toString().slice(-6)}`);
+      toast.success('Community request submitted & opening WhatsApp!');
+      reset();
     } catch {
-      toast.error('Network error submitting contact request');
+      toast.error('Network error submitting community request');
     } finally {
       setIsSubmitting(false);
     }
@@ -314,30 +349,36 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right Column: Contact Form */}
+          {/* Right Column: Community Request Form */}
           <div className="lg:col-span-7">
             <div className="rounded-3xl bg-white p-6 sm:p-10 border border-cream-200 shadow-2xs">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-leaf-700 bg-leaf-100/60 px-2.5 py-0.5 rounded-full border border-leaf-200/60 inline-flex items-center gap-1.5">
+                  <Building2 className="h-3 w-3" />
+                  Community Partnership
+                </span>
+              </div>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-forest-950 mb-2">
-                Send Us a Message
+                Community Delivery Request
               </h2>
               <p className="text-xs sm:text-sm text-forest-700/80 mb-6">
-                Fill in your details below and our customer care team will get back to you promptly.
+                Are you a resident or society committee lead? Request scheduled organic farm deliveries or a weekly harvest pop-up for your gated community or apartment society.
               </p>
 
               {submittedTicket ? (
                 <div className="rounded-2xl bg-leaf-50 p-6 border border-leaf-200 text-center space-y-3">
                   <CheckCircle2 className="h-12 w-12 text-leaf-500 mx-auto" />
                   <h4 className="font-serif text-xl font-bold text-forest-950">
-                    Inquiry Received!
+                    Community Request Dispatched!
                   </h4>
                   <p className="text-xs sm:text-sm text-forest-700/80 max-w-md mx-auto">
-                    Your reference ticket is <strong className="text-leaf-600">{submittedTicket}</strong>. We will review your message and contact your phone or WhatsApp shortly.
+                    Your reference ticket is <strong className="text-leaf-600">{submittedTicket}</strong>. We have prepared your request for WhatsApp dispatch. Our team will coordinate your society delivery schedule promptly.
                   </p>
                   <button
                     onClick={() => setSubmittedTicket(null)}
                     className="mt-4 inline-block text-xs font-bold text-leaf-600 hover:underline cursor-pointer"
                   >
-                    Send another inquiry
+                    Submit another community request
                   </button>
                 </div>
               ) : (
@@ -346,16 +387,16 @@ export default function ContactPage() {
                     {/* Name */}
                     <div>
                       <label className="block text-xs font-bold text-forest-950 mb-1">
-                        Full Name *
+                        Your Full Name *
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Ramesh Reddy"
-                        {...register('name')}
+                        placeholder="e.g. Priya Sharma"
+                        {...register('applicantName')}
                         className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none"
                       />
-                      {errors.name && (
-                        <p className="mt-1 text-[11px] text-red-600">{errors.name.message}</p>
+                      {errors.applicantName && (
+                        <p className="mt-1 text-[11px] text-red-600">{errors.applicantName.message}</p>
                       )}
                     </div>
 
@@ -377,64 +418,87 @@ export default function ContactPage() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Email */}
+                    {/* Community Name */}
                     <div>
                       <label className="block text-xs font-bold text-forest-950 mb-1">
-                        Email Address (Optional)
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="e.g. ramesh@example.com"
-                        {...register('email')}
-                        className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none"
-                      />
-                      {errors.email && (
-                        <p className="mt-1 text-[11px] text-red-600">{errors.email.message}</p>
-                      )}
-                    </div>
-
-                    {/* Delivery Location / Area */}
-                    <div>
-                      <label className="block text-xs font-bold text-forest-950 mb-1">
-                        Your Location / Neighborhood *
+                        Community / Apartment Name *
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Jubilee Hills, Hyderabad"
-                        {...register('location')}
+                        placeholder="e.g. My Home Bhooja"
+                        {...register('communityName')}
                         className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none"
                       />
-                      {errors.location && (
-                        <p className="mt-1 text-[11px] text-red-600">{errors.location.message}</p>
+                      {errors.communityName && (
+                        <p className="mt-1 text-[11px] text-red-600">{errors.communityName.message}</p>
+                      )}
+                    </div>
+
+                    {/* How heard about us */}
+                    <div>
+                      <label className="block text-xs font-bold text-forest-950 mb-1 flex items-center gap-1">
+                        <Compass className="h-3.5 w-3.5 text-leaf-600" />
+                        <span>How did you hear about us? *</span>
+                      </label>
+                      <select
+                        {...register('source')}
+                        className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none cursor-pointer"
+                      >
+                        <option value="">Select an option...</option>
+                        {HEAR_ABOUT_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.source && (
+                        <p className="mt-1 text-[11px] text-red-600">{errors.source.message}</p>
                       )}
                     </div>
                   </div>
 
-                  {/* Message */}
+                  {/* Address */}
                   <div>
                     <label className="block text-xs font-bold text-forest-950 mb-1">
-                      Message *
+                      Society Address & Locality / City *
                     </label>
-                    <textarea
-                      rows={4}
-                      placeholder="Please let us know your requirements or delivery preferences..."
-                      {...register('message')}
+                    <input
+                      type="text"
+                      placeholder="e.g. Financial District, Nanakramguda, Hyderabad - 500032"
+                      {...register('address')}
                       className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none"
                     />
-                    {errors.message && (
-                      <p className="mt-1 text-[11px] text-red-600">{errors.message.message}</p>
+                    {errors.address && (
+                      <p className="mt-1 text-[11px] text-red-600">{errors.address.message}</p>
                     )}
+                  </div>
+
+                  {/* Details / Preferences */}
+                  <div>
+                    <label className="block text-xs font-bold text-forest-950 mb-1 flex items-center justify-between">
+                      <span>Relevant Details & Household Requirements (Optional)</span>
+                      <span className="text-[10px] text-forest-500 font-normal">Optional</span>
+                    </label>
+                    <textarea
+                      rows={3}
+                      placeholder="e.g. Approx 150+ households, interested in morning vegetable crates, cold-pressed oils, and farm fresh eggs..."
+                      {...register('details')}
+                      className="w-full rounded-xl bg-cream-50 border border-cream-300 py-2.5 px-3.5 text-xs sm:text-sm text-forest-950 focus:border-leaf-500 focus:outline-none"
+                    />
                   </div>
 
                   {/* Submit Button */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-forest-900 hover:bg-forest-800 text-white py-3.5 px-6 font-semibold text-xs sm:text-sm shadow-md transition-colors cursor-pointer disabled:opacity-70"
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-6 font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-70"
                   >
-                    <Send className="h-4 w-4" />
-                    <span>{isSubmitting ? 'Sending Request...' : 'Submit Farm Inquiry'}</span>
+                    <MessageCircle className="h-4 w-4 fill-white" />
+                    <span>{isSubmitting ? 'Submitting Request...' : 'Send Community Request via WhatsApp'}</span>
                   </button>
+                  <p className="text-center text-[11px] text-forest-500">
+                    Direct farm coordinator • Zero spam • Instant WhatsApp confirmation
+                  </p>
                 </form>
               )}
             </div>

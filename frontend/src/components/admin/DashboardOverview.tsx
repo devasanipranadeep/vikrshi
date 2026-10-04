@@ -5,14 +5,12 @@ import Image from 'next/image';
 import {
   Package,
   MapPin,
-  MessageSquare,
   Clock,
   CheckCircle2,
   AlertCircle,
   Truck,
   ArrowUpRight,
   Sparkles,
-  Mail,
   ShoppingBag,
   Layers,
   ChevronRight,
@@ -23,7 +21,6 @@ import {
   LocationItem,
   CustomerReview,
   OrderInquiryRecord,
-  ContactMessageItem,
   CommunityRequestItem,
 } from '@/types';
 import { formatCurrency } from '@/utils/formatters';
@@ -33,7 +30,6 @@ interface DashboardOverviewProps {
   locations: LocationItem[];
   inquiries?: OrderInquiryRecord[];
   communityRequests?: CommunityRequestItem[];
-  messages?: ContactMessageItem[];
   reviews?: CustomerReview[];
   onNavigateTab: (tab: string) => void;
 }
@@ -43,7 +39,6 @@ export function DashboardOverview({
   locations = [],
   inquiries = [],
   communityRequests = [],
-  messages = [],
   reviews = [],
   onNavigateTab,
 }: DashboardOverviewProps) {
@@ -54,7 +49,6 @@ export function DashboardOverview({
   const fruitsCount = products.filter((p) => p.category?.toLowerCase().includes('fruit') || p.categoryName?.toLowerCase().includes('fruit')).length;
   const activeLocationsCount = locations.filter((l) => l.isActive).length;
 
-  const newMessagesCount = messages.filter((m) => m.status === 'new').length;
   const totalInquiriesCount = inquiries.length;
   const communityCount = communityRequests.length;
 
@@ -99,7 +93,7 @@ export function DashboardOverview({
       </div>
 
       {/* Required Metric Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
         {/* Total Products */}
         <div
           onClick={() => onNavigateTab('products')}
@@ -189,19 +183,6 @@ export function DashboardOverview({
           </div>
           <span className="font-serif text-2xl font-bold text-emerald-700">{communityCount}</span>
           <span className="text-[10px] text-emerald-600/80 block mt-0.5">Society requests</span>
-        </div>
-
-        {/* New Messages */}
-        <div
-          onClick={() => onNavigateTab('messages')}
-          className="bg-white p-4 rounded-2xl border border-cream-200 shadow-2xs hover:border-leaf-300 transition-all cursor-pointer group"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold text-forest-600 truncate">Messages</span>
-            <Mail className="w-4 h-4 text-blue-600" />
-          </div>
-          <span className="font-serif text-2xl font-bold text-blue-700">{newMessagesCount}</span>
-          <span className="text-[10px] text-blue-600 block mt-0.5">New unread</span>
         </div>
       </div>
 

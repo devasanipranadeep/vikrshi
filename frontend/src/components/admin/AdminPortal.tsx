@@ -10,7 +10,6 @@ import { CategoriesManager } from './CategoriesManager';
 import { LocationsManager } from './LocationsManager';
 import { OrderInquiriesManager } from './OrderInquiriesManager';
 import { CommunityRequestsManager } from './CommunityRequestsManager';
-import { MessagesManager } from './MessagesManager';
 import { SettingsManager } from './SettingsManager';
 import { ReviewsManager } from './ReviewsManager';
 import { SocialManager } from './SocialManager';
@@ -19,7 +18,6 @@ import {
   Category,
   LocationItem,
   OrderInquiryRecord,
-  ContactMessageItem,
   CommunityRequestItem,
   CustomerReview,
   CompanySettings,
@@ -29,7 +27,6 @@ import { categoryService } from '@/services/categories';
 import { locationService } from '@/services/locations';
 import { orderService } from '@/services/orders';
 import { communityService } from '@/services/community';
-import { contactService } from '@/services/contacts';
 import { settingsService } from '@/services/settings';
 import { initialProducts, initialCategories, initialReviews, initialCompanySettings } from '@/constants/mockData';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
@@ -44,7 +41,6 @@ export function AdminPortal() {
   const [locations, setLocations] = useState<LocationItem[]>([]);
   const [inquiries, setInquiries] = useState<OrderInquiryRecord[]>([]);
   const [communityRequests, setCommunityRequests] = useState<CommunityRequestItem[]>([]);
-  const [messages, setMessages] = useState<ContactMessageItem[]>([]);
   const [reviews, setReviews] = useState<CustomerReview[]>(initialReviews);
   const [settings, setSettings] = useState<CompanySettings>(initialCompanySettings);
 
@@ -57,7 +53,6 @@ export function AdminPortal() {
         locs,
         inqs,
         comms,
-        msgs,
         sets,
       ] = await Promise.allSettled([
         productService.getProducts({ includeInactive: true }),
@@ -65,7 +60,6 @@ export function AdminPortal() {
         locationService.getLocations(true),
         orderService.getOrderInquiries(),
         communityService.getCommunityRequests(),
-        contactService.getContactMessages(),
         settingsService.getCompanySettings(),
       ]);
 
@@ -74,7 +68,6 @@ export function AdminPortal() {
       if (locs.status === 'fulfilled' && locs.value) setLocations(locs.value);
       if (inqs.status === 'fulfilled') setInquiries(inqs.value || []);
       if (comms.status === 'fulfilled') setCommunityRequests(comms.value || []);
-      if (msgs.status === 'fulfilled') setMessages(msgs.value || []);
       if (sets.status === 'fulfilled' && sets.value) setSettings(sets.value);
 
       // Reviews endpoint fallback
@@ -118,7 +111,6 @@ export function AdminPortal() {
           locations={locations}
           inquiries={inquiries}
           communityRequests={communityRequests}
-          messages={messages}
           reviews={reviews}
           onNavigateTab={setActiveTab}
         />
@@ -158,13 +150,6 @@ export function AdminPortal() {
         <CommunityRequestsManager
           requests={communityRequests}
           onRequestUpdated={loadData}
-        />
-      )}
-
-      {activeTab === 'messages' && (
-        <MessagesManager
-          messages={messages}
-          onMessageUpdated={loadData}
         />
       )}
 
