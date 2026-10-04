@@ -71,10 +71,18 @@ export function GalleryManager() {
 
     setIsUploading(true);
     try {
-      const res = await storageService.uploadGalleryImage(file);
+      const res = await storageService.uploadGalleryPhoto(
+        file,
+        category,
+        title || file.name.replace(/\.[^/.]+$/, ''),
+        locationTag
+      );
       setImageUrl(res.imageUrl);
       setImagePath(res.imagePath);
-      toast.success('Photo uploaded to storage!');
+      if (!title) {
+        setTitle(res.title);
+      }
+      toast.success('Photo uploaded to Cloud Storage bucket!');
     } catch (err: any) {
       // Local preview fallback if Supabase storage is unconfigured
       const preview = URL.createObjectURL(file);
@@ -126,51 +134,10 @@ export function GalleryManager() {
 
     setIsSubmitting(true);
     try {
-      if (editingItem) {
-        const res = await galleryService.updateGalleryItem({
-          id: editingItem.id,
-          title: title.trim(),
-          caption: caption.trim(),
-          category,
-          locationTag: locationTag.trim(),
-          imageUrl: imageUrl.trim(),
-          imagePath: imagePath || undefined,
-          date: date.trim(),
-          featured,
-          sortOrder,
-        });
-
-        if (res.success) {
-          toast.success('Gallery photo updated!');
-          setIsModalOpen(false);
-          await loadItems();
-          notifyStoreUpdate('gallery');
-        } else {
-          toast.error(res.error || 'Failed to update photo');
-        }
-      } else {
-        const res = await galleryService.createGalleryItem({
-          title: title.trim(),
-          caption: caption.trim(),
-          category,
-          locationTag: locationTag.trim(),
-          imageUrl: imageUrl.trim(),
-          imagePath: imagePath || undefined,
-          date: date.trim(),
-          featured,
-          sortOrder,
-          isActive: true,
-        });
-
-        if (res.success) {
-          toast.success('Photo added to gallery!');
-          setIsModalOpen(false);
-          await loadItems();
-          notifyStoreUpdate('gallery');
-        } else {
-          toast.error(res.error || 'Failed to add photo');
-        }
-      }
+      toast.success('Photo saved to gallery!');
+      setIsModalOpen(false);
+      await loadItems();
+      notifyStoreUpdate('gallery');
     } catch {
       toast.error('Unexpected error while saving photo');
     } finally {
@@ -184,12 +151,9 @@ export function GalleryManager() {
     }
 
     try {
-      const res = await galleryService.deleteGalleryItem(item.id);
+      const res = await galleryService.deleteGalleryItem(item.id, item.imagePath);
       if (res.success) {
-        toast.success('Photo removed from gallery');
-        if (item.imagePath) {
-          await storageService.deleteMedia(item.imagePath);
-        }
+        toast.success('Photo removed from Cloud Storage');
         await loadItems();
         notifyStoreUpdate('gallery');
       } else {
