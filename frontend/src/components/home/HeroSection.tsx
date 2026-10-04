@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSettings } from '@/context/SettingsContext';
 import { useLocation } from '@/context/LocationContext';
 import { buildGeneralWhatsAppUrl } from '@/utils/whatsapp';
 import { ArrowRight, MessageCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const heroImages = [
   {
@@ -15,8 +15,8 @@ const heroImages = [
     alt: 'Organic farming fields and fresh product cultivation',
   },
   {
-    src: '/hero/farm-2.jpg',
-    alt: 'Fresh green vegetables and crops growing in rich organic soil',
+    src: '/hero/farm-2.jpg?v=2',
+    alt: 'Vikrshi Suppliers packing, sorting and cold chain logistics facility',
   },
   {
     src: '/hero/farm-3.jpg',
@@ -35,9 +35,20 @@ const heroImages = [
 const SLIDE_INTERVAL = 3500; // Relaxed 3.5 seconds per slide for premium viewing
 
 export function HeroSection() {
+  const heroRef = useRef<HTMLElement>(null);
   const { settings } = useSettings();
   const { selectedLocation } = useLocation();
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Track scroll progress of the hero section
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // As the next section comes into view, fade out the hero to white
+  const whiteFadeOpacity = useTransform(scrollYProgress, [0.3, 0.95], [0, 1]);
+  const contentOpacity = useTransform(scrollYProgress, [0.25, 0.75], [1, 0]);
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % heroImages.length);
@@ -56,7 +67,10 @@ export function HeroSection() {
   });
 
   return (
-    <section className="relative min-h-[100vh] min-h-[100dvh] md:min-h-[calc(100vh+0.5cm)] flex flex-col overflow-hidden bg-forest-950 text-white -mb-2 border-none outline-none">
+    <section
+      ref={heroRef}
+      className="relative min-h-[100vh] min-h-[100dvh] md:min-h-[calc(100vh+0.5cm)] flex flex-col overflow-hidden bg-forest-950 text-white -mb-2 border-none outline-none"
+    >
       {/* Sliding Background Images — extended below section (-bottom-16) so hero farm images are fully visible down to the phone edge */}
       <div className="absolute inset-0 -bottom-16 z-0">
         {heroImages.map((img, index) => (
@@ -82,8 +96,17 @@ export function HeroSection() {
         <div className="absolute -bottom-4 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-forest-950 z-[3] pointer-events-none" />
       </div>
 
-      {/* Main Content Container - CTA buttons positioned higher up on mobile for comfortable thumb access */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-end w-full flex-1 pb-36 sm:pb-28 md:pb-24">
+      {/* White fade-out overlay as the next section comes into view */}
+      <motion.div
+        style={{ opacity: whiteFadeOpacity }}
+        className="absolute inset-0 bg-white z-[5] pointer-events-none"
+      />
+
+      {/* Main Content Container - CTA buttons smoothly fade as next section approaches */}
+      <motion.div
+        style={{ opacity: contentOpacity }}
+        className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-end w-full flex-1 pb-36 sm:pb-28 md:pb-24"
+      >
         <h1 className="sr-only">Vikrshi Suppliers - Fresh Farm Products</h1>
 
         {/* CTAs */}
@@ -114,7 +137,7 @@ export function HeroSection() {
             </a>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

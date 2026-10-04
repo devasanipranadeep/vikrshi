@@ -27,15 +27,33 @@ export function StorySection() {
   ];
 
   return (
-    <section className="py-24 bg-cream-100/70 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="pt-4 sm:pt-6 md:pt-8 pb-24 bg-[#F0F3EC] relative overflow-hidden">
+      {/* Decorative leaf motifs matching reference design */}
+      <div className="absolute -left-12 top-2 pointer-events-none opacity-25 hidden md:block">
+        <svg width="220" height="260" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 240 C30 180 80 120 190 70 C160 120 120 160 70 200 Z" fill="#2D6A4F" />
+          <path d="M60 170 C90 130 140 100 195 80 C170 120 130 150 90 180 Z" fill="#40916C" />
+          <path d="M110 130 C130 90 160 50 200 20 C180 60 150 90 120 120 Z" fill="#52B788" />
+          <path d="M10 240 Q100 130 195 75" stroke="#2D6A4F" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      </div>
+      <div className="absolute -right-12 top-0 pointer-events-none opacity-25 hidden md:block">
+        <svg width="220" height="260" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform -scale-x-100">
+          <path d="M10 240 C30 180 80 120 190 70 C160 120 120 160 70 200 Z" fill="#2D6A4F" />
+          <path d="M60 170 C90 130 140 100 195 80 C170 120 130 150 90 180 Z" fill="#40916C" />
+          <path d="M110 130 C130 90 160 50 200 20 C180 60 150 90 120 120 Z" fill="#52B788" />
+          <path d="M10 240 Q100 130 195 75" stroke="#2D6A4F" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Imagery Grid */}
+          {/* Imagery Grid - slides in when scrolling down, slides out when scrolling up */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
             <div className="relative aspect-4/3 w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
@@ -70,12 +88,12 @@ export function StorySection() {
             </div>
           </motion.div>
 
-          {/* Text Storytelling */}
+          {/* Text Storytelling - slides in when scrolling down, slides out when scrolling up */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6"
           >
             <div>
@@ -88,11 +106,7 @@ export function StorySection() {
             </div>
 
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              At <strong>Vikrshi Suppliers Pvt Ltd</strong>, we saw how conventional grocery supply chains strip food of its aroma, cellular nutrients, and life force by holding vegetables in refrigerated storage for days.
-            </p>
-
-            <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              We replaced middle-mandi middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your products were rooted in living soil just hours before arriving at your doorstep in Hyderabad.
+              At <strong>Vikrshi Suppliers Pvt Ltd</strong>, We replaced middlemen with direct farm covenants across Telangana. When you order from Vikrshi, your products were rooted in living soil just hours before arriving at your community in Hyderabad.
             </p>
 
             {/* Pillars list */}

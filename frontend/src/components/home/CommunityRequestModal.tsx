@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSettings } from '@/context/SettingsContext';
 import { buildCommunityRequestWhatsAppUrl } from '@/utils/whatsapp';
@@ -35,7 +35,6 @@ const HEAR_ABOUT_OPTIONS = [
   'Other',
 ];
 
-const SESSION_KEY = 'vikrshi_community_popup';
 const POPUP_DELAY_MS = 7000;
 
 export function CommunityRequestModal() {
@@ -43,6 +42,8 @@ export function CommunityRequestModal() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const isDismissedRef = useRef(false);
+  const hasTriggeredRef = useRef(false);
 
   // Form states
   const [applicantName, setApplicantName] = useState('');
@@ -52,49 +53,56 @@ export function CommunityRequestModal() {
   const [source, setSource] = useState('');
   const [details, setDetails] = useState('');
 
+  // Global 7-second countdown from opening the website (persists across page transitions)
   useEffect(() => {
-    // Don't show popup on admin pages
-    if (pathname?.startsWith('/admin')) return;
-
-    // If the popup was already shown or dismissed this session, don't show again
-    const popupState = sessionStorage.getItem(SESSION_KEY);
-    if (popupState === 'shown' || popupState === 'dismissed') return;
-
-    // Record the timestamp of the very first page load if not already set
-    let landingTime = Number(sessionStorage.getItem(`${SESSION_KEY}_time`));
-    if (!landingTime) {
-      landingTime = Date.now();
-      sessionStorage.setItem(`${SESSION_KEY}_time`, String(landingTime));
-    }
-
-    // Calculate remaining delay (7s from original landing, minus time already elapsed)
-    const elapsed = Date.now() - landingTime;
-    const remaining = Math.max(0, POPUP_DELAY_MS - elapsed);
-
     const timer = setTimeout(() => {
-      // Double-check we're not on an admin page at the time the timer fires
-      if (!window.location.pathname.startsWith('/admin')) {
+      hasTriggeredRef.current = true;
+      if (!isDismissedRef.current && !window.location.pathname.startsWith('/admin')) {
         setIsOpen(true);
-        sessionStorage.setItem(SESSION_KEY, 'shown');
       }
-    }, remaining);
+    }, POPUP_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, []);
+
+  // If 7 seconds passed while on admin and user moves to public page, show popup
+  useEffect(() => {
+    if (
+      hasTriggeredRef.current &&
+      !isDismissedRef.current &&
+      !isOpen &&
+      !isSubmitted &&
+      !pathname?.startsWith('/admin')
+    ) {
+      setIsOpen(true);
+    }
+  }, [pathname, isOpen, isSubmitted]);
+
+  // Support manual open via custom events from anywhere in the app
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener('open-community-modal', handleOpen);
+    window.addEventListener('open_community_popup', handleOpen);
+    return () => {
+      window.removeEventListener('open-community-modal', handleOpen);
+      window.removeEventListener('open_community_popup', handleOpen);
+    };
+  }, []);
 
   const handleClose = (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
+    isDismissedRef.current = true;
     setIsOpen(false);
-    sessionStorage.setItem(SESSION_KEY, 'dismissed');
   };
 
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
+        isDismissedRef.current = true;
         setIsOpen(false);
       }
     };

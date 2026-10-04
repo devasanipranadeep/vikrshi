@@ -44,20 +44,37 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-5">
             <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/70 px-3 py-1 rounded-full inline-block">
-              Why We Started
+              Leadership
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-forest-950">
-              Transforming the Plate by Honoring the Soil
+              Director’s Message
             </h2>
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              Every day across India, vegetables travel through three to four middle-tier wholesale markets, spending up to a week in refrigerated trucks before reaching city households. By then, their vital enzymes have deteriorated, cellular water has transpired, and natural fragrances have vanished.
+              At <strong>Vikrshi Suppliers Pvt Ltd</strong>, we believe that good food begins with good farming and strong relationships.
             </p>
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              <strong>Vikrshi Suppliers Pvt Ltd</strong> was founded with an uncompromising purpose: dismantle this industrial food delay. We partnered with smallholder farmers within a 100km perimeter of Hyderabad to establish a 12-hour harvest-to-kitchen model.
+              Our journey is built on a simple vision — to bring fresh, responsibly sourced, farm-quality products closer to families while creating fair and transparent connections with the farmers who grow them.
             </p>
             <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
-              When our farmers pluck tomatoes, dig up carrots, or harvest baby spinach at dawn, those exact crops are on their way to your home for same-day delivery by 5:00 PM.
+              We understand that every product carries a story — from the soil it comes from, to the hands that cultivate it, and finally to the family that brings it to their table. That is why we are committed to careful sourcing, maintaining consistent quality, and keeping the journey from farm to home as direct and transparent as possible.
             </p>
+            <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
+              As we grow, our promise remains unchanged: quality without compromise, relationships built on trust, and freshness delivered with care.
+            </p>
+            <p className="text-sm sm:text-base text-forest-700/85 leading-relaxed">
+              We are grateful to our farmers, customers, partners, and team members who are part of this journey. Together, we hope to build a more responsible, transparent, and sustainable food supply network for the future.
+            </p>
+            <div className="pt-2 border-t border-cream-200/80">
+              <p className="text-xs sm:text-sm text-forest-700/85 italic">
+                With gratitude and commitment,
+              </p>
+              <p className="font-serif text-lg sm:text-xl font-bold text-forest-950 mt-1">
+                𝓜𝓪𝓷𝓪𝓼𝓪 𝓚𝓸𝓷𝓰𝓪𝓵𝓪
+              </p>
+              <p className="text-xs text-forest-700/80 font-medium mt-0.5">
+                Director<br />Vikrshi Suppliers Pvt Ltd
+              </p>
+            </div>
 
             <div className="pt-2 flex items-center gap-6">
               <div>
