@@ -156,7 +156,7 @@ export function SettingsManager({ settings, onSettingsUpdated }: SettingsManager
               Company Logo
             </label>
             <div className="flex items-center gap-3">
-              <div className="relative w-16 h-16 rounded-xl bg-white p-1 overflow-hidden shrink-0 border border-cream-200 shadow-sm flex items-center justify-center">
+              <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-cream-200/80 flex items-center justify-center">
                 {logoUrl && (
                   <Image src={logoUrl} alt="Logo preview" fill className="object-contain" />
                 )}

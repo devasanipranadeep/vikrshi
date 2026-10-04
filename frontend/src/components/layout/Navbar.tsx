@@ -103,7 +103,7 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-leaf-400 rounded-lg p-0.5 sm:p-1 shrink-0"
             >
-              <div className="relative flex h-10 w-10 sm:h-12 sm:w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm group-hover:scale-105 transition-transform ring-1 ring-forest-900/10">
+              <div className="relative flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center group-hover:scale-105 transition-transform">
                 <Image
                   src={logoSrc}
                   alt={`${settings.companyName} Logo`}
@@ -326,7 +326,7 @@ export function Navbar() {
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-cream-200">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm ring-1 ring-forest-900/10">
+                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center">
                       <Image
                         src={logoSrc}
                         alt={`${settings.companyName} Logo`}
