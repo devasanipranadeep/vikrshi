@@ -11,7 +11,7 @@ import { LocationsManager } from './LocationsManager';
 import { OrderInquiriesManager } from './OrderInquiriesManager';
 import { CommunityRequestsManager } from './CommunityRequestsManager';
 import { ReviewsManager } from './ReviewsManager';
-import { SocialManager } from './SocialManager';
+import { GalleryManager } from './GalleryManager';
 import {
   Product,
   Category,
@@ -160,7 +160,7 @@ export function AdminPortal() {
       )}
 
       {activeTab === 'social' && (
-        <SocialManager />
+        <GalleryManager />
       )}
     </AdminLayout>
   );

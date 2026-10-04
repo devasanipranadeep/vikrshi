@@ -22,7 +22,7 @@ import {
 import { InstagramIcon } from '@/components/ui/Icons';
 import { toast } from 'sonner';
 
-export function SocialManager() {
+export function GalleryManager() {
   const [posts, setPosts] = useState<SocialPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);

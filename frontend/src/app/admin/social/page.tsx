@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { AdminWrapper } from '@/components/admin/AdminWrapper';
-import { SocialManager } from '@/components/admin/SocialManager';
+import { GalleryManager } from '@/components/admin/GalleryManager';
 
 export default function AdminSocialPage() {
   return (
     <AdminWrapper activeTab="social">
-      <SocialManager />
+      <GalleryManager />
     </AdminWrapper>
   );
 }
