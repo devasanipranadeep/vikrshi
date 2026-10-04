@@ -63,45 +63,20 @@ function mapSettingsRow(row: SettingsRow): CompanySettings {
 
 export const settingsService = {
   /**
-   * Fetch company settings from Supabase singleton row (id = 1)
+   * Fetch company settings as constant
    */
-  async getSettings(customClient?: any): Promise<CompanySettings> {
-    return this.getCompanySettings(customClient);
+  async getSettings(_customClient?: any): Promise<CompanySettings> {
+    return initialCompanySettings;
   },
 
-  async getCompanySettings(customClient?: any): Promise<CompanySettings> {
-    try {
-      const client = getClient(customClient);
-      const { data, error } = await client
-        .from('company_settings')
-        .select('*')
-        .eq('id', 1)
-        .single();
-
-      if (error || !data) {
-        return initialCompanySettings;
-      }
-
-      return mapSettingsRow(data as SettingsRow);
-    } catch (err) {
-      console.warn('Failed to load company settings from Supabase, using defaults:', err);
-      return initialCompanySettings;
-    }
+  async getCompanySettings(_customClient?: any): Promise<CompanySettings> {
+    return initialCompanySettings;
   },
 
   /**
-   * Admin: Update company settings
+   * Constant company settings cannot be modified
    */
-  async updateCompanySettings(payload: Partial<SettingsUpdate>, customClient?: any): Promise<CompanySettings> {
-    const client = getClient(customClient);
-    const { data, error } = await client
-      .from('company_settings')
-      .update(payload)
-      .eq('id', 1)
-      .select()
-      .single();
-
-    if (error) throw new Error(error.message);
-    return mapSettingsRow(data as SettingsRow);
+  async updateCompanySettings(_payload: any, _customClient?: any): Promise<CompanySettings> {
+    return initialCompanySettings;
   },
 };
