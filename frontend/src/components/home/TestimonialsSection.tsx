@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { initialReviews } from '@/constants/mockData';
-import { getReviews } from '@/services/reviewService';
+import { getReviews } from '@/services/reviews';
 import { CustomerReview } from '@/types';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { Star, Quote, Mail, Sparkles, CheckCircle2 } from 'lucide-react';

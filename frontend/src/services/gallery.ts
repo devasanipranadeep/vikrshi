@@ -1,12 +1,20 @@
 import { SocialPost } from '@/types';
 import { instagramPosts } from '@/constants/mockData';
 
-export const socialService = {
+export const galleryService = {
   async getPosts(): Promise<SocialPost[]> {
     try {
-      const res = await fetch('/api/social', { cache: 'no-store' });
+      const res = await fetch('/api/gallery', { cache: 'no-store' });
       if (res.ok) {
         const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          return json.data;
+        }
+      }
+      // Fallback attempt to /api/social if needed
+      const fallbackRes = await fetch('/api/social', { cache: 'no-store' });
+      if (fallbackRes.ok) {
+        const json = await fallbackRes.json();
         if (json.success && Array.isArray(json.data)) {
           return json.data;
         }
@@ -42,33 +50,45 @@ export const socialService = {
     postUrl?: string;
   }): Promise<{ success: boolean; data?: SocialPost; error?: string }> {
     try {
-      const res = await fetch('/api/social', {
+      let res = await fetch('/api/gallery', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(post),
       });
+      if (!res.ok) {
+        res = await fetch('/api/social', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(post),
+        });
+      }
       const json = await res.json();
       if (res.ok && json.success) {
         return { success: true, data: json.data };
       }
-      return { success: false, error: json.message || 'Failed to create story' };
+      return { success: false, error: json.message || 'Failed to create gallery post' };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Network error creating story' };
+      return { success: false, error: err.message || 'Network error creating gallery post' };
     }
   },
 
   async deletePost(id: string): Promise<{ success: boolean; error?: string }> {
     try {
-      const res = await fetch(`/api/social?id=${id}`, {
+      let res = await fetch(`/api/gallery?id=${encodeURIComponent(id)}`, {
         method: 'DELETE',
       });
+      if (!res.ok) {
+        res = await fetch(`/api/social?id=${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+        });
+      }
       const json = await res.json();
       if (res.ok && json.success) {
         return { success: true };
       }
-      return { success: false, error: json.message || 'Failed to delete story' };
+      return { success: false, error: json.message || 'Failed to delete gallery post' };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Network error deleting story' };
+      return { success: false, error: err.message || 'Network error deleting gallery post' };
     }
   },
 };

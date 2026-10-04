@@ -83,7 +83,7 @@ export function DashboardOverview({
               + Add Product Item
             </button>
             <button
-              onClick={() => onNavigateTab('inquiries')}
+              onClick={() => onNavigateTab('orders')}
               className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm transition-all border border-white/10 cursor-pointer"
             >
               View Orders ({totalInquiriesCount})
@@ -245,7 +245,7 @@ export function DashboardOverview({
                 <p className="text-xs text-forest-600">Latest customer orders dispatched to WhatsApp</p>
               </div>
               <button
-                onClick={() => onNavigateTab('inquiries')}
+                onClick={() => onNavigateTab('orders')}
                 className="text-xs font-semibold text-leaf-600 hover:text-leaf-700 flex items-center gap-1 cursor-pointer"
               >
                 <span>View All</span>

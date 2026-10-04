@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Star, MapPin, CheckCircle, ThumbsUp, Sparkles } from 'lucide-react';
 import { CustomerReview } from '@/types';
-import { upvoteReview } from '@/services/reviewService';
+import { upvoteReview } from '@/services/reviews';
 
 interface ReviewCardProps {
   review: CustomerReview;

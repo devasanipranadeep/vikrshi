@@ -36,10 +36,10 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
     { id: 'products', label: 'Products & Stock', icon: Package },
     { id: 'categories', label: 'Categories', icon: Layers },
     { id: 'locations', label: 'Delivery Hubs', icon: MapPin },
-    { id: 'inquiries', label: 'Customer Orders', icon: ShoppingBag },
+    { id: 'orders', label: 'Customer Orders', icon: ShoppingBag },
     { id: 'community', label: 'Community Requests', icon: Users2 },
     { id: 'reviews', label: 'Customer Reviews', icon: Star },
-    { id: 'social', label: 'Gallery', icon: Camera },
+    { id: 'gallery', label: 'Gallery', icon: Camera },
   ];
 
   return (
@@ -98,7 +98,10 @@ export function AdminLayout({ activeTab, onSelectTab, children }: AdminLayoutPro
           <nav className="space-y-1 pt-3 border-t border-forest-800/80">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeTab === item.id;
+              const isActive =
+                activeTab === item.id ||
+                (item.id === 'orders' && activeTab === 'inquiries') ||
+                (item.id === 'gallery' && activeTab === 'social');
 
               return (
                 <button

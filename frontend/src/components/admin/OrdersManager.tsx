@@ -22,12 +22,12 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface OrderInquiriesManagerProps {
+export interface OrdersManagerProps {
   inquiries: OrderInquiryRecord[];
   onInquiryUpdated: () => void;
 }
 
-export function OrderInquiriesManager({ inquiries, onInquiryUpdated }: OrderInquiriesManagerProps) {
+export function OrdersManager({ inquiries, onInquiryUpdated }: OrdersManagerProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -129,7 +129,7 @@ export function OrderInquiriesManager({ inquiries, onInquiryUpdated }: OrderInqu
         />
       </div>
 
-      {/* Inquiries Table / Cards */}
+      {/* Orders Table / Cards */}
       {filteredInquiries.length === 0 ? (
         <div className="bg-white rounded-3xl border border-cream-200 p-12 text-center shadow-xs">
           <ShoppingBag className="w-12 h-12 text-leaf-400 mx-auto mb-3" />
@@ -155,7 +155,7 @@ export function OrderInquiriesManager({ inquiries, onInquiryUpdated }: OrderInqu
               return (
                 <div key={inq.id} className="p-5 hover:bg-cream-50/50 transition-colors">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    {/* Inquiry Left info */}
+                    {/* Order Left info */}
                     <div className="space-y-1.5">
                       <div className="flex flex-wrap items-center gap-2.5">
                         <span className="font-mono text-xs font-bold text-forest-900 bg-cream-100 px-2 py-0.5 rounded-md">
@@ -208,7 +208,7 @@ export function OrderInquiriesManager({ inquiries, onInquiryUpdated }: OrderInqu
                       })()}
                     </div>
 
-                    {/* Inquiry Right info & Status Select */}
+                    {/* Order Right info & Status Select */}
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <span className="text-[10px] text-forest-500 uppercase tracking-wider block">
@@ -285,3 +285,6 @@ export function OrderInquiriesManager({ inquiries, onInquiryUpdated }: OrderInqu
     </div>
   );
 }
+
+// Backwards compatibility alias
+export const OrderInquiriesManager = OrdersManager;

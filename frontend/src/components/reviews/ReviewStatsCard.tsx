@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Star, ShieldCheck, HeartHandshake, Sparkles, PenLine } from 'lucide-react';
-import { ReviewStats } from '@/services/reviewService';
+import { ReviewStats } from '@/services/reviews';
 
 interface ReviewStatsCardProps {
   stats: ReviewStats;

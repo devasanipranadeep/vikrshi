@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { SocialPost } from '@/types';
-import { socialService } from '@/services/socialService';
+import { galleryService } from '@/services/gallery';
 import { storageService } from '@/services/storage';
 import { notifyStoreUpdate } from '@/utils/storeEvents';
 import {
@@ -39,7 +39,7 @@ export function GalleryManager() {
   const loadPosts = async () => {
     try {
       setIsLoading(true);
-      const data = await socialService.getPosts();
+      const data = await galleryService.getPosts();
       setPosts(data);
     } catch {
       toast.error('Failed to load farm stories');
@@ -92,7 +92,7 @@ export function GalleryManager() {
 
     setIsSubmitting(true);
     try {
-      const res = await socialService.createPost({
+      const res = await galleryService.createPost({
         imageUrl: imageUrl.trim(),
         imagePath: imagePath || undefined,
         caption: caption.trim(),
@@ -102,8 +102,8 @@ export function GalleryManager() {
       });
 
       if (res.success) {
-        toast.success('New farm story added to website!');
-        notifyStoreUpdate('social');
+        toast.success('New gallery story added to website!');
+        notifyStoreUpdate('gallery');
         setIsModalOpen(false);
         loadPosts();
       } else {
@@ -123,10 +123,10 @@ export function GalleryManager() {
       if (post.imagePath) {
         await storageService.deleteMedia(post.imagePath, 'gallery');
       }
-      const res = await socialService.deletePost(post.id);
+      const res = await galleryService.deletePost(post.id);
       if (res.success) {
         toast.success('Gallery story removed');
-        notifyStoreUpdate('social');
+        notifyStoreUpdate('gallery');
         loadPosts();
       } else {
         toast.error(res.error || 'Failed to remove story');

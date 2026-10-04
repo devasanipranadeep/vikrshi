@@ -13,7 +13,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { CustomerReview } from '@/types';
-import { ReviewStats } from '@/services/reviewService';
+import { ReviewStats } from '@/services/reviews';
 import { ReviewStatsCard } from './ReviewStatsCard';
 import { ReviewCard } from './ReviewCard';
 import { ReviewModal } from './ReviewModal';

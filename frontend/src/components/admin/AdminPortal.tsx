@@ -8,7 +8,7 @@ import { DashboardOverview } from './DashboardOverview';
 import { ProductsManager } from './ProductsManager';
 import { CategoriesManager } from './CategoriesManager';
 import { LocationsManager } from './LocationsManager';
-import { OrderInquiriesManager } from './OrderInquiriesManager';
+import { OrdersManager } from './OrdersManager';
 import { CommunityRequestsManager } from './CommunityRequestsManager';
 import { ReviewsManager } from './ReviewsManager';
 import { GalleryManager } from './GalleryManager';
@@ -138,8 +138,8 @@ export function AdminPortal() {
         />
       )}
 
-      {activeTab === 'inquiries' && (
-        <OrderInquiriesManager
+      {(activeTab === 'orders' || activeTab === 'inquiries') && (
+        <OrdersManager
           inquiries={inquiries}
           onInquiryUpdated={loadData}
         />
@@ -159,7 +159,7 @@ export function AdminPortal() {
         />
       )}
 
-      {activeTab === 'social' && (
+      {(activeTab === 'gallery' || activeTab === 'social') && (
         <GalleryManager />
       )}
     </AdminLayout>

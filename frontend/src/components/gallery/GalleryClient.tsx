@@ -17,7 +17,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { SocialPost } from '@/types';
-import { socialService } from '@/services/socialService';
+import { galleryService } from '@/services/gallery';
 import { toast } from 'sonner';
 
 export function GalleryClient() {
@@ -29,7 +29,7 @@ export function GalleryClient() {
     async function fetchPosts() {
       try {
         setIsLoading(true);
-        const data = await socialService.getPosts();
+        const data = await galleryService.getPosts();
         if (Array.isArray(data)) {
           setPosts(data.filter((p) => p.isActive !== false));
         }

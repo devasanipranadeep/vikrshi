@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Star, X, Check, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
 import { ReviewSubmissionData, CustomerReview } from '@/types';
-import { submitReview } from '@/services/reviewService';
+import { submitReview } from '@/services/reviews';
 import { notifyStoreUpdate } from '@/utils/storeEvents';
 
 interface ReviewModalProps {

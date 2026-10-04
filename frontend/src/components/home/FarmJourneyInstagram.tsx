@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useSettings } from '@/context/SettingsContext';
 import { instagramPosts } from '@/constants/mockData';
-import { socialService } from '@/services/socialService';
+import { galleryService } from '@/services/gallery';
 import { SocialPost } from '@/types';
 import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { Heart, ExternalLink, ArrowUpRight } from 'lucide-react';
@@ -27,7 +27,7 @@ export function FarmJourneyInstagram() {
 
   const fetchLivePosts = useCallback(async () => {
     try {
-      const data = await socialService.getPosts();
+      const data = await galleryService.getPosts();
       if (data && data.length > 0) {
         setPosts(data);
       }
@@ -42,7 +42,7 @@ export function FarmJourneyInstagram() {
     // Automatically refresh whenever an admin adds, edits, or deletes a story
     const unsubscribe = subscribeToStoreUpdates(() => {
       fetchLivePosts();
-    }, ['social', 'all']);
+    }, ['gallery', 'social', 'all']);
 
     return () => {
       unsubscribe();
