@@ -8,6 +8,7 @@ import {
   PackageCheck,
   Truck,
   HeartHandshake,
+  Clock,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -24,29 +25,29 @@ export function ProcessTimeline() {
       step: '02',
       icon: ShieldCheck,
       title: 'Quality Grading',
-      desc: 'Cold-water rinsed and manually graded for peak nutritional maturity and zero blemishes.',
-      time: '7:30 AM',
+      desc: 'Cold-water rinsed and manually graded for peak nutritional maturity at 8:00 AM.',
+      time: '8:00 AM',
     },
     {
       step: '03',
       icon: PackageCheck,
       title: 'Eco Packaging',
-      desc: 'Wrapped in breathable compostable paper and jute to allow fresh leaves to breathe naturally.',
-      time: '10:00 AM',
+      desc: 'Wrapped in breathable compostable paper and jute to allow fresh leaves to breathe at 11:00 AM.',
+      time: '11:00 AM',
     },
     {
       step: '04',
       icon: Sprout,
       title: 'Central Hub Intake',
-      desc: 'Temperature-stabilized transit directly to our central Hyderabad sorting depot.',
+      desc: 'Temperature-stabilized transit directly to our central Hyderabad sorting depot at 1:00 PM.',
       time: '1:00 PM',
     },
     {
       step: '05',
       icon: Truck,
       title: 'Direct Dispatch',
-      desc: 'Evening express routes deployed directly across Hyderabad residential hubs.',
-      time: '3:30 PM',
+      desc: 'Express delivery routes deployed directly across Hyderabad residential hubs at 3:00 PM.',
+      time: '3:00 PM',
     },
     {
       step: '06',
@@ -97,6 +98,12 @@ export function ProcessTimeline() {
                     {item.step}
                   </span>
                 </div>
+
+                {/* Timing Badge */}
+                <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-harvest-gold bg-harvest-gold/15 border border-harvest-gold/30 px-2.5 py-0.5 rounded-full mb-2 tracking-wide group-hover:bg-harvest-gold group-hover:text-forest-950 transition-colors">
+                  <Clock className="h-3 w-3 shrink-0" />
+                  <span>{item.time}</span>
+                </span>
 
                 <h3 className="font-serif text-xs sm:text-base lg:text-lg font-bold text-white group-hover:text-leaf-300 transition-colors leading-snug">
                   {item.title}
