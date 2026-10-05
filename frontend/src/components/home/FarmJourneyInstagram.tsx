@@ -13,26 +13,14 @@ import { motion } from 'framer-motion';
 
 export function FarmJourneyInstagram() {
   const { settings } = useSettings();
-  const [posts, setPosts] = useState<SocialPost[]>(() =>
-    instagramPosts.map((p) => ({
-      id: p.id,
-      imageUrl: p.imageUrl,
-      caption: p.caption,
-      likes: p.likes,
-      date: p.date,
-      postUrl: settings.instagramUrl,
-      isActive: true,
-    }))
-  );
+  const [posts, setPosts] = useState<SocialPost[]>([]);
 
   const fetchLivePosts = useCallback(async () => {
     try {
       const data = await galleryService.getPosts();
-      if (data && data.length > 0) {
-        setPosts(data);
-      }
+      setPosts(data || []);
     } catch {
-      // Keep initial posts on network error
+      // Keep state on network error
     }
   }, []);
 
@@ -118,7 +106,16 @@ export function FarmJourneyInstagram() {
                   </div>
                 </div>
 
-                {/* Bottom Bar (Sub-text removed, Instagram link retained) */}
+                {/* Caption / Story Description */}
+                {post.caption && (
+                  <div className="p-3 bg-white flex-1">
+                    <p className="text-xs text-forest-800 line-clamp-2 leading-relaxed">
+                      {post.caption}
+                    </p>
+                  </div>
+                )}
+
+                {/* Bottom Bar */}
                 <div className="p-2.5 sm:p-3 bg-white flex items-center justify-between text-[10px] sm:text-xs border-t border-cream-100">
                   <span className="text-forest-700/70">{post.date}</span>
                   <span className="text-pink-600 font-semibold group-hover:underline flex items-center gap-0.5">

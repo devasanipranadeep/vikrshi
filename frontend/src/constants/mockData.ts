@@ -43,3 +43,5 @@ export const initialReviews: CustomerReview[] = [];
 export const instagramPosts: any[] = [];
 
 export const customerTestimonials: any[] = [];
+
+
