@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import {
   Sparkles,
@@ -14,17 +13,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Check,
+  ArrowLeft,
 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
 export function BenefitsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Track scroll progress: from when section enters until it leaves the viewport
   const { scrollYProgress } = useScroll({
@@ -207,12 +202,17 @@ export function BenefitsSection() {
     setSelectedIndex(null);
   }, []);
 
-  // Keyboard navigation & body scroll lock
+  const handleSelect = (index: number) => {
+    setSelectedIndex(index);
+    if (sectionRef.current) {
+      const topOffset = sectionRef.current.offsetTop - 70;
+      window.scrollTo({ top: Math.max(0, topOffset), behavior: 'smooth' });
+    }
+  };
+
+  // Keyboard navigation
   useEffect(() => {
     if (selectedIndex === null) return;
-
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
@@ -222,7 +222,6 @@ export function BenefitsSection() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.body.style.overflow = originalOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedIndex, handleClose, handlePrev, handleNext]);
@@ -247,300 +246,287 @@ export function BenefitsSection() {
 
       {/* Main Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-leaf-700 bg-white/90 backdrop-blur-xs px-3.5 py-1 rounded-full inline-block mb-3 border border-leaf-200/60 shadow-xs">
-            The Vikrshi Standard
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest-950 tracking-tight drop-shadow-xs">
-            Cultivated with Care, Delivered with Integrity
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-forest-800/90 font-medium leading-relaxed max-w-xl mx-auto">
-            We believe healthy food begins with fertile living soil and ends with transparent relationships between farmers and conscious families.
-          </p>
-        </div>
+        <AnimatePresence mode="wait">
+          {selectedIndex === null ? (
+            <motion.div
+              key="standard-grid-overview"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Section Header */}
+              <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+                <span className="text-xs font-bold uppercase tracking-widest text-leaf-700 bg-white/90 backdrop-blur-xs px-3.5 py-1 rounded-full inline-block mb-3 border border-leaf-200/60 shadow-xs">
+                  The Vikrshi Standard
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-forest-950 tracking-tight drop-shadow-xs">
+                  Cultivated with Care, Delivered with Integrity
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-forest-800/90 font-medium leading-relaxed max-w-xl mx-auto">
+                  We believe healthy food begins with fertile living soil and ends with transparent relationships between farmers and conscious families.
+                </p>
+              </div>
 
-        {/* Benefits Cards Grid - 3 columns on desktop, 2 on tablet and mobile */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-6">
-          {benefits.map((benefit, index) => {
-            const Icon = benefit.icon;
-            return (
-              <motion.button
-                type="button"
-                key={benefit.title}
-                onClick={() => setSelectedIndex(index)}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.4, delay: index * 0.06 }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.98 }}
-                className="group relative text-left rounded-2xl sm:rounded-3xl bg-white/95 sm:bg-white p-4 sm:p-6 lg:p-7 border border-white/80 shadow-[0_8px_30px_rgba(0,0,0,0.10)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.16)] hover:border-leaf-300/80 transition-all duration-300 flex flex-col items-start justify-between cursor-pointer backdrop-blur-xs focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 overflow-hidden"
-                style={{
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.10)',
-                }}
-                aria-label={`Open photo and details for ${benefit.title}`}
-              >
-                {/* Subtle corner hover highlight */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-leaf-100/40 via-transparent to-transparent rounded-tr-2xl sm:rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              {/* Benefits Cards Grid - 3 columns on desktop, 2 on tablet and mobile */}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-6">
+                {benefits.map((benefit, index) => {
+                  const Icon = benefit.icon;
+                  return (
+                    <motion.button
+                      type="button"
+                      key={benefit.title}
+                      onClick={() => handleSelect(index)}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-50px' }}
+                      transition={{ duration: 0.4, delay: index * 0.06 }}
+                      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                      whileTap={{ scale: 0.98 }}
+                      className="group relative text-left rounded-2xl sm:rounded-3xl bg-white/95 sm:bg-white p-4 sm:p-6 lg:p-7 border border-white/80 shadow-[0_8px_30px_rgba(0,0,0,0.10)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.16)] hover:border-leaf-300/80 transition-all duration-300 flex flex-col items-start justify-between cursor-pointer backdrop-blur-xs focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 overflow-hidden"
+                      style={{
+                        boxShadow: '0 8px 30px rgba(0,0,0,0.10)',
+                      }}
+                      aria-label={`Open details for ${benefit.title}`}
+                    >
+                      {/* Subtle corner hover highlight */}
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-leaf-100/40 via-transparent to-transparent rounded-tr-2xl sm:rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                {/* Icon */}
-                <div
-                  className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl transition-transform duration-300 group-hover:scale-110 mb-3 sm:mb-4 ${benefit.color}`}
-                >
-                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                </div>
-
-                {/* Title */}
-                <div className="w-full">
-                  <h3 className="font-serif text-base sm:text-lg md:text-xl font-bold text-forest-950 group-hover:text-leaf-700 transition-colors leading-snug">
-                    {benefit.title}
-                  </h3>
-                </div>
-              </motion.button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Lightbox Modal for Card Images */}
-      {mounted && typeof document !== 'undefined'
-        ? createPortal(
-            <AnimatePresence>
-              {selectedBenefit && selectedIndex !== null && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 md:p-6">
-                  {/* Backdrop */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    onClick={handleClose}
-                    className="fixed inset-0 bg-black/80 backdrop-blur-md"
-                    aria-hidden="true"
-                  />
-
-                  {/* Modal Dialog */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.94, y: 15 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.94, y: 15 }}
-                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                    className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/40 z-10 flex flex-col max-h-[92vh] my-auto"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label={selectedBenefit.title}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {/* Header Bar */}
-                    <div className="flex items-center justify-between px-5 sm:px-7 py-3.5 border-b border-forest-100/80 bg-forest-50/50 shrink-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-leaf-700 bg-leaf-100/80 px-2.5 py-0.5 rounded-full">
-                          {selectedIndex + 1} / {benefits.length}
-                        </span>
-                        <span className="text-xs text-forest-700 font-medium">
-                          The Vikrshi Standard
-                        </span>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={handleClose}
-                        className="rounded-full p-1.5 text-forest-600 hover:text-forest-950 hover:bg-forest-100/80 transition-colors focus:outline-none focus:ring-2 focus:ring-leaf-500"
-                        aria-label="Close modal"
+                      {/* Icon */}
+                      <div
+                        className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl transition-transform duration-300 group-hover:scale-110 mb-3 sm:mb-4 ${benefit.color}`}
                       >
-                        <X className="h-5 w-5" />
-                      </button>
-                    </div>
-
-                    {/* Scrollable / Responsive body */}
-                    <div className="overflow-y-auto p-5 sm:p-7 md:p-8">
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
-                        {/* Left Side: Image + Nav Arrows + Indicators */}
-                        <div className="md:col-span-5 flex flex-col items-center">
-                          <div className="relative w-full aspect-square sm:aspect-[4/3] md:aspect-[4/5] rounded-2xl overflow-hidden bg-forest-900/5 shadow-md border border-forest-100">
-                            <Image
-                              src={selectedBenefit.image}
-                              alt={selectedBenefit.alt}
-                              fill
-                              sizes="(max-width: 768px) 100vw, 420px"
-                              className="object-cover object-center"
-                              priority
-                            />
-
-                            {/* Left / Right floating arrows on image */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handlePrev();
-                              }}
-                              className="absolute left-2.5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 backdrop-blur-xs text-forest-900 shadow-lg flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-leaf-500"
-                              aria-label="Previous standard"
-                            >
-                              <ChevronLeft className="h-5 w-5" />
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleNext();
-                              }}
-                              className="absolute right-2.5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 backdrop-blur-xs text-forest-900 shadow-lg flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-leaf-500"
-                              aria-label="Next standard"
-                            >
-                              <ChevronRight className="h-5 w-5" />
-                            </button>
-                          </div>
-
-                          {/* Thumbnail dots selector */}
-                          <div className="mt-4 flex items-center justify-center gap-2">
-                            {benefits.map((b, idx) => (
-                              <button
-                                key={b.id}
-                                type="button"
-                                onClick={() => setSelectedIndex(idx)}
-                                className={`transition-all duration-200 rounded-full ${
-                                  idx === selectedIndex
-                                    ? 'w-7 h-2 bg-leaf-600'
-                                    : 'w-2 h-2 bg-forest-200 hover:bg-forest-400'
-                                }`}
-                                aria-label={`Jump to ${b.title}`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Right Side: Text Details */}
-                        <div className="md:col-span-7 flex flex-col text-left space-y-4">
-                          <div className="flex items-start gap-3">
-                            <div
-                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${selectedBenefit.color} mt-0.5`}
-                            >
-                              {React.createElement(selectedBenefit.icon, {
-                                className: 'h-5 w-5',
-                              })}
-                            </div>
-                            <div>
-                              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-forest-950 leading-tight">
-                                {selectedBenefit.title}
-                              </h3>
-                              <p className="text-sm sm:text-base font-semibold text-leaf-700 italic mt-0.5">
-                                {selectedBenefit.headline}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Paragraphs */}
-                          <div className="space-y-2.5 text-sm sm:text-[15px] text-forest-800 leading-relaxed font-normal">
-                            {selectedBenefit.paragraphs.map((para, pIdx) => (
-                              <p key={pIdx}>{para}</p>
-                            ))}
-                          </div>
-
-                          {/* Points Section (if any) */}
-                          {selectedBenefit.points && selectedBenefit.points.length > 0 && (
-                            <div className="pt-2">
-                              {selectedBenefit.pointsHeader && (
-                                <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-forest-900 mb-2">
-                                  {selectedBenefit.pointsHeader}
-                                </h4>
-                              )}
-                              <ul className="space-y-1.5">
-                                {selectedBenefit.points.map((pt, ptIdx) => (
-                                  <li key={ptIdx} className="flex items-start gap-2 text-xs sm:text-sm text-forest-800 leading-relaxed">
-                                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-leaf-100 text-leaf-700 mt-0.5">
-                                      <Check className="h-3 w-3" />
-                                    </span>
-                                    <span>{pt}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {/* Steps Section (e.g. for WhatsApp) */}
-                          {selectedBenefit.steps && selectedBenefit.steps.length > 0 && (
-                            <div className="pt-2">
-                              {selectedBenefit.pointsHeader && (
-                                <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-forest-900 mb-2">
-                                  {selectedBenefit.pointsHeader}
-                                </h4>
-                              )}
-                              <div className="grid grid-cols-1 gap-2">
-                                {selectedBenefit.steps.map((st, stIdx) => (
-                                  <div
-                                    key={stIdx}
-                                    className="flex items-start gap-2.5 bg-forest-50/70 p-2.5 sm:p-3 rounded-xl border border-forest-100/80"
-                                  >
-                                    <span className="text-xs sm:text-sm font-bold text-leaf-700 shrink-0">
-                                      {st.step}
-                                    </span>
-                                    <span className="text-xs sm:text-sm text-forest-800">
-                                      {st.text}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Extra Note (if any) */}
-                          {selectedBenefit.extraNote && (
-                            <p className="text-xs sm:text-sm text-forest-700 font-medium italic pt-1">
-                              {selectedBenefit.extraNote}
-                            </p>
-                          )}
-
-                          {/* Highlight / Promise / Philosophy Box */}
-                          <div className="mt-3 p-3.5 sm:p-4 rounded-xl bg-leaf-50/80 border border-leaf-200/80">
-                            <span className="block text-[11px] font-bold uppercase tracking-wider text-leaf-800">
-                              {selectedBenefit.highlightLabel}
-                            </span>
-                            <span className="block text-sm sm:text-base font-semibold text-forest-950 mt-0.5">
-                              {selectedBenefit.highlightText}
-                            </span>
-                          </div>
-                        </div>
+                        <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                       </div>
-                    </div>
 
-                    {/* Modal Footer Controls */}
-                    <div className="px-5 sm:px-6 py-3 border-t border-forest-100 flex items-center justify-between bg-white">
+                      {/* Title */}
+                      <div className="w-full">
+                        <h3 className="font-serif text-base sm:text-lg md:text-xl font-bold text-forest-950 group-hover:text-leaf-700 transition-colors leading-snug">
+                          {benefit.title}
+                        </h3>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          ) : (
+            selectedBenefit && (
+              <motion.div
+                key={`selected-standard-${selectedIndex}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+                className="w-full bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-8 md:p-10 border border-forest-100 shadow-[0_15px_45px_rgba(0,0,0,0.08)]"
+              >
+                {/* Top Control Bar */}
+                <div className="flex items-center justify-between gap-4 pb-6 border-b border-forest-100/80">
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-leaf-800 hover:text-leaf-950 bg-leaf-50 hover:bg-leaf-100 border border-leaf-200/80 px-3.5 sm:px-4 py-2 rounded-full transition-all duration-200 shadow-xs active:scale-95 cursor-pointer"
+                    aria-label="Back to all standards"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    <span>Back to All Standards</span>
+                  </button>
+
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <span className="hidden sm:inline-block text-xs font-bold uppercase tracking-wider text-forest-600 bg-forest-50 px-3 py-1 rounded-full border border-forest-100">
+                      Standard {selectedIndex + 1} of {benefits.length}
+                    </span>
+                    <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={handlePrev}
-                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-forest-700 hover:text-forest-950 px-3 py-1.5 rounded-lg hover:bg-forest-50 transition-colors"
+                        className="p-2 rounded-full border border-forest-200 bg-white text-forest-700 hover:bg-forest-50 hover:border-forest-300 transition-colors shadow-xs cursor-pointer"
+                        title="Previous Standard"
+                        aria-label="Previous standard"
                       >
                         <ChevronLeft className="h-4 w-4" />
-                        Previous
                       </button>
-
-                      <button
-                        type="button"
-                        onClick={handleClose}
-                        className="text-xs sm:text-sm font-semibold text-forest-600 hover:text-forest-900 px-3 py-1.5"
-                      >
-                        Close
-                      </button>
-
                       <button
                         type="button"
                         onClick={handleNext}
-                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-forest-700 hover:text-forest-950 px-3 py-1.5 rounded-lg hover:bg-forest-50 transition-colors"
+                        className="p-2 rounded-full border border-forest-200 bg-white text-forest-700 hover:bg-forest-50 hover:border-forest-300 transition-colors shadow-xs cursor-pointer"
+                        title="Next Standard"
+                        aria-label="Next standard"
                       >
-                        Next
                         <ChevronRight className="h-4 w-4" />
                       </button>
+                      <button
+                        type="button"
+                        onClick={handleClose}
+                        className="p-2 rounded-full border border-forest-200 bg-white text-forest-600 hover:text-forest-950 hover:bg-forest-50 transition-colors shadow-xs ml-1 cursor-pointer"
+                        title="Close"
+                        aria-label="Close"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
-              )}
-            </AnimatePresence>,
-            document.body
-          )
-        : null}
+
+                {/* Content Body */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start pt-6">
+                  {/* Left Column: Selected Card Image & Nav Thumbnails */}
+                  <div className="lg:col-span-6 flex flex-col items-center">
+                    <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] rounded-2xl overflow-hidden bg-forest-900/5 shadow-lg border border-forest-100/90 group">
+                      <Image
+                        src={selectedBenefit.image}
+                        alt={selectedBenefit.alt}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 560px"
+                        className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        priority
+                      />
+                      {/* Floating Prev / Next on Image */}
+                      <button
+                        type="button"
+                        onClick={handlePrev}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 backdrop-blur-xs text-forest-900 shadow-md flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-leaf-500 opacity-90 hover:opacity-100 cursor-pointer"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleNext}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 backdrop-blur-xs text-forest-900 shadow-md flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-leaf-500 opacity-90 hover:opacity-100 cursor-pointer"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </div>
+
+                    {/* Thumbnail dot indicators */}
+                    <div className="mt-4 flex items-center justify-center gap-2">
+                      {benefits.map((b, idx) => (
+                        <button
+                          key={b.id}
+                          type="button"
+                          onClick={() => setSelectedIndex(idx)}
+                          className={`transition-all duration-200 rounded-full cursor-pointer ${
+                            idx === selectedIndex
+                              ? 'w-7 h-2 bg-leaf-600'
+                              : 'w-2 h-2 bg-forest-200 hover:bg-forest-400'
+                          }`}
+                          aria-label={`Jump to ${b.title}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right Column: Details */}
+                  <div className="lg:col-span-6 flex flex-col text-left space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${selectedBenefit.color} mt-0.5`}
+                      >
+                        {React.createElement(selectedBenefit.icon, {
+                          className: 'h-5 w-5',
+                        })}
+                      </div>
+                      <div>
+                        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-forest-950 leading-tight">
+                          {selectedBenefit.title}
+                        </h3>
+                        <p className="text-sm sm:text-base font-semibold text-leaf-700 italic mt-0.5">
+                          {selectedBenefit.headline}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Paragraphs */}
+                    <div className="space-y-2.5 text-sm sm:text-[15px] text-forest-800 leading-relaxed font-normal">
+                      {selectedBenefit.paragraphs.map((para, pIdx) => (
+                        <p key={pIdx}>{para}</p>
+                      ))}
+                    </div>
+
+                    {/* Points */}
+                    {selectedBenefit.points && selectedBenefit.points.length > 0 && (
+                      <div className="pt-2">
+                        {selectedBenefit.pointsHeader && (
+                          <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-forest-900 mb-2">
+                            {selectedBenefit.pointsHeader}
+                          </h4>
+                        )}
+                        <ul className="space-y-1.5">
+                          {selectedBenefit.points.map((pt, ptIdx) => (
+                            <li key={ptIdx} className="flex items-start gap-2 text-xs sm:text-sm text-forest-800 leading-relaxed">
+                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-leaf-100 text-leaf-700 mt-0.5">
+                                <Check className="h-3 w-3" />
+                              </span>
+                              <span>{pt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Steps (e.g. WhatsApp) */}
+                    {selectedBenefit.steps && selectedBenefit.steps.length > 0 && (
+                      <div className="pt-2">
+                        {selectedBenefit.pointsHeader && (
+                          <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-forest-900 mb-2">
+                            {selectedBenefit.pointsHeader}
+                          </h4>
+                        )}
+                        <div className="grid grid-cols-1 gap-2">
+                          {selectedBenefit.steps.map((st, stIdx) => (
+                            <div
+                              key={stIdx}
+                              className="flex items-start gap-2.5 bg-forest-50/70 p-2.5 sm:p-3 rounded-xl border border-forest-100/80"
+                            >
+                              <span className="text-xs sm:text-sm font-bold text-leaf-700 shrink-0">
+                                {st.step}
+                              </span>
+                              <span className="text-xs sm:text-sm text-forest-800">
+                                {st.text}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Extra Note */}
+                    {selectedBenefit.extraNote && (
+                      <p className="text-xs sm:text-sm text-forest-700 font-medium italic pt-1">
+                        {selectedBenefit.extraNote}
+                      </p>
+                    )}
+
+                    {/* Highlight Box */}
+                    <div className="mt-3 p-3.5 sm:p-4 rounded-xl bg-leaf-50/80 border border-leaf-200/80">
+                      <span className="block text-[11px] font-bold uppercase tracking-wider text-leaf-800">
+                        {selectedBenefit.highlightLabel}
+                      </span>
+                      <span className="block text-sm sm:text-base font-semibold text-forest-950 mt-0.5">
+                        {selectedBenefit.highlightText}
+                      </span>
+                    </div>
+
+                    {/* Bottom Back Button */}
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={handleClose}
+                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-forest-700 hover:text-forest-950 px-4 py-2 rounded-xl bg-forest-50 hover:bg-forest-100 transition-colors cursor-pointer"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to all standards
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Large Organic Wavy Section Transition to Our Root Story */}
       <div className="absolute -bottom-1 left-0 right-0 w-full overflow-hidden leading-none pointer-events-none z-20">
