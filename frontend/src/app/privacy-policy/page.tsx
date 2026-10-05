@@ -58,7 +58,7 @@ export default function PrivacyPolicyPage() {
 
             <h3 className="font-serif text-lg font-bold text-forest-950">5. Contact Our Data Officer</h3>
             <p>
-              If you have any questions regarding your delivery records or wish to update your details, contact hello@vikrshi.com or write to our Shamshabad hub.
+              If you have any questions regarding your delivery records or wish to update your details, contact info@vikrshi.com or write to our Shamshabad hub.
             </p>
           </div>
         </div>

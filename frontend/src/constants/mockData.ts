@@ -8,7 +8,7 @@ export const initialCompanySettings: CompanySettings = {
   logoUrl: '/logo-full.png',
   whatsappNumber: '919441469814',
   whatsappDisplay: '+91 94414 69814',
-  email: 'hello@vikrshi.com',
+  email: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'info@vikrshi.com',
   phone: '+91 94414 69814',
   instagramUrl: 'https://instagram.com/vikrshi',
   instagramHandle: '@vikrshi',
