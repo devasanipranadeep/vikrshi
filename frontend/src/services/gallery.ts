@@ -99,16 +99,14 @@ export const galleryService = {
     }
   },
 
-  async deletePost(id: string): Promise<{ success: boolean; error?: string }> {
+  async deletePost(id: string, imagePath?: string): Promise<{ success: boolean; error?: string }> {
     try {
-      let res = await fetch(`/api/gallery?id=${encodeURIComponent(id)}`, {
+      const params = new URLSearchParams({ id });
+      if (imagePath) params.set('imagePath', imagePath);
+
+      const res = await fetch(`/api/gallery?${params.toString()}`, {
         method: 'DELETE',
       });
-      if (!res.ok) {
-        res = await fetch(`/api/social?id=${encodeURIComponent(id)}`, {
-          method: 'DELETE',
-        });
-      }
       const json = await res.json();
       if (res.ok && json.success) {
         return { success: true };

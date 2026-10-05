@@ -19,7 +19,7 @@ async function loadPersistedGalleryPosts(): Promise<SocialPost[]> {
     if (!error && fileData) {
       const text = await fileData.text();
       const parsed = JSON.parse(text);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
@@ -199,26 +199,42 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
+    const imagePath = searchParams.get('imagePath');
 
-    if (!id) {
+    if (!id && !imagePath) {
       return NextResponse.json(
-        { success: false, message: 'Post ID is required' },
+        { success: false, message: 'Post ID or imagePath is required' },
         { status: 400 }
       );
     }
 
     let posts = await loadPersistedGalleryPosts();
-    const initialLength = posts.length;
-    posts = posts.filter((p) => p.id !== id);
+    const postToDelete = posts.find(
+      (p) => (id && p.id === id) || (imagePath && p.imagePath === imagePath)
+    );
 
-    if (posts.length === initialLength) {
-      return NextResponse.json(
-        { success: false, message: 'Post not found' },
-        { status: 404 }
-      );
-    }
+    posts = posts.filter(
+      (p) => !((id && p.id === id) || (imagePath && p.imagePath === imagePath))
+    );
 
+    // Persist updated list
     await savePersistedGalleryPosts(posts);
+
+    // Asynchronously delete media from Supabase storage in background without delaying HTTP response
+    const fileToDelete = postToDelete?.imagePath || imagePath;
+    if (fileToDelete) {
+      try {
+        const adminClient = createAdminClient();
+        adminClient.storage
+          .from(BUCKET_NAME)
+          .remove([fileToDelete])
+          .catch((err) => {
+            console.warn('Storage background delete warning:', err);
+          });
+      } catch (err) {
+        console.warn('Failed to dispatch storage background delete:', err);
+      }
+    }
 
     return NextResponse.json({
       success: true,

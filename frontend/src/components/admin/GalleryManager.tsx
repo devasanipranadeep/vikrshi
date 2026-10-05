@@ -33,6 +33,7 @@ export function GalleryManager() {
   const [editCaption, setEditCaption] = useState('');
   const [editPostUrl, setEditPostUrl] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Form states
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -195,20 +196,29 @@ export function GalleryManager() {
   const handleDelete = async (post: SocialPost) => {
     if (!confirm('Are you sure you want to remove this gallery story?')) return;
 
+    // Snapshot previous posts for instant rollback if server errors
+    const previousPosts = [...posts];
+
+    // 1. Optimistic UI update: remove card instantly from UI (0ms delay)
+    setPosts((prev) => prev.filter((p) => p.id !== post.id));
+    setDeletingId(post.id);
+
     try {
-      if (post.imagePath) {
-        await storageService.deleteMedia(post.imagePath, 'vikrshi-media');
-      }
-      const res = await galleryService.deletePost(post.id);
+      // 2. Single fast server call (server deletes metadata and removes storage in background)
+      const res = await galleryService.deletePost(post.id, post.imagePath || undefined);
       if (res.success) {
         toast.success('Gallery story removed');
         notifyStoreUpdate('gallery');
-        loadPosts();
       } else {
+        // Rollback on server failure
+        setPosts(previousPosts);
         toast.error(res.error || 'Failed to remove story');
       }
     } catch {
+      setPosts(previousPosts);
       toast.error('Network error deleting story');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -288,10 +298,15 @@ export function GalleryManager() {
                   </button>
                   <button
                     onClick={() => handleDelete(post)}
-                    className="p-1.5 rounded-lg bg-black/60 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                    disabled={deletingId === post.id}
+                    className="p-1.5 rounded-lg bg-black/60 text-white hover:bg-red-600 transition-colors cursor-pointer disabled:opacity-50"
                     title="Delete story"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    {deletingId === post.id ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-3.5 h-3.5" />
+                    )}
                   </button>
                 </div>
 
