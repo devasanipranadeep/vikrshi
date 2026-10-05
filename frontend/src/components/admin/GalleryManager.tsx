@@ -27,11 +27,11 @@ export function GalleryManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
   // Form states
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [imagePath, setImagePath] = useState('');
   const [caption, setCaption] = useState('');
   const [postUrl, setPostUrl] = useState('https://instagram.com/vikrshi');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,37 +52,53 @@ export function GalleryManager() {
     loadPosts();
   }, []);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setIsUploading(true);
-    const toastId = toast.loading('Uploading image to Supabase storage bucket...');
-    try {
-      const res = await storageService.uploadGalleryImage(file);
-      setImageUrl(res.imageUrl);
-      setImagePath(res.imagePath);
-      toast.success('Gallery image saved to Supabase storage bucket!', { id: toastId });
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to upload image to Supabase bucket', { id: toastId });
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
     }
+
+    const objectUrl = URL.createObjectURL(file);
+    setSelectedFile(file);
+    setPreviewUrl(objectUrl);
+    setImageUrl('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleClearSelectedImage = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setSelectedFile(null);
+    setPreviewUrl('');
+    setImageUrl('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleOpenAddModal = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setSelectedFile(null);
+    setPreviewUrl('');
     setImageUrl('');
-    setImagePath('');
     setCaption('');
     setPostUrl('https://instagram.com/vikrshi');
     setIsModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setSelectedFile(null);
+    setPreviewUrl('');
+    setImageUrl('');
+    setIsModalOpen(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!imageUrl.trim()) {
-      toast.error('Please upload an image or provide an image URL');
+    if (!selectedFile && !imageUrl.trim()) {
+      toast.error('Please choose a photo or enter an image URL');
       return;
     }
     if (!caption.trim()) {
@@ -91,10 +107,20 @@ export function GalleryManager() {
     }
 
     setIsSubmitting(true);
+    let finalImageUrl = imageUrl.trim();
+    let finalImagePath: string | undefined = undefined;
+
     try {
+      // Save image to vikrshi-media/gallery only after clicking Publish
+      if (selectedFile) {
+        const uploadRes = await storageService.uploadGalleryImage(selectedFile);
+        finalImageUrl = uploadRes.imageUrl;
+        finalImagePath = uploadRes.imagePath;
+      }
+
       const res = await galleryService.createPost({
-        imageUrl: imageUrl.trim(),
-        imagePath: imagePath || undefined,
+        imageUrl: finalImageUrl,
+        imagePath: finalImagePath,
         caption: caption.trim(),
         likes: 0,
         date: 'Today',
@@ -102,15 +128,15 @@ export function GalleryManager() {
       });
 
       if (res.success) {
-        toast.success('New gallery story added to website!');
+        toast.success('Gallery story published successfully!');
         notifyStoreUpdate('gallery');
-        setIsModalOpen(false);
+        handleCloseModal();
         loadPosts();
       } else {
         toast.error(res.error || 'Failed to publish story');
       }
     } catch (err: any) {
-      toast.error(err.message || 'Network error creating story');
+      toast.error(err.message || 'Network error publishing story');
     } finally {
       setIsSubmitting(false);
     }
@@ -121,7 +147,7 @@ export function GalleryManager() {
 
     try {
       if (post.imagePath) {
-        await storageService.deleteMedia(post.imagePath, 'gallery');
+        await storageService.deleteMedia(post.imagePath, 'vikrshi-media');
       }
       const res = await galleryService.deletePost(post.id);
       if (res.success) {
@@ -259,7 +285,7 @@ export function GalleryManager() {
                 </h3>
               </div>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
                 className="p-1.5 rounded-full hover:bg-cream-100 text-forest-400 hover:text-forest-700 cursor-pointer"
               >
                 <X className="w-5 h-5" />
@@ -278,26 +304,16 @@ export function GalleryManager() {
                     type="file"
                     ref={fileInputRef}
                     accept="image/*"
-                    onChange={handleFileUpload}
+                    onChange={handleFileSelect}
                     className="hidden"
                   />
                   <button
                     type="button"
-                    disabled={isUploading}
                     onClick={() => fileInputRef.current?.click()}
                     className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-dashed border-leaf-400 bg-leaf-50/50 hover:bg-leaf-50 text-leaf-700 text-xs font-semibold cursor-pointer transition-colors"
                   >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin text-leaf-600" />
-                        <span>Uploading image...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4 text-leaf-600" />
-                        <span>Upload photo from device</span>
-                      </>
-                    )}
+                    <Upload className="w-4 h-4 text-leaf-600" />
+                    <span>{selectedFile ? 'Change selected photo' : 'Choose photo from device'}</span>
                   </button>
                 </div>
 
@@ -305,35 +321,54 @@ export function GalleryManager() {
                   <input
                     type="url"
                     value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
+                    onChange={(e) => {
+                      setImageUrl(e.target.value);
+                      if (e.target.value && selectedFile) {
+                        handleClearSelectedImage();
+                      }
+                    }}
                     placeholder="Or paste image URL (https://...)"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
                   />
                 </div>
 
                 {/* Preview Thumbnail */}
-                {imageUrl && (
+                {(previewUrl || imageUrl) && (
                   <div className="mt-2.5 flex items-center gap-3">
                     <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-cream-200 shadow-inner bg-cream-100 shrink-0">
                       <img
-                        src={imageUrl}
+                        src={previewUrl || imageUrl}
                         alt="Preview"
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="text-xs text-forest-700">
-                      {imagePath ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          ✓ Saved to Supabase Bucket
-                        </span>
+                      {selectedFile ? (
+                        <>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Ready to publish
+                          </span>
+                          <p className="text-[11px] text-forest-700 font-medium mt-1 truncate max-w-[240px]">
+                            {selectedFile.name}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={handleClearSelectedImage}
+                            className="text-[11px] text-rose-600 hover:text-rose-700 font-medium underline mt-0.5 cursor-pointer block"
+                          >
+                            Remove photo
+                          </button>
+                        </>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                          External Image URL
-                        </span>
+                        <>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                            Image URL
+                          </span>
+                          <p className="text-[11px] text-forest-500 mt-1 truncate max-w-[240px]">
+                            {imageUrl}
+                          </p>
+                        </>
                       )}
-                      <p className="text-[11px] text-forest-500 mt-1 truncate max-w-[240px]">
-                        {imageUrl}
-                      </p>
                     </div>
                   </div>
                 )}
@@ -354,7 +389,6 @@ export function GalleryManager() {
                 />
               </div>
 
-
               {/* Link */}
               <div>
                 <label className="block text-xs font-bold text-forest-950 mb-1">
@@ -373,20 +407,20 @@ export function GalleryManager() {
               <div className="pt-4 flex items-center justify-end gap-3 border-t border-cream-200">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={handleCloseModal}
                   className="px-4 py-2.5 rounded-xl text-xs font-semibold text-forest-700 hover:bg-cream-100 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting || isUploading}
+                  disabled={isSubmitting}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-md cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Publishing...</span>
+                      <span>Publishing story...</span>
                     </>
                   ) : (
                     <span>Publish Story</span>

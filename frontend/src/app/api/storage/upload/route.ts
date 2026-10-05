@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const requestedFolder = (formData.get('folder') as string) || 'gallery';
-    const requestedBucket = (formData.get('bucket') as string) || (requestedFolder === 'gallery' ? 'gallery' : 'vikrshi-media');
+    const targetBucket = (formData.get('bucket') as string) || 'vikrshi-media';
 
     if (!file) {
       return NextResponse.json(
@@ -52,31 +52,16 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // If using dedicated bucket 'gallery', filePath is directly the fileName
-    // If using 'vikrshi-media', filePath includes the folder prefix e.g. 'gallery/fileName'
-    let targetBucket = requestedBucket;
-    let filePath = targetBucket === 'gallery' ? fileName : `${requestedFolder}/${fileName}`;
+    // Save to requested folder in vikrshi-media bucket (e.g. gallery/fileName)
+    const filePath = requestedFolder ? `${requestedFolder}/${fileName}` : fileName;
 
-    let uploadRes = await adminClient.storage
+    const uploadRes = await adminClient.storage
       .from(targetBucket)
       .upload(filePath, buffer, {
         contentType: file.type,
         upsert: true,
         cacheControl: '3600',
       });
-
-    // Fallback: If 'gallery' bucket had an issue, fallback to 'vikrshi-media' under 'gallery/'
-    if (uploadRes.error && targetBucket === 'gallery') {
-      targetBucket = 'vikrshi-media';
-      filePath = `gallery/${fileName}`;
-      uploadRes = await adminClient.storage
-        .from(targetBucket)
-        .upload(filePath, buffer, {
-          contentType: file.type,
-          upsert: true,
-          cacheControl: '3600',
-        });
-    }
 
     if (uploadRes.error) {
       console.error('Supabase storage upload error:', uploadRes.error);
@@ -110,7 +95,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const imagePath = searchParams.get('imagePath');
-    const bucket = searchParams.get('bucket') || 'gallery';
+    const bucket = searchParams.get('bucket') || 'vikrshi-media';
 
     if (!imagePath) {
       return NextResponse.json(
@@ -124,9 +109,9 @@ export async function DELETE(request: NextRequest) {
     // Try deleting from specified bucket
     let { error } = await adminClient.storage.from(bucket).remove([imagePath]);
 
-    // If bucket was 'gallery' and failed or file was in 'vikrshi-media'
-    if (error && bucket === 'gallery') {
-      const fallbackPath = imagePath.startsWith('gallery/') ? imagePath : `gallery/${imagePath}`;
+    // Fallback: If deleting from vikrshi-media and imagePath didn't have gallery/ prefix
+    if (error && bucket === 'vikrshi-media' && !imagePath.startsWith('gallery/')) {
+      const fallbackPath = `gallery/${imagePath}`;
       const fallbackRes = await adminClient.storage.from('vikrshi-media').remove([fallbackPath]);
       error = fallbackRes.error;
     }

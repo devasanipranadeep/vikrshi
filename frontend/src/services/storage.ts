@@ -40,7 +40,7 @@ export const storageService = {
   async uploadFile(folder: StorageFolder, file: File, customBucket?: string): Promise<UploadResult> {
     validateFile(file);
 
-    const targetBucket = customBucket || (folder === 'gallery' ? 'gallery' : BUCKET_NAME);
+    const targetBucket = customBucket || BUCKET_NAME;
 
     // 1. First attempt: Use the secure server API route which has full Supabase service-role permissions
     try {
@@ -71,7 +71,7 @@ export const storageService = {
     // 2. Direct browser client upload fallback
     const client = getBrowserClient();
     const fileName = getSanitizedFileName(file.name);
-    const filePath = targetBucket === 'gallery' ? fileName : `${folder}/${fileName}`;
+    const filePath = `${folder}/${fileName}`;
 
     const { error } = await client.storage.from(targetBucket).upload(filePath, file, {
       cacheControl: '3600',
@@ -80,24 +80,6 @@ export const storageService = {
     });
 
     if (error) {
-      // If 'gallery' bucket failed, try 'vikrshi-media'
-      if (targetBucket === 'gallery') {
-        const fallbackPath = `gallery/${fileName}`;
-        const fallbackRes = await client.storage.from(BUCKET_NAME).upload(fallbackPath, file, {
-          cacheControl: '3600',
-          upsert: true,
-          contentType: file.type,
-        });
-
-        if (!fallbackRes.error) {
-          const { data: publicData } = client.storage.from(BUCKET_NAME).getPublicUrl(fallbackPath);
-          return {
-            imageUrl: publicData.publicUrl,
-            imagePath: fallbackPath,
-            bucket: BUCKET_NAME,
-          };
-        }
-      }
       throw new Error(`Storage upload failed: ${error.message}`);
     }
 
@@ -111,7 +93,7 @@ export const storageService = {
   },
 
   async uploadGalleryImage(file: File): Promise<UploadResult> {
-    return this.uploadFile('gallery', file, 'gallery');
+    return this.uploadFile('gallery', file, BUCKET_NAME);
   },
 
   async uploadProductImage(file: File): Promise<UploadResult> {
@@ -133,7 +115,7 @@ export const storageService = {
   /**
    * Delete media using image_path
    */
-  async deleteMedia(imagePath: string, bucket: string = 'gallery'): Promise<void> {
+  async deleteMedia(imagePath: string, bucket: string = BUCKET_NAME): Promise<void> {
     if (!imagePath) return;
 
     // 1. Try server API route
