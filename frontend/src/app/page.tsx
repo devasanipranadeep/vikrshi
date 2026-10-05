@@ -29,9 +29,9 @@ export default function HomePage() {
       <BenefitsSection />
       <StorySection />
       <CategoriesSection />
-      <FarmJourneyInstagram />
       <FeaturedProductsSection />
       <TestimonialsSection />
+      <FarmJourneyInstagram />
       <ProcessTimeline />
     </>
   );

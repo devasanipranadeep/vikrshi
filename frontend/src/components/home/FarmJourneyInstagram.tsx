@@ -45,17 +45,11 @@ export function FarmJourneyInstagram() {
     <section id="gallery" className="py-20 bg-cream-50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 sm:mb-12 gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-leaf-600 bg-leaf-100/60 px-3 py-1 rounded-full inline-block mb-3">
-              Social Community
-            </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-forest-950 tracking-tight">
-              Follow Our Farm Journey
+              Gallery
             </h2>
-            <p className="mt-2 text-sm text-forest-700/80 max-w-xl">
-              Daily morning stories, harvest reels, soil science updates, and farm life moments from Chevella and Vikarabad.
-            </p>
           </div>
 
           <a
