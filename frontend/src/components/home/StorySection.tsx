@@ -79,8 +79,8 @@ export function StorySection() {
           >
             <div className="relative aspect-4/3 w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
               <Image
-                src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=1000&q=80"
-                alt="Farmer harvesting organic greens at dawn"
+                src="/hero/farm-3.jpg"
+                alt="Farmers harvesting organic crops across regional farms at sunrise"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
