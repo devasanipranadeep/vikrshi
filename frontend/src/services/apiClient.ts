@@ -26,6 +26,7 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
   const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
 
   const res = await fetch(fullUrl, {
+    cache: options.cache || 'no-store',
     headers: {
       'Content-Type': 'application/json',
       ...headers,

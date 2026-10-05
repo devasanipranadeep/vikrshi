@@ -64,14 +64,10 @@ export async function GET(request: NextRequest) {
     } else if (sort === 'most_helpful') {
       filtered.sort((a, b) => (b.helpfulCount || 0) - (a.helpfulCount || 0));
     } else {
-      // Default: newest first (by id descending or order)
+      // Default: newest first
       filtered.sort((a, b) => {
-        const timeA = a.id.startsWith('rev-') && !isNaN(Number(a.id.replace('rev-', ''))) 
-          ? Number(a.id.replace('rev-', '')) 
-          : 0;
-        const timeB = b.id.startsWith('rev-') && !isNaN(Number(b.id.replace('rev-', ''))) 
-          ? Number(b.id.replace('rev-', '')) 
-          : 0;
+        const timeA = new Date(a.date).getTime() || (a.id.startsWith('rev-') ? Number(a.id.replace('rev-', '')) : 0);
+        const timeB = new Date(b.date).getTime() || (b.id.startsWith('rev-') ? Number(b.id.replace('rev-', '')) : 0);
         return timeB - timeA;
       });
     }
@@ -90,18 +86,27 @@ export async function GET(request: NextRequest) {
     const recommendedCount = allReviews.filter((r) => r.rating >= 4).length;
     const recommendationRate = totalCount > 0 ? Math.round((recommendedCount / totalCount) * 100) : 98;
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        reviews: filtered,
-        stats: {
-          totalReviews: totalCount,
-          averageRating,
-          recommendationRate,
-          distribution,
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          reviews: filtered,
+          stats: {
+            totalReviews: totalCount,
+            averageRating,
+            recommendationRate,
+            distribution,
+          },
         },
       },
-    });
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      }
+    );
   } catch (error) {
     console.error('GET /api/reviews error:', error);
     return NextResponse.json(
@@ -143,7 +148,12 @@ export async function POST(request: NextRequest) {
         message: 'Thank you for sharing your experience! Your review is now saved.',
         data: savedReview,
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        },
+      }
     );
   } catch (error) {
     console.error('POST /api/reviews error:', error);

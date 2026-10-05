@@ -25,7 +25,9 @@ export async function getReviews(params?: {
       rating: params?.rating,
       location: params?.location,
       sort: params?.sort,
+      _t: Date.now(),
     },
+    cache: 'no-store',
     next: { revalidate: 0 },
   });
 }

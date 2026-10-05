@@ -79,16 +79,15 @@ export async function insertPersistedReview(data: {
   comment: string;
   productName?: string;
 }): Promise<CustomerReview> {
-  const adminClient = createAdminClient();
-
   const today = new Intl.DateTimeFormat('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   }).format(new Date());
 
-  // 1. Try inserting directly into Supabase database table
+  // 1. Try inserting directly into Supabase database table using admin client
   try {
+    const adminClient = createAdminClient();
     const { data: inserted, error: dbError } = await adminClient
       .from('customer_reviews')
       .insert({
@@ -97,23 +96,65 @@ export async function insertPersistedReview(data: {
         rating: data.rating,
         title: data.title,
         comment: data.comment,
-        product_name: data.productName || null,
+        product_name: data.productName && data.productName.trim().length > 0 ? data.productName.trim() : null,
         verified_purchase: true,
         helpful_count: 0,
         is_active: true,
       })
-      .select()
-      .single();
+      .select();
 
-    if (!dbError && inserted) {
-      const review = mapRowToReview(inserted);
-      syncToStorage([review]);
+    if (!dbError && inserted && inserted.length > 0) {
+      const review = mapRowToReview(inserted[0]);
+      await syncToStorage([review]);
       return review;
     } else if (dbError) {
-      console.warn('DB insert failed, using storage backup:', dbError.message);
+      console.warn('DB insert via client warning:', dbError.message);
     }
   } catch (err) {
     console.warn('DB insert error:', err);
+  }
+
+  // 1b. Direct REST fetch fallback to insert into customer_reviews
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (supabaseUrl && key) {
+      const restRes = await fetch(`${supabaseUrl}/rest/v1/customer_reviews`, {
+        method: 'POST',
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          location: data.location,
+          rating: data.rating,
+          title: data.title,
+          comment: data.comment,
+          product_name: data.productName && data.productName.trim().length > 0 ? data.productName.trim() : null,
+          verified_purchase: true,
+          helpful_count: 0,
+          is_active: true,
+        }),
+      });
+
+      if (restRes.ok) {
+        const rows = await restRes.json();
+        if (rows && rows.length > 0) {
+          const review = mapRowToReview(rows[0]);
+          await syncToStorage([review]);
+          return review;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('REST insert fallback error:', err);
   }
 
   // 2. Fallback: Save to storage
