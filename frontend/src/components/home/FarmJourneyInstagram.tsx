@@ -217,24 +217,24 @@ export function FarmJourneyInstagram() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative z-10 w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-cream-200 flex flex-col md:flex-row my-auto max-h-[90vh]"
+              className="relative z-10 w-full max-w-5xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-cream-200 flex flex-col md:flex-row my-auto md:h-[82vh] min-h-[520px] md:min-h-[640px] max-h-[92vh]"
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedIndex(null)}
                 aria-label="Close photo view"
-                className="absolute top-3 right-3 z-20 p-2 rounded-full bg-forest-950/60 hover:bg-forest-950 text-white transition-colors cursor-pointer"
+                className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-forest-950/70 hover:bg-forest-950 text-white transition-colors cursor-pointer shadow-md"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
 
               {/* Photo Display Area */}
-              <div className="relative md:w-3/5 aspect-4/3 md:aspect-auto bg-black flex items-center justify-center min-h-[280px]">
+              <div className="relative md:w-3/5 w-full aspect-4/3 md:aspect-auto md:h-full min-h-[320px] sm:min-h-[380px] md:min-h-full bg-forest-950/95 flex items-center justify-center p-3 sm:p-5">
                 <Image
                   src={selectedPost.imageUrl}
                   alt={selectedPost.caption || 'Vikrshi farm photo'}
                   fill
-                  className="object-contain"
+                  className="object-contain p-2"
                   priority
                   unoptimized={
                     selectedPost.imageUrl.startsWith('data:') ||
@@ -264,7 +264,7 @@ export function FarmJourneyInstagram() {
               </div>
 
               {/* Photo Details Sidebar */}
-              <div className="md:w-2/5 p-5 sm:p-7 flex flex-col justify-between overflow-y-auto bg-cream-50/50">
+              <div className="md:w-2/5 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto bg-cream-50/60 md:h-full">
                 <div className="space-y-4">
                   {/* Photo counter */}
                   {posts.length > 1 && selectedIndex !== null && (
