@@ -18,6 +18,7 @@ import {
   Sparkles,
   Link as LinkIcon,
   Calendar,
+  Pencil,
 } from 'lucide-react';
 import { InstagramIcon } from '@/components/ui/Icons';
 import { toast } from 'sonner';
@@ -27,6 +28,12 @@ export function GalleryManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Edit states
+  const [editingPost, setEditingPost] = useState<SocialPost | null>(null);
+  const [editCaption, setEditCaption] = useState('');
+  const [editPostUrl, setEditPostUrl] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Form states
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -93,6 +100,48 @@ export function GalleryManager() {
     setPreviewUrl('');
     setImageUrl('');
     setIsModalOpen(false);
+  };
+
+  const handleOpenEditModal = (post: SocialPost) => {
+    setEditingPost(post);
+    setEditCaption(post.caption);
+    setEditPostUrl(post.postUrl || '');
+  };
+
+  const handleCloseEditModal = () => {
+    setEditingPost(null);
+    setEditCaption('');
+    setEditPostUrl('');
+  };
+
+  const handleUpdateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPost) return;
+    if (!editCaption.trim()) {
+      toast.error('Description cannot be empty');
+      return;
+    }
+
+    try {
+      setIsUpdating(true);
+      const res = await galleryService.updatePost(editingPost.id, {
+        caption: editCaption.trim(),
+        postUrl: editPostUrl.trim() || undefined,
+      });
+
+      if (res.success) {
+        toast.success('Story description updated successfully!');
+        notifyStoreUpdate('gallery');
+        handleCloseEditModal();
+        loadPosts();
+      } else {
+        toast.error(res.error || 'Failed to update description');
+      }
+    } catch {
+      toast.error('Network error updating description');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -230,6 +279,13 @@ export function GalleryManager() {
                 />
                 <div className="absolute top-2 right-2 flex items-center gap-1.5">
                   <button
+                    onClick={() => handleOpenEditModal(post)}
+                    className="p-1.5 rounded-lg bg-black/60 text-white hover:bg-forest-900 transition-colors cursor-pointer"
+                    title="Edit description"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
                     onClick={() => handleDelete(post)}
                     className="p-1.5 rounded-lg bg-black/60 text-white hover:bg-red-600 transition-colors cursor-pointer"
                     title="Delete story"
@@ -246,9 +302,20 @@ export function GalleryManager() {
 
               {/* Caption & Metadata */}
               <div className="p-4 flex flex-col justify-between flex-1">
-                <p className="text-xs text-forest-800 line-clamp-2 leading-relaxed">
-                  {post.caption}
-                </p>
+                <div>
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-xs text-forest-800 line-clamp-2 leading-relaxed flex-1">
+                      {post.caption}
+                    </p>
+                    <button
+                      onClick={() => handleOpenEditModal(post)}
+                      className="p-1 rounded-md text-forest-400 hover:text-forest-800 hover:bg-cream-100 transition-colors cursor-pointer shrink-0"
+                      title="Edit description"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
 
                 <div className="mt-3 pt-2 border-t border-cream-100 flex items-center justify-between text-[11px] text-forest-600">
                   <span className="flex items-center gap-1">
@@ -424,6 +491,105 @@ export function GalleryManager() {
                     </>
                   ) : (
                     <span>Publish Story</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Story Description Modal */}
+      {editingPost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-forest-950/70 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-cream-200">
+            <div className="flex items-center justify-between pb-4 border-b border-cream-200 mb-6">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-forest-700 bg-forest-50 px-2.5 py-0.5 rounded-full border border-forest-200 inline-block mb-1">
+                  Edit Story
+                </span>
+                <h3 className="font-serif text-xl font-bold text-forest-950">
+                  Edit Description
+                </h3>
+              </div>
+              <button
+                onClick={handleCloseEditModal}
+                className="p-1.5 rounded-full hover:bg-cream-100 text-forest-400 hover:text-forest-700 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateSubmit} className="space-y-4">
+              {/* Photo Preview */}
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-cream-50 border border-cream-200">
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-cream-200 shrink-0 border border-cream-200 shadow-inner">
+                  <img
+                    src={editingPost.imageUrl}
+                    alt={editingPost.caption}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="text-xs text-forest-700 overflow-hidden">
+                  <span className="text-[11px] font-semibold text-forest-500 uppercase tracking-wider">
+                    Story Image
+                  </span>
+                  <p className="text-[11px] text-forest-600 truncate mt-0.5 max-w-[280px]">
+                    {editingPost.imagePath || editingPost.imageUrl}
+                  </p>
+                </div>
+              </div>
+
+              {/* Description Input */}
+              <div>
+                <label className="block text-xs font-bold text-forest-950 mb-1">
+                  Description / Caption *
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  value={editCaption}
+                  onChange={(e) => setEditCaption(e.target.value)}
+                  placeholder="Enter story description..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
+                />
+              </div>
+
+              {/* Link Input */}
+              <div>
+                <label className="block text-xs font-bold text-forest-950 mb-1">
+                  Instagram / Reel URL (Optional)
+                </label>
+                <input
+                  type="url"
+                  value={editPostUrl}
+                  onChange={(e) => setEditPostUrl(e.target.value)}
+                  placeholder="https://instagram.com/p/..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-cream-200">
+                <button
+                  type="button"
+                  onClick={handleCloseEditModal}
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-forest-700 hover:bg-cream-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-md cursor-pointer disabled:opacity-50"
+                >
+                  {isUpdating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Saving changes...</span>
+                    </>
+                  ) : (
+                    <span>Save Changes</span>
                   )}
                 </button>
               </div>

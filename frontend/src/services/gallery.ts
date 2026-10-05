@@ -72,6 +72,33 @@ export const galleryService = {
     }
   },
 
+  async updatePost(
+    id: string,
+    updates: { caption?: string; postUrl?: string; likes?: number; date?: string; isActive?: boolean }
+  ): Promise<{ success: boolean; data?: SocialPost; error?: string }> {
+    try {
+      let res = await fetch('/api/gallery', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...updates }),
+      });
+      if (!res.ok) {
+        res = await fetch('/api/social', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, ...updates }),
+        });
+      }
+      const json = await res.json();
+      if (res.ok && json.success) {
+        return { success: true, data: json.data };
+      }
+      return { success: false, error: json.message || 'Failed to update gallery post' };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Network error updating gallery post' };
+    }
+  },
+
   async deletePost(id: string): Promise<{ success: boolean; error?: string }> {
     try {
       let res = await fetch(`/api/gallery?id=${encodeURIComponent(id)}`, {
