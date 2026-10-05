@@ -25,7 +25,7 @@ export const galleryService = {
         caption: p.caption,
         likes: p.likes,
         date: p.date,
-        postUrl: 'https://instagram.com/vikrshi',
+        postUrl: undefined,
         isActive: true,
       }));
     } catch {
@@ -35,7 +35,7 @@ export const galleryService = {
         caption: p.caption,
         likes: p.likes,
         date: p.date,
-        postUrl: 'https://instagram.com/vikrshi',
+        postUrl: undefined,
         isActive: true,
       }));
     }

@@ -20,7 +20,6 @@ import {
   Calendar,
   Pencil,
 } from 'lucide-react';
-import { InstagramIcon } from '@/components/ui/Icons';
 import { toast } from 'sonner';
 
 export function GalleryManager() {
@@ -40,7 +39,7 @@ export function GalleryManager() {
   const [previewUrl, setPreviewUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [caption, setCaption] = useState('');
-  const [postUrl, setPostUrl] = useState('https://instagram.com/vikrshi');
+  const [postUrl, setPostUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadPosts = async () => {
@@ -90,7 +89,7 @@ export function GalleryManager() {
     setPreviewUrl('');
     setImageUrl('');
     setCaption('');
-    setPostUrl('https://instagram.com/vikrshi');
+    setPostUrl('');
     setIsModalOpen(true);
   };
 
@@ -105,7 +104,9 @@ export function GalleryManager() {
   const handleOpenEditModal = (post: SocialPost) => {
     setEditingPost(post);
     setEditCaption(post.caption);
-    setEditPostUrl(post.postUrl || '');
+    setEditPostUrl(
+      post.postUrl && !post.postUrl.includes('instagram.com') ? post.postUrl : ''
+    );
   };
 
   const handleCloseEditModal = () => {
@@ -217,16 +218,16 @@ export function GalleryManager() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-forest-100 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-pink-50 text-pink-700 border border-pink-200">
-              <Camera className="w-3.5 h-3.5" />
-              Social Community Feed
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-leaf-50 text-leaf-800 border border-leaf-200">
+              <Camera className="w-3.5 h-3.5 text-leaf-600" />
+              Storefront Farm Gallery
             </span>
           </div>
           <h2 className="font-serif text-2xl font-bold text-forest-950">
             Gallery
           </h2>
           <p className="text-xs sm:text-sm text-forest-600 mt-0.5">
-            Add live harvest photos, field moments, and Instagram updates displayed dynamically on the storefront.
+            Add live harvest photos and field moments displayed dynamically on the storefront gallery.
           </p>
         </div>
 
@@ -322,15 +323,21 @@ export function GalleryManager() {
                     <Calendar className="w-3 h-3 text-forest-400" />
                     {post.date}
                   </span>
-                  <a
-                    href={post.postUrl || 'https://instagram.com/vikrshi'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-pink-600 font-semibold hover:underline inline-flex items-center gap-1"
-                  >
-                    <span>View Link</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
+                  {post.postUrl && !post.postUrl.includes('instagram.com') ? (
+                    <a
+                      href={post.postUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-leaf-700 font-semibold hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>Link</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  ) : (
+                    <span className="text-[10px] font-medium text-leaf-700 bg-leaf-50 px-2 py-0.5 rounded-md">
+                      Published
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -459,13 +466,13 @@ export function GalleryManager() {
               {/* Link */}
               <div>
                 <label className="block text-xs font-bold text-forest-950 mb-1">
-                  Instagram / Reel URL (Optional)
+                  External Link (Optional)
                 </label>
                 <input
                   type="url"
                   value={postUrl}
                   onChange={(e) => setPostUrl(e.target.value)}
-                  placeholder="https://instagram.com/p/..."
+                  placeholder="https://..."
                   className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
                 />
               </div>
@@ -558,13 +565,13 @@ export function GalleryManager() {
               {/* Link Input */}
               <div>
                 <label className="block text-xs font-bold text-forest-950 mb-1">
-                  Instagram / Reel URL (Optional)
+                  External Link (Optional)
                 </label>
                 <input
                   type="url"
                   value={editPostUrl}
                   onChange={(e) => setEditPostUrl(e.target.value)}
-                  placeholder="https://instagram.com/p/..."
+                  placeholder="https://..."
                   className="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 text-xs text-forest-900 focus:outline-none focus:border-leaf-500"
                 />
               </div>

@@ -47,7 +47,7 @@ async function loadPersistedGalleryPosts(): Promise<SocialPost[]> {
           caption: 'Fresh harvest from our partner farms. 🌿',
           likes: 0,
           date: 'Today',
-          postUrl: 'https://instagram.com/vikrshi',
+          postUrl: undefined,
           isActive: true,
           createdAt: file.created_at || new Date().toISOString(),
         };
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       caption: validated.caption,
       likes: validated.likes ?? 0,
       date: validated.date || 'Today',
-      postUrl: validated.postUrl || 'https://instagram.com/vikrshi',
+      postUrl: validated.postUrl || undefined,
       isActive: validated.isActive !== false,
       createdAt: new Date().toISOString(),
     };
