@@ -20,7 +20,7 @@ const heroImages = [
   },
   {
     src: '/hero/farm-3.jpg',
-    alt: 'Lush agricultural farmland and healthy harvest',
+    alt: 'Farmers harvesting organic vegetables at dawn under morning sunrise',
   },
   {
     src: '/hero/farm-4.jpg',
