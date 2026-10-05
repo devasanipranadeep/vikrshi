@@ -301,8 +301,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="font-bold text-forest-950">Email Support</h5>
-                    <a href={`mailto:${settings.email}`} className="text-xs text-leaf-600 font-semibold hover:underline block mt-0.5">
-                      {settings.email}
+                    <a href="mailto:info@vikrshi.com" className="text-xs text-leaf-600 font-semibold hover:underline block mt-0.5">
+                      info@vikrshi.com
                     </a>
                   </div>
                 </div>
