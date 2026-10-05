@@ -32,6 +32,17 @@
   --color-harvest-coral: #E76F51;
   --color-harvest-gold: #E9C46A;
   --color-harvest-sun: #F39C12;
+
+  --color-gold-50: #FFFBEB;
+  --color-gold-100: #FEF3C7;
+  --color-gold-200: #FDE68A;
+  --color-gold-300: #FCD34D;
+  --color-gold-400: #FBBF24;
+  --color-gold-500: #F59E0B;
+  --color-gold-600: #D97706;
+  --color-gold-700: #B45309;
+  --color-gold-800: #92400E;
+  --color-gold-900: #78350F;
 }
 
 :root {

@@ -50,7 +50,7 @@ export function ReviewStatsCard({
                 key={star}
                 className={`w-6 h-6 ${
                   star <= Math.round(averageRating)
-                    ? 'text-gold-500 fill-gold-500'
+                    ? 'text-amber-400 fill-amber-400'
                     : 'text-forest-200'
                 }`}
               />
@@ -103,7 +103,7 @@ export function ReviewStatsCard({
               >
                 <div className="flex items-center gap-1 w-14 shrink-0 font-medium text-forest-800">
                   <span>{stars}</span>
-                  <Star className="w-3.5 h-3.5 text-gold-500 fill-gold-500" />
+                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                 </div>
 
                 <div className="flex-1 h-3 bg-forest-100 rounded-full overflow-hidden relative">
@@ -112,7 +112,7 @@ export function ReviewStatsCard({
                       stars >= 4
                         ? 'bg-gradient-to-r from-leaf-500 to-leaf-600'
                         : stars === 3
-                        ? 'bg-gradient-to-r from-gold-400 to-gold-500'
+                        ? 'bg-gradient-to-r from-amber-400 to-amber-500'
                         : 'bg-gradient-to-r from-amber-400 to-amber-600'
                     }`}
                     style={{ width: `${percentage}%` }}

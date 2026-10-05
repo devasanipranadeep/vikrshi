@@ -78,7 +78,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   key={i}
                   className={`w-3.5 h-3.5 ${
                     i < review.rating
-                      ? 'text-gold-500 fill-gold-500'
+                      ? 'text-amber-400 fill-amber-400'
                       : 'text-forest-200'
                   }`}
                 />

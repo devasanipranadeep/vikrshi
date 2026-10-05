@@ -164,28 +164,31 @@ export function ReviewModal({ isOpen, onClose, onReviewSubmitted }: ReviewModalP
                 <label className="block text-xs font-semibold text-forest-800 uppercase tracking-wider mb-2">
                   Your Overall Rating
                 </label>
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(null)}
-                      className="p-1 transition-transform hover:scale-110 active:scale-95"
-                      aria-label={`${star} star`}
-                    >
-                      <Star
-                        className={`w-8 h-8 transition-colors ${
-                          star <= activeRating
-                            ? 'text-gold-500 fill-gold-500'
-                            : 'text-forest-200'
-                        }`}
-                      />
-                    </button>
-                  ))}
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const isFilled = star <= activeRating;
+                    return (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(null)}
+                        className="p-1.5 rounded-xl transition-all hover:scale-115 active:scale-95 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                        aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                      >
+                        <Star
+                          className={`w-8 h-8 sm:w-9 sm:h-9 transition-all duration-150 ${
+                            isFilled
+                              ? 'text-amber-400 fill-amber-400 drop-shadow-xs'
+                              : 'text-forest-200 fill-transparent hover:text-amber-300'
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
-                <p className="text-xs font-medium text-forest-700 transition-all">
+                <p className="text-xs font-semibold text-forest-800 transition-all min-h-[1.25rem]">
                   {RATING_DESCRIPTIONS[activeRating]}
                 </p>
               </div>
