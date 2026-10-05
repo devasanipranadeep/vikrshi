@@ -133,7 +133,7 @@ export function HeroSection() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base shadow-xl shadow-forest-950/60 transition-all cursor-pointer"
             >
               <MessageCircle className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
-              <span>Order on WhatsApp</span>
+              <span>Chat on WhatsApp</span>
             </a>
           </motion.div>
         </div>
