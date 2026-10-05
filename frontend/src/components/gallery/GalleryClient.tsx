@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { SocialPost } from '@/types';
 import { galleryService } from '@/services/gallery';
+import { subscribeToStoreUpdates } from '@/utils/storeEvents';
 import { toast } from 'sonner';
 
 export function GalleryClient() {
@@ -25,22 +26,30 @@ export function GalleryClient() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<SocialPost | null>(null);
 
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        setIsLoading(true);
-        const data = await galleryService.getPosts();
-        if (Array.isArray(data)) {
-          setPosts(data.filter((p) => p.isActive !== false));
-        }
-      } catch (err) {
-        console.warn('Could not load gallery posts:', err);
-      } finally {
-        setIsLoading(false);
+  const fetchPosts = React.useCallback(async () => {
+    try {
+      const data = await galleryService.getPosts();
+      if (Array.isArray(data)) {
+        setPosts(data.filter((p) => p.isActive !== false));
       }
+    } catch (err) {
+      console.warn('Could not load gallery posts:', err);
+    } finally {
+      setIsLoading(false);
     }
-    fetchPosts();
   }, []);
+
+  useEffect(() => {
+    fetchPosts();
+
+    const unsubscribe = subscribeToStoreUpdates(() => {
+      fetchPosts();
+    }, ['gallery', 'social', 'all']);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [fetchPosts]);
 
   const handleShare = (item: SocialPost, e: React.MouseEvent) => {
     e.stopPropagation();

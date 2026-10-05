@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { SocialPost } from '@/types';
 import { galleryService } from '@/services/gallery';
 import { storageService } from '@/services/storage';
-import { notifyStoreUpdate } from '@/utils/storeEvents';
+import { notifyStoreUpdate, subscribeToStoreUpdates } from '@/utils/storeEvents';
 import {
   Camera,
   Plus,
@@ -43,7 +43,7 @@ export function GalleryManager() {
   const [postUrl, setPostUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await galleryService.getPosts();
@@ -53,11 +53,19 @@ export function GalleryManager() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPosts();
-  }, []);
+
+    const unsubscribe = subscribeToStoreUpdates(() => {
+      loadPosts();
+    }, ['gallery', 'social', 'all']);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [loadPosts]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -205,7 +213,11 @@ export function GalleryManager() {
 
     try {
       // 2. Single fast server call (server deletes metadata and removes storage in background)
-      const res = await galleryService.deletePost(post.id, post.imagePath || undefined);
+      const res = await galleryService.deletePost(
+        post.id,
+        post.imagePath || undefined,
+        post.imageUrl
+      );
       if (res.success) {
         toast.success('Gallery story removed');
         notifyStoreUpdate('gallery');

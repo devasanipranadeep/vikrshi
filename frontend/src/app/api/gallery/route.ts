@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { SocialPost } from '@/types';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -9,7 +10,14 @@ export const revalidate = 0;
 const BUCKET_NAME = 'vikrshi-media';
 const METADATA_FILE = 'gallery-metadata.json';
 
-async function loadPersistedGalleryPosts(): Promise<SocialPost[]> {
+// In-memory cache to guarantee zero-latency reads and eliminate Supabase CDN stale cache issues
+let inMemoryGalleryPosts: SocialPost[] | null = null;
+
+async function loadPersistedGalleryPosts(forceRefresh: boolean = false): Promise<SocialPost[]> {
+  if (!forceRefresh && inMemoryGalleryPosts !== null) {
+    return inMemoryGalleryPosts;
+  }
+
   try {
     const adminClient = createAdminClient();
     const { data: fileData, error } = await adminClient.storage
@@ -20,6 +28,7 @@ async function loadPersistedGalleryPosts(): Promise<SocialPost[]> {
       const text = await fileData.text();
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed)) {
+        inMemoryGalleryPosts = parsed;
         return parsed;
       }
     }
@@ -32,7 +41,12 @@ async function loadPersistedGalleryPosts(): Promise<SocialPost[]> {
     const adminClient = createAdminClient();
     const { data: files } = await adminClient.storage.from(BUCKET_NAME).list('gallery');
     const validImageFiles = (files || []).filter(
-      (f) => !f.name.startsWith('.') && (f.name.endsWith('.jpg') || f.name.endsWith('.jpeg') || f.name.endsWith('.png') || f.name.endsWith('.webp'))
+      (f) =>
+        !f.name.startsWith('.') &&
+        (f.name.endsWith('.jpg') ||
+          f.name.endsWith('.jpeg') ||
+          f.name.endsWith('.png') ||
+          f.name.endsWith('.webp'))
     );
 
     if (validImageFiles.length > 0) {
@@ -60,17 +74,21 @@ async function loadPersistedGalleryPosts(): Promise<SocialPost[]> {
     console.warn('Could not list gallery images from Supabase:', err);
   }
 
-  // Zero mock data: return empty array if no images have been uploaded by admin
+  inMemoryGalleryPosts = [];
   return [];
 }
 
 async function savePersistedGalleryPosts(posts: SocialPost[]): Promise<boolean> {
+  // Update in-memory cache immediately so all instant subsequent requests receive fresh data
+  inMemoryGalleryPosts = [...posts];
+
   try {
     const adminClient = createAdminClient();
     const buffer = Buffer.from(JSON.stringify(posts, null, 2));
     const { error } = await adminClient.storage.from(BUCKET_NAME).upload(METADATA_FILE, buffer, {
       contentType: 'application/json',
       upsert: true,
+      cacheControl: '0', // Critical: prevent Supabase storage CDN from caching stale metadata!
     });
     if (error) {
       console.error('Failed to save gallery metadata:', error);
@@ -103,7 +121,10 @@ export async function GET() {
       },
       {
         headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          'Surrogate-Control': 'no-store',
+          Pragma: 'no-cache',
+          Expires: '0',
         },
       }
     );
@@ -136,6 +157,11 @@ export async function POST(request: NextRequest) {
 
     posts.unshift(newPost);
     await savePersistedGalleryPosts(posts);
+
+    try {
+      revalidatePath('/');
+      revalidatePath('/gallery');
+    } catch {}
 
     return NextResponse.json(
       {
@@ -182,6 +208,11 @@ export async function PUT(request: NextRequest) {
 
     await savePersistedGalleryPosts(posts);
 
+    try {
+      revalidatePath('/');
+      revalidatePath('/gallery');
+    } catch {}
+
     return NextResponse.json({
       success: true,
       message: 'Gallery post updated successfully',
@@ -200,27 +231,42 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     const imagePath = searchParams.get('imagePath');
+    const imageUrl = searchParams.get('imageUrl');
 
-    if (!id && !imagePath) {
+    if (!id && !imagePath && !imageUrl) {
       return NextResponse.json(
-        { success: false, message: 'Post ID or imagePath is required' },
+        { success: false, message: 'Post identifier is required' },
         { status: 400 }
       );
     }
 
     let posts = await loadPersistedGalleryPosts();
     const postToDelete = posts.find(
-      (p) => (id && p.id === id) || (imagePath && p.imagePath === imagePath)
+      (p) =>
+        (id && p.id === id) ||
+        (imagePath && p.imagePath === imagePath) ||
+        (imageUrl && p.imageUrl === imageUrl)
     );
 
     posts = posts.filter(
-      (p) => !((id && p.id === id) || (imagePath && p.imagePath === imagePath))
+      (p) =>
+        !(
+          (id && p.id === id) ||
+          (imagePath && p.imagePath === imagePath) ||
+          (imageUrl && p.imageUrl === imageUrl)
+        )
     );
 
-    // Persist updated list
+    // Save and update in-memory cache immediately
     await savePersistedGalleryPosts(posts);
 
-    // Asynchronously delete media from Supabase storage in background without delaying HTTP response
+    // Trigger Next.js cache purging
+    try {
+      revalidatePath('/');
+      revalidatePath('/gallery');
+    } catch {}
+
+    // Delete image from storage in background
     const fileToDelete = postToDelete?.imagePath || imagePath;
     if (fileToDelete) {
       try {

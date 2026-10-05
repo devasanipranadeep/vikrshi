@@ -4,7 +4,10 @@ import { instagramPosts } from '@/constants/mockData';
 export const galleryService = {
   async getPosts(): Promise<SocialPost[]> {
     try {
-      const res = await fetch('/api/gallery', { cache: 'no-store' });
+      const res = await fetch(`/api/gallery?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
+      });
       if (res.ok) {
         const json = await res.json();
         if (json.success && Array.isArray(json.data)) {
@@ -99,10 +102,15 @@ export const galleryService = {
     }
   },
 
-  async deletePost(id: string, imagePath?: string): Promise<{ success: boolean; error?: string }> {
+  async deletePost(
+    id: string,
+    imagePath?: string,
+    imageUrl?: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const params = new URLSearchParams({ id });
       if (imagePath) params.set('imagePath', imagePath);
+      if (imageUrl) params.set('imageUrl', imageUrl);
 
       const res = await fetch(`/api/gallery?${params.toString()}`, {
         method: 'DELETE',
