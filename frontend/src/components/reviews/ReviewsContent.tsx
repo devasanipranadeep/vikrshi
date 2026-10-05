@@ -47,16 +47,17 @@ export function ReviewsContent({ initialReviews, initialStats }: ReviewsContentP
 
   // Compute live stats when reviews change
   const currentStats = useMemo(() => {
-    const total = reviews.length;
+    const validReviews = (reviews || []).filter((r) => r && typeof r.rating === 'number');
+    const total = validReviews.length;
     if (total === 0) return stats;
-    const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+    const sum = validReviews.reduce((acc, r) => acc + (r.rating || 0), 0);
     const avg = Number((sum / total).toFixed(1));
     const dist: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    reviews.forEach((r) => {
+    validReviews.forEach((r) => {
       const star = Math.min(5, Math.max(1, Math.round(r.rating)));
       dist[star] = (dist[star] || 0) + 1;
     });
-    const recRate = Math.round((reviews.filter((r) => r.rating >= 4).length / total) * 100);
+    const recRate = Math.round((validReviews.filter((r) => r.rating >= 4).length / total) * 100);
 
     return {
       totalReviews: total,
@@ -68,15 +69,16 @@ export function ReviewsContent({ initialReviews, initialStats }: ReviewsContentP
 
   // Filtered & sorted reviews
   const filteredReviews = useMemo(() => {
-    return reviews
+    const validReviews = (reviews || []).filter((r) => r && typeof r.rating === 'number');
+    return validReviews
       .filter((review) => {
         // Search filter
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase().trim();
-          const matchName = review.name.toLowerCase().includes(q);
-          const matchTitle = review.title.toLowerCase().includes(q);
-          const matchComment = review.comment.toLowerCase().includes(q);
-          const matchLoc = review.location.toLowerCase().includes(q);
+          const matchName = review.name ? review.name.toLowerCase().includes(q) : false;
+          const matchTitle = review.title ? review.title.toLowerCase().includes(q) : false;
+          const matchComment = review.comment ? review.comment.toLowerCase().includes(q) : false;
+          const matchLoc = review.location ? review.location.toLowerCase().includes(q) : false;
           const matchProd = review.productName?.toLowerCase().includes(q);
           if (!matchName && !matchTitle && !matchComment && !matchLoc && !matchProd) {
             return false;
@@ -92,7 +94,7 @@ export function ReviewsContent({ initialReviews, initialStats }: ReviewsContentP
 
         // Location filter
         if (selectedLocation !== 'All Locations') {
-          if (!review.location.toLowerCase().includes(selectedLocation.toLowerCase())) {
+          if (!review.location || !review.location.toLowerCase().includes(selectedLocation.toLowerCase())) {
             return false;
           }
         }
@@ -115,7 +117,8 @@ export function ReviewsContent({ initialReviews, initialStats }: ReviewsContentP
   }, [reviews, searchQuery, selectedRating, selectedLocation, sortBy]);
 
   const handleReviewSubmitted = (newReview: CustomerReview) => {
-    setReviews((prev) => [newReview, ...prev]);
+    if (!newReview || typeof newReview.rating !== 'number') return;
+    setReviews((prev) => [newReview, ...(prev || []).filter((r) => r && r.id !== newReview.id)]);
   };
 
   const clearAllFilters = () => {

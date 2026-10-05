@@ -82,7 +82,13 @@ export function ReviewModal({ isOpen, onClose, onReviewSubmitted }: ReviewModalP
 
       const res = await submitReview(payload);
       setIsSuccess(true);
-      onReviewSubmitted(res.data);
+      const newReview: CustomerReview | null = (res && res.data && typeof res.data.rating === 'number')
+        ? res.data
+        : (res && typeof (res as any).rating === 'number' ? (res as any) : null);
+
+      if (newReview) {
+        onReviewSubmitted(newReview);
+      }
       notifyStoreUpdate('reviews');
 
       setTimeout(() => {

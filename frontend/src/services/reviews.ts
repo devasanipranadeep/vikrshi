@@ -31,10 +31,16 @@ export async function getReviews(params?: {
 }
 
 export async function submitReview(data: ReviewSubmissionData): Promise<{ message: string; data: CustomerReview }> {
-  return apiClient<{ message: string; data: CustomerReview }>('/api/reviews', {
+  const res = await apiClient<any>('/api/reviews', {
     method: 'POST',
     body: JSON.stringify(data),
   });
+  // apiClient unboxes json.data if present, so res might directly be CustomerReview
+  const reviewData: CustomerReview = (res && typeof res.rating === 'number') ? res : (res?.data || res);
+  return {
+    message: res?.message || 'Thank you for sharing your experience! Your review is now live.',
+    data: reviewData,
+  };
 }
 
 export async function upvoteReview(reviewId: string): Promise<{ helpfulCount: number }> {
