@@ -1,10 +1,10 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { z } from 'zod';
-import { initialReviews } from '@/constants/mockData';
 import { CustomerReview } from '@/types';
+import { loadPersistedReviews, savePersistedReviews } from '@/services/reviewsServer';
 
-// In-memory reviews storage (persists during runtime, initialized with rich Hyderabad reviews)
-let reviewsStore: CustomerReview[] = [...initialReviews];
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const reviewSchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters').max(60),
@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
     const locationParam = searchParams.get('location')?.toLowerCase().trim();
     const sort = searchParams.get('sort') || 'newest';
 
-    let filtered = [...reviewsStore];
+    const allReviews = await loadPersistedReviews();
+    let filtered = [...allReviews];
 
     // Filter by rating
     if (ratingParam && ratingParam !== 'all') {
@@ -52,11 +53,11 @@ export async function GET(request: NextRequest) {
 
     // Sorting
     if (sort === 'highest') {
-      filtered.sort((a, b) => b.rating - a.rating || b.helpfulCount - a.helpfulCount);
+      filtered.sort((a, b) => b.rating - a.rating || (b.helpfulCount || 0) - (a.helpfulCount || 0));
     } else if (sort === 'lowest') {
       filtered.sort((a, b) => a.rating - b.rating);
     } else if (sort === 'most_helpful') {
-      filtered.sort((a, b) => b.helpfulCount - a.helpfulCount);
+      filtered.sort((a, b) => (b.helpfulCount || 0) - (a.helpfulCount || 0));
     } else {
       // Default: newest first (by id descending or order)
       filtered.sort((a, b) => {
@@ -71,17 +72,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Statistics based on all reviews
-    const totalCount = reviewsStore.length;
-    const sumRatings = reviewsStore.reduce((acc, curr) => acc + curr.rating, 0);
+    const totalCount = allReviews.length;
+    const sumRatings = allReviews.reduce((acc, curr) => acc + curr.rating, 0);
     const averageRating = totalCount > 0 ? Number((sumRatings / totalCount).toFixed(1)) : 5.0;
 
     const distribution: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    reviewsStore.forEach((r) => {
+    allReviews.forEach((r) => {
       const rounded = Math.min(5, Math.max(1, Math.round(r.rating)));
       distribution[rounded] = (distribution[rounded] || 0) + 1;
     });
 
-    const recommendedCount = reviewsStore.filter((r) => r.rating >= 4).length;
+    const recommendedCount = allReviews.filter((r) => r.rating >= 4).length;
     const recommendationRate = totalCount > 0 ? Math.round((recommendedCount / totalCount) * 100) : 98;
 
     return NextResponse.json({
@@ -97,6 +98,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
+    console.error('GET /api/reviews error:', error);
     return NextResponse.json(
       { success: false, message: 'Failed to retrieve customer reviews' },
       { status: 500 }
@@ -140,8 +142,9 @@ export async function POST(request: NextRequest) {
       helpfulCount: 0,
     };
 
-    // Prepend to store
-    reviewsStore.unshift(newReview);
+    const allReviews = await loadPersistedReviews();
+    allReviews.unshift(newReview);
+    await savePersistedReviews(allReviews);
 
     return NextResponse.json(
       {
@@ -152,6 +155,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    console.error('POST /api/reviews error:', error);
     return NextResponse.json(
       { success: false, message: 'Failed to process review submission' },
       { status: 500 }
@@ -171,7 +175,8 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const review = reviewsStore.find((r) => r.id === reviewId);
+    const allReviews = await loadPersistedReviews();
+    const review = allReviews.find((r) => r.id === reviewId);
     if (!review) {
       return NextResponse.json(
         { success: false, message: 'Review not found' },
@@ -180,12 +185,14 @@ export async function PATCH(request: NextRequest) {
     }
 
     review.helpfulCount = (review.helpfulCount || 0) + 1;
+    await savePersistedReviews(allReviews);
 
     return NextResponse.json({
       success: true,
       helpfulCount: review.helpfulCount,
     });
   } catch (error) {
+    console.error('PATCH /api/reviews error:', error);
     return NextResponse.json(
       { success: false, message: 'Failed to upvote review' },
       { status: 500 }
@@ -202,18 +209,22 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Review ID is required' }, { status: 400 });
     }
 
-    const initialLength = reviewsStore.length;
-    reviewsStore = reviewsStore.filter((r) => r.id !== id);
+    let allReviews = await loadPersistedReviews();
+    const initialLength = allReviews.length;
+    allReviews = allReviews.filter((r) => r.id !== id);
 
-    if (reviewsStore.length === initialLength) {
+    if (allReviews.length === initialLength) {
       return NextResponse.json({ success: false, message: 'Review not found' }, { status: 404 });
     }
+
+    await savePersistedReviews(allReviews);
 
     return NextResponse.json({
       success: true,
       message: 'Review removed successfully',
     });
   } catch (error) {
+    console.error('DELETE /api/reviews error:', error);
     return NextResponse.json(
       { success: false, message: 'Failed to delete review' },
       { status: 500 }

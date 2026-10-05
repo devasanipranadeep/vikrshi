@@ -1,9 +1,12 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { initialReviews } from '@/constants/mockData';
 import { ReviewsContent } from '@/components/reviews/ReviewsContent';
 import { getReviewsPageSchema } from '@/utils/seo';
-import { ChevronRight, Sparkles, MessageSquareHeart } from 'lucide-react';
+import { ChevronRight, MessageSquareHeart } from 'lucide-react';
+import { loadPersistedReviews } from '@/services/reviewsServer';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: 'Customer Reviews & Real Farm Feedback | Vikrshi Suppliers Pvt Ltd',
@@ -19,17 +22,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ReviewsPage() {
+export default async function ReviewsPage() {
+  const reviews = await loadPersistedReviews();
+
   // Pre-calculate initial stats for server render
-  const total = initialReviews.length;
-  const sum = initialReviews.reduce((acc, r) => acc + r.rating, 0);
+  const total = reviews.length;
+  const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
   const avg = total > 0 ? Number((sum / total).toFixed(1)) : 5.0;
   const distribution: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  initialReviews.forEach((r) => {
-    const star = Math.min(5, Math.max(1, Math.round(r.rating)));
+  reviews.forEach((r) => {
+    const star = Math.min(5, Math.max(1, Math.round(r.rating || 5)));
     distribution[star] = (distribution[star] || 0) + 1;
   });
-  const recRate = Math.round((initialReviews.filter((r) => r.rating >= 4).length / total) * 100);
+  const recRate = total > 0 ? Math.round((reviews.filter((r) => r.rating >= 4).length / total) * 100) : 100;
 
   const initialStats = {
     totalReviews: total,
@@ -38,7 +43,7 @@ export default function ReviewsPage() {
     distribution,
   };
 
-  const schemaJson = getReviewsPageSchema(initialReviews, avg, 280);
+  const schemaJson = getReviewsPageSchema(reviews, avg, total || 280);
 
   return (
     <>
@@ -76,7 +81,7 @@ export default function ReviewsPage() {
 
           {/* Main Content Component */}
           <ReviewsContent
-            initialReviews={initialReviews}
+            initialReviews={reviews}
             initialStats={initialStats}
           />
         </div>

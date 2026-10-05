@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   Search,
   Filter,
@@ -13,7 +13,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { CustomerReview } from '@/types';
-import { ReviewStats } from '@/services/reviews';
+import { ReviewStats, getReviews } from '@/services/reviews';
+import { subscribeToStoreUpdates, notifyStoreUpdate } from '@/utils/storeEvents';
 import { ReviewStatsCard } from './ReviewStatsCard';
 import { ReviewCard } from './ReviewCard';
 import { ReviewModal } from './ReviewModal';
@@ -38,6 +39,36 @@ const POPULAR_LOCATIONS = [
 export function ReviewsContent({ initialReviews, initialStats }: ReviewsContentProps) {
   const [reviews, setReviews] = useState<CustomerReview[]>(initialReviews);
   const [stats, setStats] = useState<ReviewStats>(initialStats);
+
+  useEffect(() => {
+    if (initialReviews && initialReviews.length > 0) {
+      setReviews(initialReviews);
+    }
+  }, [initialReviews]);
+
+  const fetchLiveReviews = useCallback(async () => {
+    try {
+      const data = await getReviews();
+      if (data?.reviews) {
+        setReviews(data.reviews);
+      }
+      if (data?.stats) {
+        setStats(data.stats);
+      }
+    } catch (e) {
+      console.error('Failed to load reviews:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLiveReviews();
+    const unsub = subscribeToStoreUpdates((type) => {
+      if (type === 'reviews' || type === 'all') {
+        fetchLiveReviews();
+      }
+    });
+    return () => unsub();
+  }, [fetchLiveReviews]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRating, setSelectedRating] = useState<string>('all');
@@ -119,6 +150,10 @@ export function ReviewsContent({ initialReviews, initialStats }: ReviewsContentP
   const handleReviewSubmitted = (newReview: CustomerReview) => {
     if (!newReview || typeof newReview.rating !== 'number') return;
     setReviews((prev) => [newReview, ...(prev || []).filter((r) => r && r.id !== newReview.id)]);
+    notifyStoreUpdate('reviews');
+    setTimeout(() => {
+      fetchLiveReviews();
+    }, 500);
   };
 
   const clearAllFilters = () => {
