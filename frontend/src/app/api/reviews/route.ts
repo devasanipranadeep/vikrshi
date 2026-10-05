@@ -1,7 +1,12 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { z } from 'zod';
 import { CustomerReview } from '@/types';
-import { loadPersistedReviews, savePersistedReviews } from '@/services/reviewsServer';
+import {
+  loadPersistedReviews,
+  insertPersistedReview,
+  deletePersistedReview,
+  upvotePersistedReview,
+} from '@/services/reviewsServer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -123,34 +128,20 @@ export async function POST(request: NextRequest) {
 
     const { name, location, rating, title, comment, productName } = result.data;
 
-    const today = new Intl.DateTimeFormat('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(new Date());
-
-    const newReview: CustomerReview = {
-      id: `rev-${Date.now()}`,
+    const savedReview = await insertPersistedReview({
       name,
       location,
       rating,
       title,
       comment,
-      date: today,
-      verifiedPurchase: true,
-      productName: productName && productName.trim().length > 0 ? productName.trim() : undefined,
-      helpfulCount: 0,
-    };
-
-    const allReviews = await loadPersistedReviews();
-    allReviews.unshift(newReview);
-    await savePersistedReviews(allReviews);
+      productName,
+    });
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Thank you for sharing your experience! Your review is now live.',
-        data: newReview,
+        message: 'Thank you for sharing your experience! Your review is now saved.',
+        data: savedReview,
       },
       { status: 201 }
     );
@@ -175,21 +166,11 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const allReviews = await loadPersistedReviews();
-    const review = allReviews.find((r) => r.id === reviewId);
-    if (!review) {
-      return NextResponse.json(
-        { success: false, message: 'Review not found' },
-        { status: 404 }
-      );
-    }
-
-    review.helpfulCount = (review.helpfulCount || 0) + 1;
-    await savePersistedReviews(allReviews);
+    const newHelpfulCount = await upvotePersistedReview(reviewId);
 
     return NextResponse.json({
       success: true,
-      helpfulCount: review.helpfulCount,
+      helpfulCount: newHelpfulCount,
     });
   } catch (error) {
     console.error('PATCH /api/reviews error:', error);
@@ -209,19 +190,11 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Review ID is required' }, { status: 400 });
     }
 
-    let allReviews = await loadPersistedReviews();
-    const initialLength = allReviews.length;
-    allReviews = allReviews.filter((r) => r.id !== id);
-
-    if (allReviews.length === initialLength) {
-      return NextResponse.json({ success: false, message: 'Review not found' }, { status: 404 });
-    }
-
-    await savePersistedReviews(allReviews);
+    await deletePersistedReview(id);
 
     return NextResponse.json({
       success: true,
-      message: 'Review removed successfully',
+      message: 'Review deleted successfully from database',
     });
   } catch (error) {
     console.error('DELETE /api/reviews error:', error);

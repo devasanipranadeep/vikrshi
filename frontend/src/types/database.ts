@@ -276,6 +276,50 @@ export interface Database {
           created_at?: string;
         };
       };
+      customer_reviews: {
+        Row: {
+          id: string;
+          name: string;
+          location: string;
+          rating: number;
+          title: string;
+          comment: string;
+          product_name: string | null;
+          verified_purchase: boolean;
+          helpful_count: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          location: string;
+          rating: number;
+          title: string;
+          comment: string;
+          product_name?: string | null;
+          verified_purchase?: boolean;
+          helpful_count?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          location?: string;
+          rating?: number;
+          title?: string;
+          comment?: string;
+          product_name?: string | null;
+          verified_purchase?: boolean;
+          helpful_count?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 }
