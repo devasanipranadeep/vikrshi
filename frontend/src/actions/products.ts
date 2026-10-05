@@ -17,17 +17,61 @@ function getServerAdminClient() {
   return undefined;
 }
 
+function formatErrorMessage(err: any): string {
+  if (err?.issues && Array.isArray(err.issues) && err.issues.length > 0) {
+    return err.issues.map((i: any) => i.message).join(', ');
+  }
+  if (err?.message) {
+    try {
+      const parsed = JSON.parse(err.message);
+      if (Array.isArray(parsed) && parsed[0]?.message) {
+        return parsed.map((p: any) => p.message).join(', ');
+      }
+    } catch {
+      // not JSON
+    }
+    return err.message;
+  }
+  return 'An unexpected error occurred';
+}
+
+async function resolveCategoryId(catId: string | null | undefined, client?: any): Promise<string | null> {
+  if (!catId || !catId.trim()) return null;
+  const trimmed = catId.trim();
+  // Valid Postgres UUID format (32 hex digits with hyphens)
+  const isPostgresUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(trimmed);
+  if (isPostgresUuid) {
+    return trimmed;
+  }
+  try {
+    const supabase = client || getServerAdminClient();
+    if (supabase) {
+      const { data } = await supabase
+        .from('categories')
+        .select('id')
+        .or(`slug.eq.${trimmed},name.ilike.${trimmed}`)
+        .limit(1)
+        .maybeSingle();
+      if (data?.id) return data.id;
+    }
+  } catch (e) {
+    console.warn('Could not resolve categoryId:', e);
+  }
+  return null;
+}
+
 export async function createProductAction(formData: ProductFormValues) {
   try {
     const validated = productSchema.parse(formData);
     const slug = validated.slug?.trim() || generateSlug(validated.name);
     const adminClient = getServerAdminClient();
+    const categoryId = await resolveCategoryId(validated.categoryId, adminClient);
 
     const product = await productService.createProduct(
       {
         name: validated.name,
         slug,
-        category_id: validated.categoryId || null,
+        category_id: categoryId,
         short_description: validated.shortDescription || null,
         description: validated.description || null,
         price: validated.price,
@@ -58,7 +102,7 @@ export async function createProductAction(formData: ProductFormValues) {
     return { success: true, data: product };
   } catch (err: any) {
     console.error('createProductAction error:', err);
-    return { success: false, error: err.message || 'Failed to create product' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 
@@ -66,11 +110,14 @@ export async function updateProductAction(id: string, formData: Partial<ProductF
   try {
     const validated = productSchema.partial().parse(formData);
     const slug = validated.name ? generateSlug(validated.name) : validated.slug;
+    const adminClient = getServerAdminClient();
 
     const payload: any = {};
     if (validated.name !== undefined) payload.name = validated.name;
     if (slug !== undefined) payload.slug = slug;
-    if (validated.categoryId !== undefined) payload.category_id = validated.categoryId;
+    if (validated.categoryId !== undefined) {
+      payload.category_id = await resolveCategoryId(validated.categoryId, adminClient);
+    }
     if (validated.shortDescription !== undefined) payload.short_description = validated.shortDescription;
     if (validated.description !== undefined) payload.description = validated.description;
     if (validated.price !== undefined) payload.price = validated.price;
@@ -86,7 +133,6 @@ export async function updateProductAction(id: string, formData: Partial<ProductF
     if (validated.isActive !== undefined) payload.is_active = validated.isActive;
     if (validated.sortOrder !== undefined) payload.sort_order = validated.sortOrder;
 
-    const adminClient = getServerAdminClient();
     const updated = await productService.updateProduct(id, payload, validated.locationSettings, adminClient);
 
     revalidatePath('/products');
@@ -100,7 +146,7 @@ export async function updateProductAction(id: string, formData: Partial<ProductF
     return { success: true, data: updated };
   } catch (err: any) {
     console.error('updateProductAction error:', err);
-    return { success: false, error: err.message || 'Failed to update product' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 
@@ -120,7 +166,7 @@ export async function deleteProductAction(id: string) {
     return { success: true };
   } catch (err: any) {
     console.error('deleteProductAction error:', err);
-    return { success: false, error: err.message || 'Failed to delete product' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 
@@ -140,7 +186,7 @@ export async function toggleProductStatusAction(id: string, isActive: boolean) {
     return { success: true };
   } catch (err: any) {
     console.error('toggleProductStatusAction error:', err);
-    return { success: false, error: err.message || 'Failed to toggle product status' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 

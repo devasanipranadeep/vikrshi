@@ -22,11 +22,11 @@ export const productSchema = z.object({
   slug: z.string().optional(),
   categoryId: z
     .string()
-    .uuid('Invalid category ID')
+    .trim()
     .nullable()
     .optional()
     .or(z.literal(''))
-    .transform((val) => (val === '' ? null : val)),
+    .transform((val) => (!val || val === '' ? null : val)),
   shortDescription: z.string().max(250, 'Short description cannot exceed 250 characters').optional().nullable(),
   description: z.string().optional().nullable(),
   price: z.coerce.number().min(0, 'Price must be greater than or equal to 0'),

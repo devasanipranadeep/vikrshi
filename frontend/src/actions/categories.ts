@@ -17,6 +17,24 @@ function getServerAdminClient() {
   return undefined;
 }
 
+function formatErrorMessage(err: any): string {
+  if (err?.issues && Array.isArray(err.issues) && err.issues.length > 0) {
+    return err.issues.map((i: any) => i.message).join(', ');
+  }
+  if (err?.message) {
+    try {
+      const parsed = JSON.parse(err.message);
+      if (Array.isArray(parsed) && parsed[0]?.message) {
+        return parsed.map((p: any) => p.message).join(', ');
+      }
+    } catch {
+      // not JSON
+    }
+    return err.message;
+  }
+  return 'An unexpected error occurred';
+}
+
 export async function createCategoryAction(formData: CategoryFormValues) {
   try {
     const validated = categorySchema.parse(formData);
@@ -40,7 +58,7 @@ export async function createCategoryAction(formData: CategoryFormValues) {
     return { success: true, data: category };
   } catch (err: any) {
     console.error('createCategoryAction error:', err);
-    return { success: false, error: err.message || 'Failed to create category' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 
@@ -68,7 +86,7 @@ export async function updateCategoryAction(id: string, formData: Partial<Categor
     return { success: true, data: updated };
   } catch (err: any) {
     console.error('updateCategoryAction error:', err);
-    return { success: false, error: err.message || 'Failed to update category' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 
@@ -84,7 +102,7 @@ export async function deleteCategoryAction(id: string) {
     return { success: true };
   } catch (err: any) {
     console.error('deleteCategoryAction error:', err);
-    return { success: false, error: err.message || 'Failed to delete category' };
+    return { success: false, error: formatErrorMessage(err) };
   }
 }
 
